@@ -6,9 +6,7 @@ export const env = createEnv({
     NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   },
   clientPrefix: 'VITE_',
-  client: {
-    VITE_SOME_KEY: z.string().optional(),
-  },
+  client: {},
   runtimeEnv: import.meta.env || process.env,
   emptyStringAsUndefined: true,
 })

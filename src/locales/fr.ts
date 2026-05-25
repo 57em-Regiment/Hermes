@@ -14,4 +14,11 @@ export const fr = {
   "nav.select_stock": "Sélectionnez une installation de stockage pour voir son inventaire.",
   "stock.not_found": "Stock introuvable",
   "stock.items": "articles",
+  "dialog.add": "Ajouter",
+  "dialog.remove": "Retirer",
+  "dialog.cancel": "Annuler",
+  "dialog.confirm_add": "Confirmer l'ajout",
+  "dialog.confirm_remove": "Confirmer le retrait",
+  "dialog.add_description": "Combien d'unités voulez-vous ajouter ? Actuellement à",
+  "dialog.remove_description": "Combien d'unités voulez-vous retirer ?",
 }

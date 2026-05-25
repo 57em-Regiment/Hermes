@@ -14,4 +14,11 @@ export const en = {
   "nav.select_stock": "Select a stock facility to view its inventory.",
   "stock.not_found": "Stock not found",
   "stock.items": "items",
+  "dialog.add": "Add",
+  "dialog.remove": "Remove",
+  "dialog.cancel": "Cancel",
+  "dialog.confirm_add": "Confirm Add",
+  "dialog.confirm_remove": "Confirm Remove",
+  "dialog.add_description": "How many units would you like to add? Currently at",
+  "dialog.remove_description": "How many units would you like to remove?",
 }
