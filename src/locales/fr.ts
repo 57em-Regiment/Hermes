@@ -1,0 +1,17 @@
+export const fr = {
+  "v1.title": "Tableau Standard Triable",
+  "v1.desc": "Espacement standard avec en-têtes cliquables pour le tri.",
+  "v1.search": "Rechercher dans l'inventaire...",
+  "v1.resource": "Ressource",
+  "v1.stock": "Stock / Capacité",
+  "v1.demand": "Demande",
+  "v1.production": "Besoin de Production",
+  "v1.actions": "Actions",
+  "v1.required": "requis",
+  "v1.colors.disable": "Désactiver les couleurs",
+  "v1.colors.enable": "Activer les couleurs",
+  "nav.title": "Prototypes Hermes",
+  "nav.select_stock": "Sélectionnez une installation de stockage pour voir son inventaire.",
+  "stock.not_found": "Stock introuvable",
+  "stock.items": "articles",
+}

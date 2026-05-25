@@ -14,6 +14,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as TestRouteImport } from './routes/test'
 
 const IndexLazyRouteImport = createFileRoute('/')()
+const StockIdLazyRouteImport = createFileRoute('/stock/$id')()
 
 const TestRoute = TestRouteImport.update({
   id: '/test',
@@ -25,31 +26,40 @@ const IndexLazyRoute = IndexLazyRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
+const StockIdLazyRoute = StockIdLazyRouteImport.update({
+  id: '/stock/$id',
+  path: '/stock/$id',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/stock.$id.lazy').then((d) => d.Route))
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
   '/test': typeof TestRoute
+  '/stock/$id': typeof StockIdLazyRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
   '/test': typeof TestRoute
+  '/stock/$id': typeof StockIdLazyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexLazyRoute
   '/test': typeof TestRoute
+  '/stock/$id': typeof StockIdLazyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/test'
+  fullPaths: '/' | '/test' | '/stock/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/test'
-  id: '__root__' | '/' | '/test'
+  to: '/' | '/test' | '/stock/$id'
+  id: '__root__' | '/' | '/test' | '/stock/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
   TestRoute: typeof TestRoute
+  StockIdLazyRoute: typeof StockIdLazyRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -68,12 +78,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexLazyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/stock/$id': {
+      id: '/stock/$id'
+      path: '/stock/$id'
+      fullPath: '/stock/$id'
+      preLoaderRoute: typeof StockIdLazyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
   TestRoute: TestRoute,
+  StockIdLazyRoute: StockIdLazyRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

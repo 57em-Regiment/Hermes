@@ -1,0 +1,17 @@
+export const en = {
+  "v1.title": "Sortable Standard Table",
+  "v1.desc": "Standard spacing with clickable column headers for sorting.",
+  "v1.search": "Search inventory...",
+  "v1.resource": "Resource",
+  "v1.stock": "Stock / Capacity",
+  "v1.demand": "Demand",
+  "v1.production": "Production Need",
+  "v1.actions": "Actions",
+  "v1.required": "required",
+  "v1.colors.disable": "Disable Colors",
+  "v1.colors.enable": "Enable Colors",
+  "nav.title": "Hermes Prototypes",
+  "nav.select_stock": "Select a stock facility to view its inventory.",
+  "stock.not_found": "Stock not found",
+  "stock.items": "items",
+}
