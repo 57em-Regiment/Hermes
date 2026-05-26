@@ -1,179 +1,186 @@
 import { createLazyFileRoute } from '@tanstack/react-router'
-import { useState, useMemo } from 'react'
-import Fuse from 'fuse.js'
-import { useInventoryStore, type InventoryItem } from '@/store/inventory'
+import { useState, useMemo, useCallback, useRef, useEffect } from 'react'
+import { AgGridReact } from 'ag-grid-react'
+import {
+	AllCommunityModule,
+	themeQuartz,
+	colorSchemeDark,
+	colorSchemeLight,
+} from 'ag-grid-community'
+import type { ColDef, RowClassParams } from 'ag-grid-community'
+import { useInventoryStore } from '@/store/inventory'
+import { useLanguage } from '@/components/language-provider'
+import { useTheme } from '@/components/theme-provider'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { Progress } from '@/components/ui/progress'
-import { ItemActionsDialog } from '@/components/inventory/ItemActionsDialog'
-import { useLanguage } from '@/components/language-provider'
-import * as Icons from '@tabler/icons-react'
+import { ResourceCell } from '@/components/inventory/cells/ResourceCell'
+import { StockCell } from '@/components/inventory/cells/StockCell'
+import { DemandCell } from '@/components/inventory/cells/DemandCell'
+import { ProductionCell } from '@/components/inventory/cells/ProductionCell'
+import { ActionsCell } from '@/components/inventory/cells/ActionsCell'
+import type { InventoryItem } from '@/types/inventory'
 
 export const Route = createLazyFileRoute('/stock/$id')({
-  component: StockView,
+	component: StockView,
 })
 
-type SortKey = 'name' | 'quantity' | 'demand' | 'productionNeed'
-
 function StockView() {
-  const { id } = Route.useParams()
-  const { t } = useLanguage()
-  const stock = useInventoryStore(state => state.stocks.find(s => s.id === id))
-  
-  const [search, setSearch] = useState('')
-  const [sortKey, setSortKey] = useState<SortKey>('name')
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
-  const [colorEnabled, setColorEnabled] = useState(true)
+	const { id } = Route.useParams()
+	const { t } = useLanguage()
+	const { theme } = useTheme()
+	const stock = useInventoryStore(state => state.stocks.find(s => s.id === id))
+	const gridRef = useRef<AgGridReact<InventoryItem>>(null)
 
-  if (!stock) {
-    return <div className="text-center py-20 text-muted-foreground">{t('stock.not_found')}</div>
-  }
+	const [search, setSearch] = useState('')
+	const [colorEnabled, setColorEnabled] = useState(true)
 
-  const items = stock.items
+	const isDark =
+		theme === 'dark' ||
+		(theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)
 
-  const handleSort = (key: SortKey) => {
-    if (sortKey === key) {
-      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')
-    } else {
-      setSortKey(key)
-      setSortOrder('asc')
-    }
-  }
+	const agTheme = useMemo(
+		() =>
+			isDark
+				? themeQuartz.withPart(colorSchemeDark).withParams({
+					backgroundColor: 'transparent',
+					headerBackgroundColor: 'transparent',
+				})
+				: themeQuartz.withPart(colorSchemeLight).withParams({
+					backgroundColor: 'transparent',
+					headerBackgroundColor: 'transparent',
+				}),
+		[isDark],
+	)
 
-  const processedItems = useMemo(() => {
-    let result = items
-    if (search) {
-      const fuse = new Fuse(items, { keys: ['name'] })
-      result = fuse.search(search).map(r => r.item)
-    }
+	const getRowStyle = useCallback(
+		({ data }: RowClassParams<InventoryItem>) => {
+			if (!colorEnabled || !data) return undefined
+			const req = data.demand > 0 ? data.demand : data.maxCapacity
+			const hue = Math.max(0, Math.min(1, data.quantity / req)) * 120
+			return { backgroundColor: `hsla(${hue}, 70%, 50%, 0.1)` }
+		},
+		[colorEnabled],
+	)
 
-    return [...result].sort((a, b) => {
-      // Modify demand sorting to sort by fulfillment percentage instead of flat demand integer
-      if (sortKey === 'demand') {
-        const aReq = a.demand > 0 ? a.demand : a.maxCapacity
-        const bReq = b.demand > 0 ? b.demand : b.maxCapacity
-        const aPct = a.quantity / aReq
-        const bPct = b.quantity / bReq
+	useEffect(() => {
+		gridRef.current?.api?.redrawRows()
+	}, [colorEnabled])
 
-        if (aPct < bPct) return sortOrder === 'asc' ? -1 : 1
-        if (aPct > bPct) return sortOrder === 'asc' ? 1 : -1
-        return 0
-      }
+	const colDefs = useMemo<ColDef<InventoryItem>[]>(
+		() => [
+			{
+				headerName: t('v1.resource'),
+				field: 'name',
+				cellRenderer: ResourceCell,
+				flex: 2,
+				minWidth: 220,
+			},
+			{
+				headerName: t('v1.stock'),
+				field: 'quantity',
+				cellRenderer: StockCell,
+				flex: 2,
+				minWidth: 230,
+				getQuickFilterText: () => '',
+			},
+			{
+				headerName: t('v1.demand'),
+				field: 'demand',
+				cellRenderer: DemandCell,
+				flex: 2,
+				minWidth: 200,
+				getQuickFilterText: () => '',
+				comparator: (_a, _b, nodeA, nodeB) => {
+					const a = nodeA.data!
+					const b = nodeB.data!
+					const aReq = a.demand > 0 ? a.demand : a.maxCapacity
+					const bReq = b.demand > 0 ? b.demand : b.maxCapacity
+					return a.quantity / aReq - b.quantity / bReq
+				},
+			},
+			{
+				headerName: t('v1.production'),
+				field: 'productionNeed',
+				cellRenderer: ProductionCell,
+				flex: 1,
+				minWidth: 160,
+				getQuickFilterText: () => '',
+			},
+			{
+				headerName: t('v1.actions'),
+				cellRenderer: ActionsCell,
+				cellRendererParams: { stockId: stock?.id ?? '' },
+				headerClass: '[&_.ag-header-cell-label]:justify-end',
+				sortable: false,
+				suppressHeaderMenuButton: true,
+				flex: 1.5,
+				minWidth: 180,
+				getQuickFilterText: () => '',
+			},
+		],
+		[t, stock?.id],
+	)
 
-      let aVal = a[sortKey]
-      let bVal = b[sortKey]
+	const filteredItems = useMemo(() => {
+		if (!stock?.items) return []
+		if (!search.trim()) return stock.items
+		
+		const searchChars = search.toLowerCase().replace(/\s+/g, '').split('')
+		return stock.items.filter(item => {
+			const name = item.name.toLowerCase()
+			let searchIdx = 0
+			for (let i = 0; i < name.length; i++) {
+				if (name[i] === searchChars[searchIdx]) {
+					searchIdx++
+					if (searchIdx === searchChars.length) return true
+				}
+			}
+			return false
+		})
+	}, [stock?.items, search])
 
-      if (typeof aVal === 'string' && typeof bVal === 'string') {
-        return sortOrder === 'asc' ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal)
-      }
+	if (!stock) {
+		return (
+			<div className="text-center py-20 text-muted-foreground">
+				{t('stock.not_found')}
+			</div>
+		)
+	}
 
-      if (aVal < bVal) return sortOrder === 'asc' ? -1 : 1
-      if (aVal > bVal) return sortOrder === 'asc' ? 1 : -1
-      return 0
-    })
-  }, [items, search, sortKey, sortOrder])
+	return (
+		<div className="flex flex-col space-y-4" style={{ height: 'calc(100vh - 130px)' }}>
+			<div className="flex items-center justify-between shrink-0">
+				<div>
+					<h2 className="text-2xl font-bold">{stock.name}</h2>
+					<p className="text-muted-foreground">
+						{stock.city} • {stock.type} • {stock.items.length} {t('stock.items')}
+					</p>
+				</div>
+				<Button variant="outline" onClick={() => setColorEnabled(prev => !prev)}>
+					{colorEnabled ? t('v1.colors.disable') : t('v1.colors.enable')}
+				</Button>
+			</div>
 
-  const SortIcon = ({ column }: { column: SortKey }) => {
-    if (sortKey !== column) return <Icons.IconSelector className="w-4 h-4 inline-block ml-1 opacity-50" />
-    return sortOrder === 'asc' 
-      ? <Icons.IconChevronUp className="w-4 h-4 inline-block ml-1" />
-      : <Icons.IconChevronDown className="w-4 h-4 inline-block ml-1" />
-  }
+			<Input
+				placeholder={t('v1.search')}
+				value={search}
+				onChange={e => setSearch(e.target.value)}
+				className="max-w-md shrink-0"
+			/>
 
-  return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-bold">{stock.name}</h2>
-          <p className="text-muted-foreground">{stock.city} • {stock.type} • {stock.items.length} {t('stock.items')}</p>
-        </div>
-        <Button variant="outline" onClick={() => setColorEnabled(!colorEnabled)}>
-          {colorEnabled ? t('v1.colors.disable') : t('v1.colors.enable')}
-        </Button>
-      </div>
-
-      <Input 
-        placeholder={t('v1.search')}
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        className="max-w-md"
-      />
-
-      <div className="border rounded-md">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[200px] cursor-pointer hover:bg-muted/50 select-none" onClick={() => handleSort('name')}>
-                {t('v1.resource')} <SortIcon column="name" />
-              </TableHead>
-              <TableHead className="cursor-pointer hover:bg-muted/50 select-none" onClick={() => handleSort('quantity')}>
-                {t('v1.stock')} <SortIcon column="quantity" />
-              </TableHead>
-              <TableHead className="cursor-pointer hover:bg-muted/50 select-none" onClick={() => handleSort('demand')}>
-                {t('v1.demand')} <SortIcon column="demand" />
-              </TableHead>
-              <TableHead className="cursor-pointer hover:bg-muted/50 select-none" onClick={() => handleSort('productionNeed')}>
-                {t('v1.production')} <SortIcon column="productionNeed" />
-              </TableHead>
-              <TableHead className="text-right">{t('v1.actions')}</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {processedItems.map(item => {
-              const Icon = (Icons as any)[item.icon]
-              const stockPct = (item.quantity / item.maxCapacity) * 100
-              const demandPct = item.demand > 0 ? Math.min(100, (item.quantity / item.demand) * 100) : 100
-              
-              const req = item.demand > 0 ? item.demand : item.maxCapacity;
-              const ratio = Math.max(0, Math.min(1, item.quantity / req));
-              const hue = ratio * 120; // 0 (Red) to 120 (Green)
-              const rowStyle = colorEnabled ? { backgroundColor: `hsla(${hue}, 70%, 50%, 0.1)` } : undefined;
-
-              return (
-                <TableRow key={item.id} style={rowStyle}>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <div className="p-2 border rounded-md bg-muted/50">
-                        {Icon && <Icon className="h-4 w-4" />}
-                      </div>
-                      <span className="font-medium">{item.name}</span>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="space-y-1.5 w-[200px]">
-                      <div className="flex justify-between text-xs">
-                        <span>{item.quantity} / {item.maxCapacity}</span>
-                        <span className="text-muted-foreground">{stockPct.toFixed(0)}%</span>
-                      </div>
-                      <Progress value={stockPct} className="h-2" />
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="space-y-1.5 w-[150px]">
-                      <div className="flex justify-between text-xs">
-                        <span>{item.demand} {t('v1.required')}</span>
-                        <span className={demandPct >= 100 ? "text-green-500" : "text-amber-500"}>
-                          {demandPct.toFixed(0)}%
-                        </span>
-                      </div>
-                      <Progress value={demandPct} className="h-2" />
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <span className="font-semibold">{item.productionNeed > 0 ? `+${item.productionNeed}` : '-'}</span>
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex justify-end">
-                      <ItemActionsDialog item={item} stockId={stock.id} />
-                    </div>
-                  </TableCell>
-                </TableRow>
-              )
-            })}
-          </TableBody>
-        </Table>
-      </div>
-    </div>
-  )
+			<div className="flex-1 min-h-0">
+				<AgGridReact<InventoryItem>
+					ref={gridRef}
+					modules={[AllCommunityModule]}
+					theme={agTheme}
+					rowData={filteredItems}
+					columnDefs={colDefs}
+					getRowStyle={getRowStyle}
+					rowHeight={60}
+					defaultColDef={{ sortable: true, resizable: false }}
+					suppressMovableColumns
+				/>
+			</div>
+		</div>
+	)
 }
