@@ -10,6 +10,7 @@ export const en = {
   "v1.required": "required",
   "v1.colors.disable": "Disable Colors",
   "v1.colors.enable": "Enable Colors",
+  "v1.all_items": "All Items",
   "nav.title": "Hermes Prototypes",
   "nav.select_stock": "Select a stock facility to view its inventory.",
   "stock.not_found": "Stock not found",

@@ -10,6 +10,7 @@ export const fr = {
   "v1.required": "requis",
   "v1.colors.disable": "Désactiver les couleurs",
   "v1.colors.enable": "Activer les couleurs",
+  "v1.all_items": "Tous les articles",
   "nav.title": "Prototypes Hermes",
   "nav.select_stock": "Sélectionnez une installation de stockage pour voir son inventaire.",
   "stock.not_found": "Stock introuvable",

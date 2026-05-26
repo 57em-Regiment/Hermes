@@ -10,7 +10,7 @@ export function ActionsCell({ data, stockId }: ActionsCellParams) {
   if (!data) return null
 
   return (
-    <div className="flex items-center h-full">
+    <div className="flex items-center justify-end h-full pr-4">
       <ItemActionsDialog item={data} stockId={stockId} />
     </div>
   )
