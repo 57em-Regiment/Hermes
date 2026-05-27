@@ -8,9 +8,9 @@ importers:
 
   .:
     dependencies:
-      '@57em-regiment/renenutet-api-contract':
-        specifier: ^0.1.1
-        version: 0.1.1(@types/node@24.12.4)(zod@4.4.3)
+      '@57eme-regiment/renenutet-api-contract':
+        specifier: ^0.2.0
+        version: 0.2.0(@types/node@24.12.4)(zod@4.4.3)
       '@base-ui/react':
         specifier: ^1.5.0
         version: 1.5.0(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
@@ -59,6 +59,9 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
+      dotenv:
+        specifier: ^17.4.2
+        version: 17.4.2
       framer-motion:
         specifier: ^12.40.0
         version: 12.40.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
@@ -150,8 +153,8 @@ importers:
 
 packages:
 
-  '@57em-regiment/renenutet-api-contract@0.1.1':
-    resolution: {integrity: sha512-NhKcEdWCesga8Vo/TYMrAYTJu//H0SOACbBgezik1av20F4G0TN2nfHDb559ATQdLgwI6VAaq+5x6haZnOfe5Q==, tarball: https://npm.pkg.github.com/download/@57em-regiment/renenutet-api-contract/0.1.1/31d289c6bf8f8f55e49418d35ede910e15fb0809}
+  '@57eme-regiment/renenutet-api-contract@0.2.0':
+    resolution: {integrity: sha512-EKe+3RpnCukmRFq8cQLfsBSNVJ+2xHqggxGzrScsEfOIlLGZIwwsOo+G9JmdJtmrDOoLdhrAqz/PhBgOhlCUgw==, tarball: https://npm.pkg.github.com/download/@57eme-Regiment/renenutet-api-contract/0.2.0/583fd457b0cf69e3b9f43012c733cccc066ffd40}
     peerDependencies:
       zod: '>=3'
 
@@ -2919,7 +2922,7 @@ packages:
 
 snapshots:
 
-  '@57em-regiment/renenutet-api-contract@0.1.1(@types/node@24.12.4)(zod@4.4.3)':
+  '@57eme-regiment/renenutet-api-contract@0.2.0(@types/node@24.12.4)(zod@4.4.3)':
     dependencies:
       '@ts-rest/core': 3.53.0-rc.1(@types/node@24.12.4)
       zod: 4.4.3

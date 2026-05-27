@@ -3,11 +3,13 @@ import { TanStackRouterDevtools } from '@tanstack/router-devtools'
 import { ThemeProvider } from '@/components/theme-provider'
 import { LanguageProvider } from '@/components/language-provider'
 import { Header } from '@/components/layout/Header'
+import { DataLoader } from '@/components/DataLoader'
 
 export const Route = createRootRoute({
 	component: () => (
 		<ThemeProvider defaultTheme="dark" storageKey="hermes-theme">
 			<LanguageProvider>
+				<DataLoader />
 				<div className="min-h-screen bg-background text-foreground flex flex-col">
 					<Header />
 					<main className="flex-1 container mx-auto px-8 py-6">

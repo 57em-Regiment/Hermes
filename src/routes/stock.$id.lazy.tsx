@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createLazyFileRoute } from '@tanstack/react-router'
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react'
 import { AgGridReact } from 'ag-grid-react'
@@ -28,7 +29,8 @@ function StockView() {
 	const { id } = Route.useParams()
 	const { t } = useLanguage()
 	const { theme } = useTheme()
-	const stock = useInventoryStore(state => state.stocks.find(s => s.id === id))
+	const stock = useInventoryStore((state) => state.stocks.find((s) => s.id === id))
+	const isLoaded = useInventoryStore((state) => state.isLoaded)
 	const gridRef = useRef<AgGridReact<InventoryItem>>(null)
 
 	const [search, setSearch] = useState('')
@@ -124,9 +126,9 @@ function StockView() {
 	const filteredItems = useMemo(() => {
 		if (!stock?.items) return []
 		if (!search.trim()) return stock.items
-		
+
 		const searchChars = search.toLowerCase().replace(/\s+/g, '').split('')
-		return stock.items.filter(item => {
+		return stock.items.filter((item) => {
 			const name = item.name.toLowerCase()
 			let searchIdx = 0
 			for (let i = 0; i < name.length; i++) {
@@ -137,7 +139,17 @@ function StockView() {
 			}
 			return false
 		})
-	}, [stock?.items, search])
+	}, [stock, search])
+
+	if (!isLoaded) {
+		return (
+			<div className="flex flex-col space-y-4" style={{ height: 'calc(100vh - 130px)' }}>
+				<div className="h-10 w-64 rounded bg-muted animate-pulse shrink-0" />
+				<div className="h-6 w-48 rounded bg-muted animate-pulse shrink-0" />
+				<div className="flex-1 rounded-lg bg-muted animate-pulse" />
+			</div>
+		)
+	}
 
 	if (!stock) {
 		return (
@@ -156,7 +168,7 @@ function StockView() {
 						{stock.city} • {stock.type} • {stock.items.length} {t('stock.items')}
 					</p>
 				</div>
-				<Button variant="outline" onClick={() => setColorEnabled(prev => !prev)}>
+				<Button variant="outline" onClick={() => setColorEnabled((prev) => !prev)}>
 					{colorEnabled ? t('v1.colors.disable') : t('v1.colors.enable')}
 				</Button>
 			</div>
@@ -164,7 +176,7 @@ function StockView() {
 			<Input
 				placeholder={t('v1.search')}
 				value={search}
-				onChange={e => setSearch(e.target.value)}
+				onChange={(e) => setSearch(e.target.value)}
 				className="max-w-md shrink-0"
 			/>
 
