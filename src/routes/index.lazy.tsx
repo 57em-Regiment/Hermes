@@ -8,6 +8,7 @@ import { useLanguage } from '@/components/language-provider';
 import { useTheme } from '@/components/theme-provider';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { InventoryDialog } from '@/features/inventory/InventoryDialog';
 import { useInventoryStore } from '@/store/inventory';
 import type { InventoryItem } from '@/types/inventory';
 import { createLazyFileRoute } from '@tanstack/react-router';
@@ -28,9 +29,9 @@ export const Route = createLazyFileRoute('/')({
 function Index() {
   const { t } = useLanguage();
   const { theme } = useTheme();
-  const stocks = useInventoryStore((state) => state.stocks);
-  const isLoaded = useInventoryStore((state) => state.isLoaded);
-  const error = useInventoryStore((state) => state.error);
+  const stocks = useInventoryStore(state => state.stocks);
+  const isLoaded = useInventoryStore(state => state.isLoaded);
+  const error = useInventoryStore(state => state.error);
   const gridRef = useRef<AgGridReact<InventoryItem>>(null);
 
   const [search, setSearch] = useState('');
@@ -119,15 +120,15 @@ function Index() {
 
   const megaItems = useMemo(() => {
     const result: Map<string, InventoryItem> = new Map();
-    stocks.forEach((stock) => {
-      stock.items.forEach((item) => {
+    stocks.forEach(stock => {
+      stock.items.forEach(item => {
         if (result.has(item.id)) {
           result.set(item.id, {
             ...item,
             quantity: result.get(item.id)!.quantity + item.quantity,
-          })
+          });
         } else {
-          result.set(item.id, { ...item })
+          result.set(item.id, { ...item });
         }
       });
     });
@@ -138,7 +139,7 @@ function Index() {
     if (!search.trim()) return megaItems;
 
     const searchChars = search.toLowerCase().replace(/\s+/g, '').split('');
-    return megaItems.filter((item) => {
+    return megaItems.filter(item => {
       const textToSearch = item.name.toLowerCase();
       let searchIdx = 0;
       for (let i = 0; i < textToSearch.length; i++) {
@@ -153,9 +154,16 @@ function Index() {
 
   return (
     <div className="flex flex-col space-y-8 pb-8 min-h-[calc(100vh-80px)]">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">{t('nav.title')}</h1>
-        <p className="text-muted-foreground mt-2">{t('nav.select_stock')}</p>
+      <div className="flex">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">
+            {t('nav.title')}
+          </h1>
+          <p className="text-muted-foreground mt-2">{t('nav.select_stock')}</p>
+        </div>
+        <div className="flex">
+          <InventoryDialog />
+        </div>
       </div>
 
       {error && (
@@ -166,7 +174,7 @@ function Index() {
 
       {!isLoaded ? (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 shrink-0">
-          {[0, 1, 2, 3].map((i) => (
+          {[0, 1, 2, 3].map(i => (
             <div key={i} className="h-32 rounded-lg bg-muted animate-pulse" />
           ))}
         </div>
@@ -187,7 +195,7 @@ function Index() {
           </h2>
           <Button
             variant="outline"
-            onClick={() => setColorEnabled((prev) => !prev)}>
+            onClick={() => setColorEnabled(prev => !prev)}>
             {colorEnabled ? t('v1.colors.disable') : t('v1.colors.enable')}
           </Button>
         </div>
@@ -195,7 +203,7 @@ function Index() {
         <Input
           placeholder={t('v1.search') + '...'}
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={e => setSearch(e.target.value)}
           className="max-w-md shrink-0"
         />
 
