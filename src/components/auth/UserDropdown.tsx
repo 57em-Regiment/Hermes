@@ -19,7 +19,7 @@ export function UserDropdown() {
 
   const logout = useMutation({
     mutationFn: () => authClient.signOut(),
-    onSuccess: () => navigate({ to: '/login' }),
+    onSuccess: () => navigate({ to: '/unauthenticated' }),
   });
 
   return (

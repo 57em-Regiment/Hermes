@@ -1,8 +1,13 @@
 /* eslint-disable react-refresh/only-export-components */
+import { authClient } from '@/lib/auth';
 import { IconLockQuestion } from '@tabler/icons-react';
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, redirect } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/unauthenticated')({
+  beforeLoad: async () => {
+    const session = await authClient.getSession();
+    if (session.data?.session) throw redirect({ to: '/' });
+  },
   component: ForbiddenPage,
 });
 

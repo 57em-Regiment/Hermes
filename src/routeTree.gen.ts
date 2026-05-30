@@ -11,7 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as UnauthenticatedRouteImport } from './routes/unauthenticated'
 import { Route as ForbiddenRouteImport } from './routes/forbidden'
-import { Route as IndexRouteImport } from './routes/index.'
+import { Route as IndexRouteImport } from './routes/index'
 import { Route as StockIdRouteImport } from './routes/stock.$id'
 
 const UnauthenticatedRoute = UnauthenticatedRouteImport.update({
