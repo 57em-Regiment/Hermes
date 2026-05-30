@@ -4,7 +4,9 @@ import { initClient } from '@ts-rest/core';
 
 export const inventoryApi = initClient(contract, {
   baseUrl: import.meta.env.VITE_RENENUTET_SERVICE_URL,
+  credentials: 'include',
 });
 export const stockApi = initClient(stockContract, {
   baseUrl: import.meta.env.VITE_RENENUTET_SERVICE_URL,
+  credentials: 'include',
 });

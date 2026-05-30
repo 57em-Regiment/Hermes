@@ -9,11 +9,11 @@ importers:
   .:
     dependencies:
       '@57eme-regiment/auth-browser':
-        specifier: ^1.3.1
-        version: 1.3.1(@types/node@24.12.4)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+        specifier: ^1.4.0
+        version: 1.4.0(@types/node@24.12.4)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@57eme-regiment/auth-contracts':
-        specifier: ^1.3.0
-        version: 1.3.0(@types/node@24.12.4)
+        specifier: ^1.5.0
+        version: 1.5.0(@types/node@24.12.4)
       '@57eme-regiment/renenutet-api-contract':
         specifier: ^0.3.2
         version: 0.3.2(@types/node@24.12.4)(zod@4.4.3)
@@ -177,16 +177,13 @@ importers:
 
 packages:
 
-  '@57eme-regiment/auth-browser@1.3.1':
-    resolution: {integrity: sha512-z98M85d/32N9KexuRt+XrfO2wRFru1XCd7PW84VeuqOipUW7sobtw5DLwVxhofzZgaxWKgVS8OEvquA0P6HjoQ==, tarball: https://npm.pkg.github.com/download/@57eme-regiment/auth-browser/1.3.1/d7064bfc4ccd5b66e447d850253fc4baece3471c}
+  '@57eme-regiment/auth-browser@1.4.0':
+    resolution: {integrity: sha512-rqa9jAz6IU8ceED9A4qrr+1dBIDsU3aUYpyalWFaoQbbGMGyoeRAfR82XM1l9yNrGPbJpVFGG8PXQ7svFz+4bA==, tarball: https://npm.pkg.github.com/download/@57eme-regiment/auth-browser/1.4.0/7ce2458d98783863a22510488865c156ff5905d8}
     peerDependencies:
       react: '>=18'
 
-  '@57eme-regiment/auth-contracts@1.3.0':
-    resolution: {integrity: sha512-MfxEcWRMQWxOaQ/H0TKEnBAv3ZVONv+lsB/T05WHqYdLm5/jsttGAasGxbhz0VRQJUFmZG1rJAAgOwuAgjZzow==, tarball: https://npm.pkg.github.com/download/@57eme-regiment/auth-contracts/1.3.0/be155a98371dd15ccc768e229c6a1ebbdc2e8290}
-
-  '@57eme-regiment/auth-contracts@1.4.0':
-    resolution: {integrity: sha512-/MLSaAyNLwo2C0R2ugh8Wir04K5HC6LnD+uACu5iC9N6C9375+eS1Gj766ePFiNvy7atQ19zBt92mmPOtk+Cug==, tarball: https://npm.pkg.github.com/download/@57eme-regiment/auth-contracts/1.4.0/4ea012c0e21342414d92d4f64999a0b4b4e200f2}
+  '@57eme-regiment/auth-contracts@1.5.0':
+    resolution: {integrity: sha512-CCz9OZ8F3AAzyMmYVS1q38HaiMsRtwIzBAn9yONJMr+F/AAiT+sL1mRFIkP4oWO+6grthTF2AJfVy22+B42eEg==, tarball: https://npm.pkg.github.com/download/@57eme-regiment/auth-contracts/1.5.0/99e39a228483601e2b3c2ccfd4a816b97081392f}
 
   '@57eme-regiment/renenutet-api-contract@0.3.2':
     resolution: {integrity: sha512-4oU0S1t9D4DsdKu3QJSO6Qfv+ci0w4XyvWKqfcodgpNadAW9Iy6AZtgojVt8H+Bs+1yx2glOpMhwr0oB167Uig==, tarball: https://npm.pkg.github.com/download/@57eme-Regiment/renenutet-api-contract/0.3.2/babab422be323fa2e02a5708964966619f7ee489}
@@ -3001,9 +2998,9 @@ packages:
 
 snapshots:
 
-  '@57eme-regiment/auth-browser@1.3.1(@types/node@24.12.4)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)':
+  '@57eme-regiment/auth-browser@1.4.0(@types/node@24.12.4)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)':
     dependencies:
-      '@57eme-regiment/auth-contracts': 1.4.0(@types/node@24.12.4)
+      '@57eme-regiment/auth-contracts': 1.5.0(@types/node@24.12.4)
       better-auth: 1.6.11(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       react: 19.2.6
     transitivePeerDependencies:
@@ -3029,14 +3026,7 @@ snapshots:
       - vitest
       - vue
 
-  '@57eme-regiment/auth-contracts@1.3.0(@types/node@24.12.4)':
-    dependencies:
-      '@ts-rest/core': 3.53.0-rc.1(@types/node@24.12.4)
-      zod: 4.4.3
-    transitivePeerDependencies:
-      - '@types/node'
-
-  '@57eme-regiment/auth-contracts@1.4.0(@types/node@24.12.4)':
+  '@57eme-regiment/auth-contracts@1.5.0(@types/node@24.12.4)':
     dependencies:
       '@ts-rest/core': 3.53.0-rc.1(@types/node@24.12.4)
       zod: 4.4.3

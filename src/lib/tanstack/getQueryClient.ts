@@ -3,6 +3,7 @@ import {
   defaultShouldDehydrateQuery,
   environmentManager,
 } from '@tanstack/react-query';
+import { HttpError } from '@/lib/http-error';
 
 const makeQueryClient = () => {
   return new QueryClient({
@@ -10,9 +11,11 @@ const makeQueryClient = () => {
       queries: {
         staleTime: 60 * 1000, //60 seconds
         gcTime: 10 * 60 * 1000, //10 minutes
-        retry: failureCount => {
-          if (failureCount >= 2) return false;
-          return true;
+        retry: (failureCount, error) => {
+          if (error instanceof HttpError && (error.status === 401 || error.status === 403)) {
+            return false;
+          }
+          return failureCount < 2;
         },
       },
       dehydrate: {

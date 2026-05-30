@@ -37,6 +37,7 @@ const routeApi = getRouteApi('/');
 
 export function InventoryDialog({ children }: InventoryDialog) {
   const userCanCreate = useHasPermission(PERMISSIONS.STOCK_INVENTORY_CREATE);
+  console.log('🚀 ~ InventoryDialog ~ userCanCreate:', userCanCreate);
   const [open, setOpen] = useState(false);
   const { handleSubmit, control, reset } = useForm<CreateInventory>({
     resolver: zodResolver(createInventorySchema),

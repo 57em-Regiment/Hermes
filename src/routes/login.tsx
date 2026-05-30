@@ -1,20 +1,21 @@
 /* eslint-disable react-refresh/only-export-components */
-import { authClient } from '@/lib/auth';
-import { createFileRoute, redirect } from '@tanstack/react-router';
-import { IconLogin } from '@tabler/icons-react';
 import { Button } from '@/components/ui/button';
+import { authClient } from '@/lib/auth';
+import { IconLogin } from '@tabler/icons-react';
+import { createFileRoute, redirect } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/login')({
   beforeLoad: async () => {
     const session = await authClient.getSession();
-    if (session) throw redirect({ to: '/' });
+
+    if (session.data?.session) throw redirect({ to: '/' });
   },
   component: LoginPage,
 });
 
 function LoginPage() {
   const handleLogin = () => {
-    authClient.signIn.social({ provider: 'wanshitong', callbackURL: '/' });
+    authClient.signIn.social({ provider: 'discord', callbackURL: 'http://hermes.57regiment.local:5173' });
   };
 
   return (
