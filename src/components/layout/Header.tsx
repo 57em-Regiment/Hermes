@@ -1,7 +1,9 @@
-import { Link } from '@tanstack/react-router'
-import { ThemeToggle } from '@/components/theme-toggle'
+import { UserDropdown } from '@/components/auth/UserDropdown'
 import { LanguageToggle } from '@/components/language-toggle'
+import { ThemeToggle } from '@/components/theme-toggle'
+import { Link } from '@tanstack/react-router'
 import { useLanguage } from '@/components/language-provider'
+import { AuthButton } from '../auth/authButton'
 
 export function Header() {
   const { t } = useLanguage()
@@ -15,6 +17,7 @@ export function Header() {
         <div className="flex items-center gap-4">
           <LanguageToggle />
           <ThemeToggle />
+          <AuthButton />
         </div>
       </div>
     </header>

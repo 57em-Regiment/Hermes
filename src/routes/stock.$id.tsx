@@ -7,7 +7,7 @@ import { createFileRoute, notFound, redirect } from '@tanstack/react-router';
 export const Route = createFileRoute('/stock/$id')({
   beforeLoad: async () => {
     const session = await authClient.getSession();
-    if (!session) throw redirect({ to: '/login' });
+    if (!session) throw redirect({ to: '/unauthenticated' });
 
     const access = await accessClient.getMyAccess();
     if (!accessClient.hasPermission(access, PERMISSIONS.STOCK_INVENTORY_READ)) {

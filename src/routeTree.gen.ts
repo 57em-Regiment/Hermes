@@ -9,14 +9,14 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as LoginRouteImport } from './routes/login'
+import { Route as UnauthenticatedRouteImport } from './routes/unauthenticated'
 import { Route as ForbiddenRouteImport } from './routes/forbidden'
 import { Route as IndexRouteImport } from './routes/index.'
 import { Route as StockIdRouteImport } from './routes/stock.$id'
 
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
+const UnauthenticatedRoute = UnauthenticatedRouteImport.update({
+  id: '/unauthenticated',
+  path: '/unauthenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ForbiddenRoute = ForbiddenRouteImport.update({
@@ -38,44 +38,44 @@ const StockIdRoute = StockIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/forbidden': typeof ForbiddenRoute
-  '/login': typeof LoginRoute
+  '/unauthenticated': typeof UnauthenticatedRoute
   '/stock/$id': typeof StockIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/forbidden': typeof ForbiddenRoute
-  '/login': typeof LoginRoute
+  '/unauthenticated': typeof UnauthenticatedRoute
   '/stock/$id': typeof StockIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/forbidden': typeof ForbiddenRoute
-  '/login': typeof LoginRoute
+  '/unauthenticated': typeof UnauthenticatedRoute
   '/stock/$id': typeof StockIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/forbidden' | '/login' | '/stock/$id'
+  fullPaths: '/' | '/forbidden' | '/unauthenticated' | '/stock/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/forbidden' | '/login' | '/stock/$id'
-  id: '__root__' | '/' | '/forbidden' | '/login' | '/stock/$id'
+  to: '/' | '/forbidden' | '/unauthenticated' | '/stock/$id'
+  id: '__root__' | '/' | '/forbidden' | '/unauthenticated' | '/stock/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ForbiddenRoute: typeof ForbiddenRoute
-  LoginRoute: typeof LoginRoute
+  UnauthenticatedRoute: typeof UnauthenticatedRoute
   StockIdRoute: typeof StockIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
+    '/unauthenticated': {
+      id: '/unauthenticated'
+      path: '/unauthenticated'
+      fullPath: '/unauthenticated'
+      preLoaderRoute: typeof UnauthenticatedRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/forbidden': {
@@ -105,7 +105,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ForbiddenRoute: ForbiddenRoute,
-  LoginRoute: LoginRoute,
+  UnauthenticatedRoute: UnauthenticatedRoute,
   StockIdRoute: StockIdRoute,
 }
 export const routeTree = rootRouteImport
