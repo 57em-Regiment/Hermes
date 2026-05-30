@@ -11,16 +11,28 @@
 import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as ForbiddenRouteImport } from './routes/forbidden'
+import { Route as StockIdRouteImport } from './routes/stock.$id'
 
 const IndexLazyRouteImport = createFileRoute('/')()
-const StockIdLazyRouteImport = createFileRoute('/stock/$id')()
 
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForbiddenRoute = ForbiddenRouteImport.update({
+  id: '/forbidden',
+  path: '/forbidden',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexLazyRoute = IndexLazyRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
-const StockIdLazyRoute = StockIdLazyRouteImport.update({
+const StockIdRoute = StockIdRouteImport.update({
   id: '/stock/$id',
   path: '/stock/$id',
   getParentRoute: () => rootRouteImport,
@@ -28,32 +40,54 @@ const StockIdLazyRoute = StockIdLazyRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
-  '/stock/$id': typeof StockIdLazyRoute
+  '/forbidden': typeof ForbiddenRoute
+  '/login': typeof LoginRoute
+  '/stock/$id': typeof StockIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
-  '/stock/$id': typeof StockIdLazyRoute
+  '/forbidden': typeof ForbiddenRoute
+  '/login': typeof LoginRoute
+  '/stock/$id': typeof StockIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexLazyRoute
-  '/stock/$id': typeof StockIdLazyRoute
+  '/forbidden': typeof ForbiddenRoute
+  '/login': typeof LoginRoute
+  '/stock/$id': typeof StockIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/stock/$id'
+  fullPaths: '/' | '/forbidden' | '/login' | '/stock/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/stock/$id'
-  id: '__root__' | '/' | '/stock/$id'
+  to: '/' | '/forbidden' | '/login' | '/stock/$id'
+  id: '__root__' | '/' | '/forbidden' | '/login' | '/stock/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
-  StockIdLazyRoute: typeof StockIdLazyRoute
+  ForbiddenRoute: typeof ForbiddenRoute
+  LoginRoute: typeof LoginRoute
+  StockIdRoute: typeof StockIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forbidden': {
+      id: '/forbidden'
+      path: '/forbidden'
+      fullPath: '/forbidden'
+      preLoaderRoute: typeof ForbiddenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -65,7 +99,7 @@ declare module '@tanstack/react-router' {
       id: '/stock/$id'
       path: '/stock/$id'
       fullPath: '/stock/$id'
-      preLoaderRoute: typeof StockIdLazyRouteImport
+      preLoaderRoute: typeof StockIdRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -73,7 +107,9 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
-  StockIdLazyRoute: StockIdLazyRoute,
+  ForbiddenRoute: ForbiddenRoute,
+  LoginRoute: LoginRoute,
+  StockIdRoute: StockIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
