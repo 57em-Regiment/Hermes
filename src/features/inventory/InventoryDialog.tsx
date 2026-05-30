@@ -18,6 +18,8 @@ import {
 } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { inventoryApi } from '@/lib/api-client';
+import { useHasPermission } from '@57eme-regiment/auth-browser';
+import { PERMISSIONS } from '@57eme-regiment/auth-contracts';
 import {
   createInventorySchema,
   type CreateInventory,
@@ -34,6 +36,7 @@ type InventoryDialog = PropsWithChildren;
 const routeApi = getRouteApi('/');
 
 export function InventoryDialog({ children }: InventoryDialog) {
+  const userCanCreate = useHasPermission(PERMISSIONS.STOCK_INVENTORY_CREATE);
   const [open, setOpen] = useState(false);
   const { handleSubmit, control, reset } = useForm<CreateInventory>({
     resolver: zodResolver(createInventorySchema),
@@ -76,92 +79,93 @@ export function InventoryDialog({ children }: InventoryDialog) {
     await mutateAsync(formValues);
   };
 
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogTrigger onClick={() => setOpen(true)}>
-        {children ? children : <Button>Add Inventory</Button>}
-      </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Create Inventory</DialogTitle>
-        </DialogHeader>
+  if (userCanCreate)
+    return (
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogTrigger onClick={() => setOpen(true)}>
+          {children ? children : <Button>Add Inventory</Button>}
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Create Inventory</DialogTitle>
+          </DialogHeader>
 
-        <form id="createInventoryForm" onSubmit={handleSubmit(onSubmit)}>
-          <FieldGroup>
-            <h1>Inventory Defenition</h1>
-            <Controller
-              control={control}
-              name="ownerId"
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel>Owner</FieldLabel>
-                  <Input disabled {...field} value="Dercraker" />
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
-            <Controller
-              control={control}
-              name="name"
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel>Name</FieldLabel>
-                  <Input
-                    {...field}
-                    placeholder="New inventory name like : 57ème - 4"
-                  />
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
-            <Controller
-              control={control}
-              name="accessCode"
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel>Acces code</FieldLabel>
-                  <Input {...field} placeholder="Code like: 123456" />
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                  <FieldDescription>
-                    Code to unlock storage pickup
-                  </FieldDescription>
-                </Field>
-              )}
-            />
-          </FieldGroup>
-          <FieldSeparator />
-          <FieldGroup>
-            <Controller //TODO: A voir comment on fait selectionner le locaiton. Je penssais a un autocomplete en mode googlemaps
-              control={control}
-              name="locationId"
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel>location</FieldLabel>
-                  <Input {...field} placeholder="Code like: 123456" />
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
-          </FieldGroup>
-        </form>
+          <form id="createInventoryForm" onSubmit={handleSubmit(onSubmit)}>
+            <FieldGroup>
+              <h1>Inventory Defenition</h1>
+              <Controller
+                control={control}
+                name="ownerId"
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel>Owner</FieldLabel>
+                    <Input disabled {...field} value="Dercraker" />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+              <Controller
+                control={control}
+                name="name"
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel>Name</FieldLabel>
+                    <Input
+                      {...field}
+                      placeholder="New inventory name like : 57ème - 4"
+                    />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+              <Controller
+                control={control}
+                name="accessCode"
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel>Acces code</FieldLabel>
+                    <Input {...field} placeholder="Code like: 123456" />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                    <FieldDescription>
+                      Code to unlock storage pickup
+                    </FieldDescription>
+                  </Field>
+                )}
+              />
+            </FieldGroup>
+            <FieldSeparator />
+            <FieldGroup>
+              <Controller //TODO: A voir comment on fait selectionner le locaiton. Je penssais a un autocomplete en mode googlemaps
+                control={control}
+                name="locationId"
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel>location</FieldLabel>
+                    <Input {...field} placeholder="Code like: 123456" />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+            </FieldGroup>
+          </form>
 
-        <DialogFooter>
-          <DialogClose>
-            <Button variant="destructive">Cancel</Button>
-          </DialogClose>
-          <Button type="submit" form="createInventoryForm">
-            Add Inventory
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
+          <DialogFooter>
+            <DialogClose>
+              <Button variant="destructive">Cancel</Button>
+            </DialogClose>
+            <Button type="submit" form="createInventoryForm">
+              Add Inventory
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    );
 }

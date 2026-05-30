@@ -32,7 +32,6 @@ function StockView() {
   const { t } = useLanguage();
   const { theme } = useTheme();
   const stock = useInventoryStore(state => state.stocks.find(s => s.id === id));
-  const isLoaded = useInventoryStore(state => state.isLoaded);
   const gridRef = useRef<AgGridReact<InventoryItem>>(null);
 
   const [search, setSearch] = useState('');
@@ -144,25 +143,7 @@ function StockView() {
     });
   }, [stock, search]);
 
-  if (!isLoaded) {
-    return (
-      <div
-        className="flex flex-col space-y-4"
-        style={{ height: 'calc(100vh - 130px)' }}>
-        <div className="h-10 w-64 rounded bg-muted animate-pulse shrink-0" />
-        <div className="h-6 w-48 rounded bg-muted animate-pulse shrink-0" />
-        <div className="flex-1 rounded-lg bg-muted animate-pulse" />
-      </div>
-    );
-  }
-
-  if (!stock) {
-    return (
-      <div className="text-center py-20 text-muted-foreground">
-        {t('stock.not_found')}
-      </div>
-    );
-  }
+  if (!stock) return null;
 
   return (
     <div
