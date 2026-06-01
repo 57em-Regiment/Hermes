@@ -4,7 +4,7 @@ import { useInventoryStore } from '@/store/inventory';
 import { PERMISSIONS } from '@57eme-regiment/auth-contracts';
 import { createFileRoute, notFound, redirect } from '@tanstack/react-router';
 
-export const Route = createFileRoute('/stock/$id')({
+export const Route = createFileRoute('/_authenticated/inventory/$id')({
   beforeLoad: async () => {
     const session = await authClient.getSession();
     if (!session) throw redirect({ to: '/unauthenticated' });

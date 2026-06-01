@@ -11,8 +11,9 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as UnauthenticatedRouteImport } from './routes/unauthenticated'
 import { Route as ForbiddenRouteImport } from './routes/forbidden'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as StockIdRouteImport } from './routes/stock.$id'
+import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
+import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
+import { Route as AuthenticatedInventoryIdRouteImport } from './routes/_authenticated/inventory/$id'
 
 const UnauthenticatedRoute = UnauthenticatedRouteImport.update({
   id: '/unauthenticated',
@@ -24,49 +25,64 @@ const ForbiddenRoute = ForbiddenRouteImport.update({
   path: '/forbidden',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
+const AuthenticatedRoute = AuthenticatedRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
-const StockIdRoute = StockIdRouteImport.update({
-  id: '/stock/$id',
-  path: '/stock/$id',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/stock.$id.lazy').then((d) => d.Route))
+  getParentRoute: () => AuthenticatedRoute,
+} as any).lazy(() =>
+  import('./routes/_authenticated/index.lazy').then((d) => d.Route),
+)
+const AuthenticatedInventoryIdRoute =
+  AuthenticatedInventoryIdRouteImport.update({
+    id: '/inventory/$id',
+    path: '/inventory/$id',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any).lazy(() =>
+    import('./routes/_authenticated/inventory/$id.lazy').then((d) => d.Route),
+  )
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
+  '/': typeof AuthenticatedIndexRoute
   '/forbidden': typeof ForbiddenRoute
   '/unauthenticated': typeof UnauthenticatedRoute
-  '/stock/$id': typeof StockIdRoute
+  '/inventory/$id': typeof AuthenticatedInventoryIdRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
   '/forbidden': typeof ForbiddenRoute
   '/unauthenticated': typeof UnauthenticatedRoute
-  '/stock/$id': typeof StockIdRoute
+  '/': typeof AuthenticatedIndexRoute
+  '/inventory/$id': typeof AuthenticatedInventoryIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/forbidden': typeof ForbiddenRoute
   '/unauthenticated': typeof UnauthenticatedRoute
-  '/stock/$id': typeof StockIdRoute
+  '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/_authenticated/inventory/$id': typeof AuthenticatedInventoryIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/forbidden' | '/unauthenticated' | '/stock/$id'
+  fullPaths: '/' | '/forbidden' | '/unauthenticated' | '/inventory/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/forbidden' | '/unauthenticated' | '/stock/$id'
-  id: '__root__' | '/' | '/forbidden' | '/unauthenticated' | '/stock/$id'
+  to: '/forbidden' | '/unauthenticated' | '/' | '/inventory/$id'
+  id:
+    | '__root__'
+    | '/_authenticated'
+    | '/forbidden'
+    | '/unauthenticated'
+    | '/_authenticated/'
+    | '/_authenticated/inventory/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
+  AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   ForbiddenRoute: typeof ForbiddenRoute
   UnauthenticatedRoute: typeof UnauthenticatedRoute
-  StockIdRoute: typeof StockIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -85,28 +101,48 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ForbiddenRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+      preLoaderRoute: typeof AuthenticatedRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/stock/$id': {
-      id: '/stock/$id'
-      path: '/stock/$id'
-      fullPath: '/stock/$id'
-      preLoaderRoute: typeof StockIdRouteImport
-      parentRoute: typeof rootRouteImport
+    '/_authenticated/': {
+      id: '/_authenticated/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/inventory/$id': {
+      id: '/_authenticated/inventory/$id'
+      path: '/inventory/$id'
+      fullPath: '/inventory/$id'
+      preLoaderRoute: typeof AuthenticatedInventoryIdRouteImport
+      parentRoute: typeof AuthenticatedRoute
     }
   }
 }
 
+interface AuthenticatedRouteChildren {
+  AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
+  AuthenticatedInventoryIdRoute: typeof AuthenticatedInventoryIdRoute
+}
+
+const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedIndexRoute: AuthenticatedIndexRoute,
+  AuthenticatedInventoryIdRoute: AuthenticatedInventoryIdRoute,
+}
+
+const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
+  AuthenticatedRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
+  AuthenticatedRoute: AuthenticatedRouteWithChildren,
   ForbiddenRoute: ForbiddenRoute,
   UnauthenticatedRoute: UnauthenticatedRoute,
-  StockIdRoute: StockIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

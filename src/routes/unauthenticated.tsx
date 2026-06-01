@@ -1,4 +1,3 @@
-/* eslint-disable react-refresh/only-export-components */
 import { authClient } from '@/lib/auth';
 import { IconLockQuestion } from '@tabler/icons-react';
 import { createFileRoute, redirect } from '@tanstack/react-router';
