@@ -4,12 +4,13 @@ import { DemandCell } from '@/components/inventory/cells/DemandCell';
 import { ProductionCell } from '@/components/inventory/cells/ProductionCell';
 import { ResourceCell } from '@/components/inventory/cells/ResourceCell';
 import { StockCell } from '@/components/inventory/cells/StockCell';
+import { AddItemDialog } from '@/components/item/addNewItem';
 import { useLanguage } from '@/components/language-provider';
 import { useTheme } from '@/components/theme-provider';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { DeleteInventoryDialog } from '@/features/inventory/deleteInventory';
-import { useInventoryStore } from '@/store/inventory';
+import { useGetStockByInventoryId } from '@/hooks/useGetStockByInventoryId';
 import type { InventoryItem } from '@/types/inventory';
 import { IconTrashFilled } from '@tabler/icons-react';
 import { createLazyFileRoute } from '@tanstack/react-router';
@@ -31,7 +32,8 @@ function StockView() {
   const { id } = Route.useParams();
   const { t } = useLanguage();
   const { theme } = useTheme();
-  const stock = useInventoryStore(state => state.stocks.find(s => s.id === id));
+
+  const { data: stock } = useGetStockByInventoryId(id);
   const gridRef = useRef<AgGridReact<InventoryItem>>(null);
 
   const [search, setSearch] = useState('');
@@ -113,7 +115,7 @@ function StockView() {
       {
         headerName: t('v1.actions'),
         cellRenderer: ActionsCell,
-        cellRendererParams: { stockId: stock?.id ?? '' },
+        cellRendererParams: { stockId: stock?.item ?? '' },
         headerClass: '[&_.ag-header-cell-label]:justify-end',
         sortable: false,
         suppressHeaderMenuButton: true,
@@ -126,11 +128,11 @@ function StockView() {
   );
 
   const filteredItems = useMemo(() => {
-    if (!stock?.items) return [];
-    if (!search.trim()) return stock.items;
+    if (!stock) return [];
+    if (!search.trim()) return stock;
 
     const searchChars = search.toLowerCase().replace(/\s+/g, '').split('');
-    return stock.items.filter(item => {
+    return stock.filter(item => {
       const name = item.name.toLowerCase();
       let searchIdx = 0;
       for (let i = 0; i < name.length; i++) {
@@ -171,12 +173,16 @@ function StockView() {
         </div>
       </div>
 
-      <Input
-        placeholder={t('v1.search')}
-        value={search}
-        onChange={e => setSearch(e.target.value)}
-        className="max-w-md shrink-0"
-      />
+      <div className="flex">
+        <Input
+          placeholder={t('v1.search')}
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          className="max-w-md shrink-0"
+        />
+
+        <AddItemDialog className="ml-auto" />
+      </div>
 
       <div className="flex-1 min-h-0">
         <AgGridReact<InventoryItem>

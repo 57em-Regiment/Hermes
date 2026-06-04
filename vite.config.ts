@@ -18,6 +18,9 @@ export default defineConfig(({ mode }) => {
       host: '0.0.0.0',
       port: parseInt(env.PORT ?? '5173'),
       allowedHosts: env.ALLOWED_HOST ? [env.ALLOWED_HOST] : [],
+      watch: {
+        ignored: ['!**/node_modules/@57eme-regiment/**'],
+      },
     },
   };
 });

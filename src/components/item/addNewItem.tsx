@@ -3,6 +3,7 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -14,10 +15,11 @@ import {
   FieldError,
   FieldGroup,
   FieldLabel,
-  FieldSeparator,
 } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
+import { LINKS } from '@/features/navigation/links';
 import { inventoryApi } from '@/lib/api-client';
+import { cn } from '@/lib/utils';
 import { useHasPermission } from '@57eme-regiment/auth-browser';
 import { PERMISSIONS } from '@57eme-regiment/auth-contracts';
 import {
@@ -30,14 +32,16 @@ import { useNavigate } from '@tanstack/react-router';
 import { useState, type PropsWithChildren } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import { LINKS } from '../navigation/links';
 
-type InventoryDialog = PropsWithChildren;
+type AddItemDialog = PropsWithChildren<{
+  className?: string;
+}>;
 
-export function InventoryDialog({ children }: InventoryDialog) {
-  const userCanCreate = useHasPermission(PERMISSIONS.STOCK_INVENTORY_CREATE);
+export function AddItemDialog({ children, className }: AddItemDialog) {
+  const userCanCreate = useHasPermission(PERMISSIONS.STOCK_ITEM_READ); //TODO HERMES_ITEM_ADD
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+
   const { handleSubmit, control, reset } = useForm<CreateInventory>({
     resolver: zodResolver(createInventorySchema),
     defaultValues: {
@@ -78,17 +82,19 @@ export function InventoryDialog({ children }: InventoryDialog) {
   if (userCanCreate)
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogTrigger onClick={() => setOpen(true)}>
-          {children ? children : <Button>Add Inventory</Button>}
+        <DialogTrigger className={cn(className)} onClick={() => setOpen(true)}>
+          {children ? children : <Button>Add Item</Button>}
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Create Inventory</DialogTitle>
+            <DialogTitle>Add item</DialogTitle>
+            <DialogDescription>
+              Add items that are not already in the stock
+            </DialogDescription>
           </DialogHeader>
 
           <form id="createInventoryForm" onSubmit={handleSubmit(onSubmit)}>
             <FieldGroup>
-              <h1>Inventory Defenition</h1>
               <Controller
                 control={control}
                 name="ownerId"
@@ -96,22 +102,6 @@ export function InventoryDialog({ children }: InventoryDialog) {
                   <Field data-invalid={fieldState.invalid}>
                     <FieldLabel>Owner</FieldLabel>
                     <Input disabled {...field} value="Dercraker" />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
-              <Controller
-                control={control}
-                name="name"
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel>Name</FieldLabel>
-                    <Input
-                      {...field}
-                      placeholder="New inventory name like : 57ème - 4"
-                    />
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
                     )}
@@ -131,22 +121,6 @@ export function InventoryDialog({ children }: InventoryDialog) {
                     <FieldDescription>
                       Code to unlock storage pickup
                     </FieldDescription>
-                  </Field>
-                )}
-              />
-            </FieldGroup>
-            <FieldSeparator />
-            <FieldGroup>
-              <Controller //TODO: A voir comment on fait selectionner le locaiton. Je penssais a un autocomplete en mode googlemaps
-                control={control}
-                name="locationId"
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel>location</FieldLabel>
-                    <Input {...field} placeholder="Code like: 123456" />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
                   </Field>
                 )}
               />

@@ -1,8 +1,8 @@
 import { accessClient } from '@/lib/access';
 import { authClient } from '@/lib/auth';
-import { useInventoryStore } from '@/store/inventory';
+// import { useInventoryStore } from '@/store/inventory';
 import { PERMISSIONS } from '@57eme-regiment/auth-contracts';
-import { createFileRoute, notFound, redirect } from '@tanstack/react-router';
+import { createFileRoute, redirect } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/_authenticated/inventory/$id')({
   beforeLoad: async () => {
@@ -16,22 +16,20 @@ export const Route = createFileRoute('/_authenticated/inventory/$id')({
     return { access };
   },
   loader: async ({ params }) => {
-    if (!useInventoryStore.getState().isLoaded) {
-      await new Promise<void>(resolve => {
-        const unsub = useInventoryStore.subscribe(s => {
-          if (s.isLoaded) {
-            unsub();
-            resolve();
-          }
-        });
-      });
-    }
-
-    const stock = useInventoryStore
-      .getState()
-      .stocks.find(s => s.id === params.id);
-
-    if (!stock) throw notFound();
+    // if (!useInventoryStore.getState().isLoaded) {
+    //   await new Promise<void>(resolve => {
+    //     const unsub = useInventoryStore.subscribe(s => {
+    //       if (s.isLoaded) {
+    //         unsub();
+    //         resolve();
+    //       }
+    //     });
+    //   });
+    // }
+    // const stock = useInventoryStore
+    //   .getState()
+    //   .stocks.find(s => s.id === params.id);
+    // if (!stock) throw notFound();
   },
 
   pendingComponent: () => (

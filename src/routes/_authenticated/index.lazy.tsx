@@ -3,18 +3,16 @@ import { DemandCell } from '@/components/inventory/cells/DemandCell';
 import { ProductionCell } from '@/components/inventory/cells/ProductionCell';
 import { ResourceCell } from '@/components/inventory/cells/ResourceCell';
 import { StockCell } from '@/components/inventory/cells/StockCell';
-import { StockCard } from '@/components/inventory/StockCard';
+import { InventoryMenu } from '@/components/inventory/InventoryMenu';
 import { useLanguage } from '@/components/language-provider';
 import { useTheme } from '@/components/theme-provider';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { InventoryDialog } from '@/features/inventory/InventoryDialog';
-import { useInventoryStore } from '@/store/inventory';
 import type { InventoryItem } from '@/types/inventory';
 import { createLazyFileRoute } from '@tanstack/react-router';
 import type { ColDef, RowClassParams } from 'ag-grid-community';
 import {
-  AllCommunityModule,
   colorSchemeDark,
   colorSchemeLight,
   themeQuartz,
@@ -29,9 +27,6 @@ export const Route = createLazyFileRoute('/_authenticated/')({
 function Index() {
   const { t } = useLanguage();
   const { theme } = useTheme();
-  const stocks = useInventoryStore(state => state.stocks);
-  const isLoaded = useInventoryStore(state => state.isLoaded);
-  const error = useInventoryStore(state => state.error);
   const gridRef = useRef<AgGridReact<InventoryItem>>(null);
 
   const [search, setSearch] = useState('');
@@ -118,39 +113,39 @@ function Index() {
     [t],
   );
 
-  const megaItems = useMemo(() => {
-    const result: Map<string, InventoryItem> = new Map();
-    stocks.forEach(stock => {
-      stock.items.forEach(item => {
-        if (result.has(item.id)) {
-          result.set(item.id, {
-            ...item,
-            quantity: result.get(item.id)!.quantity + item.quantity,
-          });
-        } else {
-          result.set(item.id, { ...item });
-        }
-      });
-    });
-    return Array.from(result.values());
-  }, [stocks]);
+  // const megaItems = useMemo(() => {
+  //   const result: Map<string, InventoryItem> = new Map();
+  //   inventories?.forEach(inventory => {
+  //     inventory.items.forEach(item => {
+  //       if (result.has(item.id)) {
+  //         result.set(item.id, {
+  //           ...item,
+  //           quantity: result.get(item.id)!.quantity + item.quantity,
+  //         });
+  //       } else {
+  //         result.set(item.id, { ...item });
+  //       }
+  //     });
+  //   });
+  //   return Array.from(result.values());
+  // }, [inventories]);
 
-  const filteredItems = useMemo(() => {
-    if (!search.trim()) return megaItems;
+  // const filteredItems = useMemo(() => {
+  //   if (!search.trim()) return megaItems;
 
-    const searchChars = search.toLowerCase().replace(/\s+/g, '').split('');
-    return megaItems.filter(item => {
-      const textToSearch = item.name.toLowerCase();
-      let searchIdx = 0;
-      for (let i = 0; i < textToSearch.length; i++) {
-        if (textToSearch[i] === searchChars[searchIdx]) {
-          searchIdx++;
-          if (searchIdx === searchChars.length) return true;
-        }
-      }
-      return false;
-    });
-  }, [megaItems, search]);
+  //   const searchChars = search.toLowerCase().replace(/\s+/g, '').split('');
+  //   return megaItems.filter(item => {
+  //     const textToSearch = item.name.toLowerCase();
+  //     let searchIdx = 0;
+  //     for (let i = 0; i < textToSearch.length; i++) {
+  //       if (textToSearch[i] === searchChars[searchIdx]) {
+  //         searchIdx++;
+  //         if (searchIdx === searchChars.length) return true;
+  //       }
+  //     }
+  //     return false;
+  //   });
+  // }, [megaItems, search]);
 
   return (
     <div className="flex flex-col space-y-8 pb-8 min-h-[calc(100vh-80px)]">
@@ -166,25 +161,7 @@ function Index() {
         </div>
       </div>
 
-      {error && (
-        <div className="text-sm p-3 rounded-md bg-destructive/10 text-destructive border border-destructive/20">
-          {error}
-        </div>
-      )}
-
-      {!isLoaded ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 shrink-0">
-          {[0, 1, 2, 3].map(i => (
-            <div key={i} className="h-32 rounded-lg bg-muted animate-pulse" />
-          ))}
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 shrink-0">
-          {stocks.map((stock, i) => (
-            <StockCard key={stock.id} stock={stock} index={i} />
-          ))}
-        </div>
-      )}
+      <InventoryMenu />
 
       <div
         className="pt-4 border-t border-border flex flex-col space-y-4"
@@ -208,17 +185,18 @@ function Index() {
         />
 
         <div className="flex-1 min-h-0">
-          <AgGridReact<InventoryItem>
+          {/* <AgGridReact<InventoryItem>
             ref={gridRef}
             modules={[AllCommunityModule]}
             theme={agTheme}
-            rowData={isLoaded ? filteredItems : null}
+            rowData={isFetched ? inventor : null}
+            // rowData={isFetched ? filteredItems : null}
             columnDefs={colDefs}
             getRowStyle={getRowStyle}
             rowHeight={60}
             defaultColDef={{ sortable: true, resizable: false }}
             suppressMovableColumns
-          />
+          /> */}
         </div>
       </div>
     </div>

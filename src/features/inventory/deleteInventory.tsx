@@ -13,17 +13,18 @@ import {
 import { Button } from '@/components/ui/button';
 import { inventoryApi } from '@/lib/api-client';
 import { useMutation } from '@tanstack/react-query';
-import { getRouteApi } from '@tanstack/react-router';
+import { getRouteApi, useNavigate } from '@tanstack/react-router';
 import { Trash2Icon } from 'lucide-react';
 import { type PropsWithChildren } from 'react';
 import { toast } from 'sonner';
 
 type DeleteInventoryDialog = PropsWithChildren;
 
-const routeApi = getRouteApi('/stock/$id');
+const routeApi = getRouteApi('/_authenticated/inventory/$id');
 
 export function DeleteInventoryDialog({ children }: DeleteInventoryDialog) {
   const { id: stockId } = routeApi.useParams();
+  const navigate = useNavigate();
   const { mutateAsync } = useMutation({
     mutationFn: async () => {
       const res = await inventoryApi.inventory.delete({
@@ -38,10 +39,7 @@ export function DeleteInventoryDialog({ children }: DeleteInventoryDialog) {
     },
     onSuccess() {
       toast.warning('Inventory Deleted');
-      //TODO check pk le redirect ne fonctionne pas
-      routeApi.redirect({
-        to: `/`,
-      });
+      navigate({ to: '/' });
     },
   });
 

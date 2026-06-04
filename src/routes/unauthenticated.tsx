@@ -7,10 +7,10 @@ export const Route = createFileRoute('/unauthenticated')({
     const session = await authClient.getSession();
     if (session.data?.session) throw redirect({ to: '/' });
   },
-  component: ForbiddenPage,
+  component: UnauthenticatedPage,
 });
 
-function ForbiddenPage() {
+function UnauthenticatedPage() {
   return (
     <div className="flex flex-col items-center justify-center min-h-[calc(100vh-56px)]">
       <div className="flex flex-col items-center gap-4 text-center">
