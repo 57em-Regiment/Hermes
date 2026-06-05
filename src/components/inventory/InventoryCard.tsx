@@ -1,10 +1,11 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+// import {
+//   Card,
+//   CardContent,
+//   CardDescription,
+//   CardHeader,
+//   CardTitle,
+// } from '@/components/ui/card';
+import {Card} from "@57eme-regiment/nabu-ui"
 import { useInventoryDetailsQuery } from '@/features/inventory/useInventoryDetails.query';
 import { LINKS } from '@/features/navigation/links';
 import type { Stock } from '@/types/inventory';
