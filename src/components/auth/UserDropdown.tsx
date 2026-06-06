@@ -1,16 +1,18 @@
+import { authClient } from '@/lib/auth';
 import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { authClient } from '@/lib/auth';
+} from '@57eme-regiment/nabu-ui';
 import { IconHome, IconLoader2, IconLogout } from '@tabler/icons-react';
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
-import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 
 export function UserDropdown() {
   const session = authClient.useSession();

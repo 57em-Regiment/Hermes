@@ -10,7 +10,6 @@ export function useGetStockByInventoryId(inventoryId: string) {
       const res = await stockApi.getByInventory({
         params: {
           inventoryId,
-          itemId: '',
         },
       });
       if (res.status !== 200)

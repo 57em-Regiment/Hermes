@@ -9,8 +9,8 @@ import {
   AlertDialogMedia,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
-import { Button } from '@/components/ui/button';
+} from '@57eme-regiment/nabu-ui';
+import { Button } from '@57eme-regiment/nabu-ui';
 import { inventoryApi } from '@/lib/api-client';
 import { useMutation } from '@tanstack/react-query';
 import { getRouteApi, useNavigate } from '@tanstack/react-router';

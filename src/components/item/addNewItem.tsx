@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button';
+import { Button } from '@57eme-regiment/nabu-ui';
 import {
   Dialog,
   DialogClose,
@@ -8,15 +8,15 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
+} from '@57eme-regiment/nabu-ui';
 import {
   Field,
   FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
-} from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
+} from '@57eme-regiment/nabu-ui';
+import { Input } from '@57eme-regiment/nabu-ui';
 import { LINKS } from '@/features/navigation/links';
 import { inventoryApi } from '@/lib/api-client';
 import { cn } from '@/lib/utils';

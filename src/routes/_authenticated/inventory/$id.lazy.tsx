@@ -7,11 +7,10 @@ import { StockCell } from '@/components/inventory/cells/StockCell';
 import { AddItemDialog } from '@/components/item/addNewItem';
 import { useLanguage } from '@/components/language-provider';
 import { useTheme } from '@/components/theme-provider';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { DeleteInventoryDialog } from '@/features/inventory/deleteInventory';
 import { useGetStockByInventoryId } from '@/hooks/useGetStockByInventoryId';
 import type { InventoryItem } from '@/types/inventory';
+import { Button, Input } from '@57eme-regiment/nabu-ui';
 import { IconTrashFilled } from '@tabler/icons-react';
 import { createLazyFileRoute } from '@tanstack/react-router';
 import type { ColDef, RowClassParams } from 'ag-grid-community';
@@ -61,9 +60,9 @@ function StockView() {
   const getRowStyle = useCallback(
     ({ data }: RowClassParams<InventoryItem>) => {
       if (!colorEnabled || !data) return undefined;
-      const req = data.demand > 0 ? data.demand : data.maxCapacity;
-      const hue = Math.max(0, Math.min(1, data.quantity / req)) * 120;
-      return { backgroundColor: `hsla(${hue}, 70%, 50%, 0.1)` };
+      // const req = data.demand > 0 ? data.demand : data.maxCapacity;
+      // const hue = Math.max(0, Math.min(1, data.quantity / req)) * 120;
+      // return { backgroundColor: `hsla(${hue}, 70%, 50%, 0.1)` };
     },
     [colorEnabled],
   );
@@ -96,13 +95,13 @@ function StockView() {
         flex: 2,
         minWidth: 200,
         getQuickFilterText: () => '',
-        comparator: (_a, _b, nodeA, nodeB) => {
-          const a = nodeA.data!;
-          const b = nodeB.data!;
-          const aReq = a.demand > 0 ? a.demand : a.maxCapacity;
-          const bReq = b.demand > 0 ? b.demand : b.maxCapacity;
-          return a.quantity / aReq - b.quantity / bReq;
-        },
+        // comparator: (_a, _b, nodeA, nodeB) => {
+        // const a = nodeA.data!;
+        // const b = nodeB.data!;
+        // const aReq = a.demand > 0 ? a.demand : a.maxCapacity;
+        // const bReq = b.demand > 0 ? b.demand : b.maxCapacity;
+        // return a.quantity / aReq - b.quantity / bReq;
+        // },
       },
       {
         headerName: t('v1.production'),
@@ -131,18 +130,18 @@ function StockView() {
     if (!stock) return [];
     if (!search.trim()) return stock;
 
-    const searchChars = search.toLowerCase().replace(/\s+/g, '').split('');
-    return stock.filter(item => {
-      const name = item.name.toLowerCase();
-      let searchIdx = 0;
-      for (let i = 0; i < name.length; i++) {
-        if (name[i] === searchChars[searchIdx]) {
-          searchIdx++;
-          if (searchIdx === searchChars.length) return true;
-        }
-      }
-      return false;
-    });
+    // const searchChars = search.toLowerCase().replace(/\s+/g, '').split('');
+    // return stock.filter(item => {
+    //   const name = item.name.toLowerCase();
+    //   let searchIdx = 0;
+    //   for (let i = 0; i < name.length; i++) {
+    //     if (name[i] === searchChars[searchIdx]) {
+    //       searchIdx++;
+    //       if (searchIdx === searchChars.length) return true;
+    //     }
+    //   }
+    //   return false;
+    // });
   }, [stock, search]);
 
   if (!stock) return null;
@@ -155,7 +154,7 @@ function StockView() {
         <div>
           <h2 className="text-2xl font-bold">{stock.name}</h2>
           <p className="text-muted-foreground">
-            {stock.city} • {stock.type} • {stock.items.length}{' '}
+            {/* {stock.city} • {stock.type} • {stock.items.length}{' '} */}
             {t('stock.items')}
           </p>
         </div>

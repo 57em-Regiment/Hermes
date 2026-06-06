@@ -12,8 +12,8 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0(@types/node@24.12.4)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@57eme-regiment/auth-contracts':
-        specifier: ^1.5.0
-        version: 1.5.0(@types/node@24.12.4)
+        specifier: link:../wan-shi-tong/packages/auth-contracts
+        version: link:../wan-shi-tong/packages/auth-contracts
       '@57eme-regiment/nabu-frontend-utils':
         specifier: link:../Hermes/nabu/packages/frontend-utils
         version: link:nabu/packages/frontend-utils
@@ -21,7 +21,7 @@ importers:
         specifier: link:../Hermes/nabu/packages/ui
         version: link:nabu/packages/ui
       '@57eme-regiment/renenutet-api-contract':
-        specifier: portal:../../../Renenutet/packages/contract
+        specifier: link:../Renenutet/packages/contract
         version: link:../Renenutet/packages/contract
       '@base-ui/react':
         specifier: ^1.5.0

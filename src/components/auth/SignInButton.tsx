@@ -1,5 +1,5 @@
 import { authClient } from '@/lib/auth';
-import { Button } from '../ui/button';
+import { Button } from '@57eme-regiment/nabu-ui';
 
 export const SignInButton = () => {
   return (

@@ -1,7 +1,7 @@
 import { useLanguage } from '@/components/language-provider';
+import type { InventoryItem } from '@/types/inventory';
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -9,15 +9,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
-import { Button, buttonVariants } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { stockApi } from '@/lib/api-client';
-import { InventoryFactory } from '@/lib/tanstack/queryFactory';
-import type { InventoryItem } from '@/types/inventory';
-import { useMutation } from '@tanstack/react-query';
-import { useState } from 'react';
-import {
+  Button,
+  buttonVariants,
   Dialog,
   DialogClose,
   DialogContent,
@@ -26,7 +19,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '../ui/dialog';
+  Input,
+} from '@57eme-regiment/nabu-ui';
+import { useState } from 'react';
 
 interface ItemActionsDialogProps {
   item: InventoryItem;
@@ -38,25 +33,25 @@ export function ItemActionsDialog({ item, stockId }: ItemActionsDialogProps) {
   // const updateQuantity = useInventoryStore(state => state.updateQuantity)
   const { t } = useLanguage();
 
-  const updateQuantity = useMutation({
-    mutationFn: async () =>
-      await stockApi.update({
-        params: {
-          id: stockId,
-          inventoryId: '',
-          itemId: '',
-        },
-      }),
-    onMutate: async (newQuantity, context) => {
-      context.client.cancelQueries({ queryKey: InventoryFactory.all });
-      // const previousValue = context.client.getQueryData(InventoryFactory.all);
-      // context.client.setQueryData;
-    },
-    onError(error, variables, onMutateResult, context) {
-      // context.client.setQueryData(InventoryFactory.all, onMutateResult.)
-    },
-    onSettled(data, error, variables, onMutateResult, context) {},
-  });
+  // const updateQuantity = useMutation({
+  //   mutationFn: async () =>
+  //     await stockApi.update({
+  //       params: {
+  //         id: stockId,
+  //         inventoryId: '',
+  //         itemId: '',
+  //       },
+  //     }),
+  //   onMutate: async (newQuantity, context) => {
+  //     context.client.cancelQueries({ queryKey: InventoryFactory.all });
+  //     // const previousValue = context.client.getQueryData(InventoryFactory.all);
+  //     // context.client.setQueryData;
+  //   },
+  //   onError(error, variables, onMutateResult, context) {
+  //     // context.client.setQueryData(InventoryFactory.all, onMutateResult.)
+  //   },
+  //   onSettled(data, error, variables, onMutateResult, context) {},
+  // });
 
   return (
     <div className="flex items-center gap-2">
@@ -77,17 +72,17 @@ export function ItemActionsDialog({ item, stockId }: ItemActionsDialogProps) {
             </DialogTitle>
             <DialogDescription>
               {t('dialog.add_description')} {item.quantity.toLocaleString()} /{' '}
-              {item.maxCapacity.toLocaleString()}.
+              {/* {item.maxCapacity.toLocaleString()}. */}
             </DialogDescription>
           </DialogHeader>
           <div className="py-4">
-            <Input
+            {/* <Input
               type="number"
               value={amount}
               onChange={e => setAmount(Number(e.target.value))}
               min={1}
               max={item.maxCapacity - item.quantity}
-            />
+            /> */}
           </div>
           <DialogFooter>
             <DialogClose>{t('dialog.cancel')}</DialogClose>
@@ -130,11 +125,11 @@ export function ItemActionsDialog({ item, stockId }: ItemActionsDialogProps) {
           </div>
           <AlertDialogFooter>
             <AlertDialogCancel>{t('dialog.cancel')}</AlertDialogCancel>
-            <AlertDialogAction
+            {/* <AlertDialogAction
               className="bg-destructive hover:bg-destructive/90"
               onClick={() => updateQuantity(stockId, item.id, -amount)}>
               {t('dialog.confirm_remove')}
-            </AlertDialogAction>
+            </AlertDialogAction> */}
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

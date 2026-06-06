@@ -1,89 +1,103 @@
-// import {
-//   Card,
-//   CardContent,
-//   CardDescription,
-//   CardHeader,
-//   CardTitle,
-// } from '@/components/ui/card';
-import {Card} from "@57eme-regiment/nabu-ui"
 import { useInventoryDetailsQuery } from '@/features/inventory/useInventoryDetails.query';
 import { LINKS } from '@/features/navigation/links';
-import type { Stock } from '@/types/inventory';
-import { IconBuildingWarehouse, IconShip } from '@tabler/icons-react';
+import { formatDateTime } from '@57eme-regiment/nabu-frontend-utils';
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+  Typography,
+} from '@57eme-regiment/nabu-ui';
+import {
+  IconAlertTriangle,
+  IconHours24,
+  IconInfoCircle,
+  IconShip,
+} from '@tabler/icons-react';
 import { Link } from '@tanstack/react-router';
 import { motion } from 'framer-motion';
-import { useLanguage } from '../language-provider';
 
-const STOCK_ICONS = {
-  Seaport: IconShip,
-  Depot: IconBuildingWarehouse,
-} as const;
-
-function getAlertCounts(stock: Stock) {
-  const critical = stock.items.filter(
-    item => item.demand > 0 && item.quantity / item.demand < 0.2,
-  ).length;
-  const warning = stock.items.filter(item => {
-    if (item.demand === 0) return false;
-    const ratio = item.quantity / item.demand;
-    return ratio >= 0.2 && ratio < 0.5;
-  }).length;
-  return { critical, warning };
-}
+//TODO pour plus tard
+// function getAlertCounts(stock: Stock) {
+//   const critical = stock.items.filter(
+//     item => item.demand > 0 && item.quantity / item.demand < 0.2,
+//   ).length;
+//   const warning = stock.items.filter(item => {
+//     if (item.demand === 0) return false;
+//     const ratio = item.quantity / item.demand;
+//     return ratio >= 0.2 && ratio < 0.5;
+//   }).length;
+//   return { critical, warning };
+// }
 
 interface InventoryCardProps {
   inventoryId: string;
 }
 
 export function InventoryCard({ inventoryId }: InventoryCardProps) {
-  const { t } = useLanguage();
   const { data: inventory, error } = useInventoryDetailsQuery(inventoryId);
-  // const Icon = STOCK_ICONS[stock.type];
-  // const { critical, warning } = getAlertCounts(inventory);
 
-  if (!error || !inventory) return <div>toto</div>;
+  if (error || !inventory) return <div>toto</div>;
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.1 }}
-      whileHover={{ scale: 1.02 }}>
-      <Link
-        to={LINKS.Inventory.detail.to}
-        params={{ id: inventory.id }}
-        className="block h-full">
-        <Card className="h-full hover:border-primary transition-colors cursor-pointer">
+      whileHover={{ scale: 1.02 }}
+      className="group select-none cursor-pointer">
+      <Link to={LINKS.Inventory.detail.to} params={{ id: inventory.id }}>
+        <Card className="min-w-96 min-h-24">
           <CardHeader>
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-primary/10 rounded-lg text-primary">
-                <IconShip className="h-6 w-6" />
-              </div>
-              <div>
-                <CardTitle>{inventory.name}</CardTitle>
-                <CardDescription>TODO City • TODO Type</CardDescription>
-              </div>
-            </div>
+            <CardTitle className="flex gap-4 items-center">
+              <IconShip className="text-primary" />
+              <Typography variant="lead" className="group-hover:text-primary">
+                {inventory.name}
+              </Typography>
+            </CardTitle>
+            <CardDescription className="flex gap-1 flex-wrap">
+              <Typography>{inventory.location.region.name} •</Typography>
+              <Typography>{inventory.location.town.name} •</Typography>
+              <Typography>{inventory.location.type}</Typography>
+            </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="flex flex-wrap items-center gap-4 text-sm font-medium">
-              <span className="text-muted-foreground">
-                InventoryItemCount {t('stock.items')}
-              </span>
-              {/* {critical > 0 && (
-                <span className="flex items-center gap-1 px-2 py-0.5 rounded-md text-red-500 bg-red-500/10">
-                  <IconAlertTriangle className="w-4 h-4" />
-                  {critical}
-                </span>
-              )}
-              {warning > 0 && (
-                <span className="flex items-center gap-1 px-2 py-0.5 rounded-md text-yellow-500 bg-yellow-500/10">
-                  <IconAlertTriangle className="w-4 h-4" />
-                  {warning}
-                </span>
-              )} */}
+            <div className="flex flex-wrap gap-4">
+              <div className="flex gap-1 items-center text-red-500 font-semibold">
+                <IconAlertTriangle className="size-4 animate-pulse" />X Critique
+              </div>
+              <div className="flex gap-1 items-center text-amber-500 font-semibold">
+                <IconAlertTriangle className="size-4 animate-pulse" />X Warning
+              </div>
+              <div className="flex gap-1 items-center text-blue-500 font-semibold">
+                <IconInfoCircle className="size-4 animate-pulse" />X Demand
+              </div>
             </div>
+            <Typography variant="muted">
+              Last update {formatDateTime(inventory.updatedAt)}
+            </Typography>
           </CardContent>
+          <CardFooter className="flex gap-1 items-center w-full">
+            <Avatar>
+              <AvatarFallback>
+                {inventory.owner.name?.slice(0, 1).toUpperCase()}
+              </AvatarFallback>
+              {inventory.owner.image && (
+                <AvatarImage src={inventory.owner.image} />
+              )}
+            </Avatar>
+            <Typography variant="muted">{inventory.owner.name}</Typography>
+            <div className="flex items-center ml-auto">
+              <IconHours24 className="text-muted-foreground" />
+              <Typography variant="muted">
+                {formatDateTime(inventory.updatedAt)}
+              </Typography>
+            </div>
+          </CardFooter>
         </Card>
       </Link>
     </motion.div>
