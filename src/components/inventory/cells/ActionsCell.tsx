@@ -1,17 +1,15 @@
-import type { ICellRendererParams } from 'ag-grid-community'
-import type { InventoryItem } from '@/types/inventory'
-import { ItemActionsDialog } from '@/components/inventory/ItemActionsDialog'
+import { DecrementItemStock } from '@/components/stock/DecrementItemStock';
+import { IncrementItemStock } from '@/components/stock/IncrementItemStock';
+import type { StockDetails } from '@57eme-regiment/renenutet-api-contract';
+import type { ICellRendererParams } from 'ag-grid-community';
 
-export interface ActionsCellParams extends ICellRendererParams<InventoryItem> {
-  stockId: string
-}
-
-export function ActionsCell({ data, stockId }: ActionsCellParams) {
-  if (!data) return null
+export function ActionsCell({ data }: ICellRendererParams<StockDetails>) {
+  if (!data) return null;
 
   return (
-    <div className="flex items-center justify-end h-full pr-4">
-      <ItemActionsDialog item={data} stockId={stockId} />
+    <div className="flex items-center justify-end gap-2 h-full">
+      <IncrementItemStock item={data} />
+      <DecrementItemStock item={data} />
     </div>
-  )
+  );
 }

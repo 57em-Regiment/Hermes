@@ -1,201 +1,28 @@
 /* eslint-disable react-refresh/only-export-components */
-import { ActionsCell } from '@/components/inventory/cells/ActionsCell';
-import { DemandCell } from '@/components/inventory/cells/DemandCell';
-import { ProductionCell } from '@/components/inventory/cells/ProductionCell';
-import { ResourceCell } from '@/components/inventory/cells/ResourceCell';
-import { StockCell } from '@/components/inventory/cells/StockCell';
-import { AddItemDialog } from '@/components/item/addNewItem';
-import { useLanguage } from '@/components/language-provider';
-import { useTheme } from '@/components/theme-provider';
-import { DeleteInventoryDialog } from '@/features/inventory/deleteInventory';
+import { InventoryHeader } from '@/components/inventory/InventoryHeader';
+import { StockGrid } from '@/components/stock/stockGrid';
+import { useInventoryDetailsQuery } from '@/features/inventory/useInventoryDetails.query';
 import { useGetStockByInventoryId } from '@/hooks/useGetStockByInventoryId';
-import type { InventoryItem } from '@/types/inventory';
-import { Button, Input } from '@57eme-regiment/nabu-ui';
-import { IconTrashFilled } from '@tabler/icons-react';
 import { createLazyFileRoute } from '@tanstack/react-router';
-import type { ColDef, RowClassParams } from 'ag-grid-community';
-import {
-  AllCommunityModule,
-  colorSchemeDark,
-  colorSchemeLight,
-  themeQuartz,
-} from 'ag-grid-community';
-import { AgGridReact } from 'ag-grid-react';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 export const Route = createLazyFileRoute('/_authenticated/inventory/$id')({
   component: StockView,
 });
 
 function StockView() {
-  const { id } = Route.useParams();
-  const { t } = useLanguage();
-  const { theme } = useTheme();
+  const { id: inventoryId } = Route.useParams();
 
-  const { data: stock } = useGetStockByInventoryId(id);
-  const gridRef = useRef<AgGridReact<InventoryItem>>(null);
+  const { data: stocks } = useGetStockByInventoryId(inventoryId);
+  const { data: inventory } = useInventoryDetailsQuery(inventoryId);
 
-  const [search, setSearch] = useState('');
-  const [colorEnabled, setColorEnabled] = useState(true);
+  if (!stocks) return null;
 
-  const isDark =
-    theme === 'dark' ||
-    (theme === 'system' &&
-      window.matchMedia('(prefers-color-scheme: dark)').matches);
-
-  const agTheme = useMemo(
-    () =>
-      isDark
-        ? themeQuartz.withPart(colorSchemeDark).withParams({
-            backgroundColor: 'transparent',
-            headerBackgroundColor: 'transparent',
-          })
-        : themeQuartz.withPart(colorSchemeLight).withParams({
-            backgroundColor: 'transparent',
-            headerBackgroundColor: 'transparent',
-          }),
-    [isDark],
-  );
-
-  const getRowStyle = useCallback(
-    ({ data }: RowClassParams<InventoryItem>) => {
-      if (!colorEnabled || !data) return undefined;
-      // const req = data.demand > 0 ? data.demand : data.maxCapacity;
-      // const hue = Math.max(0, Math.min(1, data.quantity / req)) * 120;
-      // return { backgroundColor: `hsla(${hue}, 70%, 50%, 0.1)` };
-    },
-    [colorEnabled],
-  );
-
-  useEffect(() => {
-    gridRef.current?.api?.redrawRows();
-  }, [colorEnabled]);
-
-  const colDefs = useMemo<ColDef<InventoryItem>[]>(
-    () => [
-      {
-        headerName: t('v1.resource'),
-        field: 'name',
-        cellRenderer: ResourceCell,
-        flex: 2,
-        minWidth: 220,
-      },
-      {
-        headerName: t('v1.stock'),
-        field: 'quantity',
-        cellRenderer: StockCell,
-        flex: 2,
-        minWidth: 230,
-        getQuickFilterText: () => '',
-      },
-      {
-        headerName: t('v1.demand'),
-        field: 'demand',
-        cellRenderer: DemandCell,
-        flex: 2,
-        minWidth: 200,
-        getQuickFilterText: () => '',
-        // comparator: (_a, _b, nodeA, nodeB) => {
-        // const a = nodeA.data!;
-        // const b = nodeB.data!;
-        // const aReq = a.demand > 0 ? a.demand : a.maxCapacity;
-        // const bReq = b.demand > 0 ? b.demand : b.maxCapacity;
-        // return a.quantity / aReq - b.quantity / bReq;
-        // },
-      },
-      {
-        headerName: t('v1.production'),
-        field: 'productionNeed',
-        cellRenderer: ProductionCell,
-        flex: 1,
-        minWidth: 160,
-        getQuickFilterText: () => '',
-      },
-      {
-        headerName: t('v1.actions'),
-        cellRenderer: ActionsCell,
-        cellRendererParams: { stockId: stock?.item ?? '' },
-        headerClass: '[&_.ag-header-cell-label]:justify-end',
-        sortable: false,
-        suppressHeaderMenuButton: true,
-        flex: 1.5,
-        minWidth: 180,
-        getQuickFilterText: () => '',
-      },
-    ],
-    [t, stock?.id],
-  );
-
-  const filteredItems = useMemo(() => {
-    if (!stock) return [];
-    if (!search.trim()) return stock;
-
-    // const searchChars = search.toLowerCase().replace(/\s+/g, '').split('');
-    // return stock.filter(item => {
-    //   const name = item.name.toLowerCase();
-    //   let searchIdx = 0;
-    //   for (let i = 0; i < name.length; i++) {
-    //     if (name[i] === searchChars[searchIdx]) {
-    //       searchIdx++;
-    //       if (searchIdx === searchChars.length) return true;
-    //     }
-    //   }
-    //   return false;
-    // });
-  }, [stock, search]);
-
-  if (!stock) return null;
+  if (!inventory) return <div>toto</div>;
 
   return (
-    <div
-      className="flex flex-col space-y-4"
-      style={{ height: 'calc(100vh - 130px)' }}>
-      <div className="flex items-center justify-between shrink-0">
-        <div>
-          <h2 className="text-2xl font-bold">{stock.name}</h2>
-          <p className="text-muted-foreground">
-            {/* {stock.city} • {stock.type} • {stock.items.length}{' '} */}
-            {t('stock.items')}
-          </p>
-        </div>
-        <div className="flex gap-4">
-          <DeleteInventoryDialog>
-            <Button variant={'destructive'}>
-              <IconTrashFilled />
-            </Button>
-          </DeleteInventoryDialog>
-          <Button
-            variant="outline"
-            onClick={() => setColorEnabled(prev => !prev)}>
-            {colorEnabled ? t('v1.colors.disable') : t('v1.colors.enable')}
-          </Button>
-        </div>
-      </div>
-
-      <div className="flex">
-        <Input
-          placeholder={t('v1.search')}
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-          className="max-w-md shrink-0"
-        />
-
-        <AddItemDialog className="ml-auto" />
-      </div>
-
-      <div className="flex-1 min-h-0">
-        <AgGridReact<InventoryItem>
-          ref={gridRef}
-          modules={[AllCommunityModule]}
-          theme={agTheme}
-          rowData={filteredItems}
-          columnDefs={colDefs}
-          getRowStyle={getRowStyle}
-          rowHeight={60}
-          defaultColDef={{ sortable: true, resizable: false }}
-          suppressMovableColumns
-        />
-      </div>
+    <div className="space-y-4">
+      <InventoryHeader inventory={inventory} stockLen={stocks.length} />
+      <StockGrid stocks={stocks} />
     </div>
   );
 }

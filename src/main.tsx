@@ -1,10 +1,10 @@
-import './lib/configure-auth';
+import { getQueryClient } from '@57eme-regiment/nabu-frontend-utils';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { RouterProvider, createRouter } from '@tanstack/react-router';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.css';
-import { getQueryClient } from './lib/tanstack/getQueryClient';
+import './lib/configure-auth';
 import { routeTree } from './routeTree.gen';
 
 const router = createRouter({ routeTree });

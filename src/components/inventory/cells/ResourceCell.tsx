@@ -1,17 +1,20 @@
-import type { ICellRendererParams } from 'ag-grid-community'
-import * as Icons from '@tabler/icons-react'
-import type { InventoryItem } from '@/types/inventory'
+import { Typography } from '@57eme-regiment/nabu-ui';
+import type { StockDetails } from '@57eme-regiment/renenutet-api-contract';
+import { IconPackage } from '@tabler/icons-react';
+import type { ICellRendererParams } from 'ag-grid-community';
 
-export function ResourceCell({ data }: ICellRendererParams<InventoryItem>) {
-  if (!data) return null
-  const Icon = (Icons as unknown as Record<string, React.ElementType>)[data.icon]
+export function ResourceCell({ data }: ICellRendererParams<StockDetails>) {
+  if (!data) return null;
 
   return (
     <div className="flex items-center gap-2 h-full">
-      <div className="p-1.5 border rounded-md bg-muted/50 shrink-0">
-        {Icon && <Icon className="h-4 w-4" />}
-      </div>
-      <span className="font-medium truncate">{data.name}</span>
+      <IconPackage />
+      <Typography>
+        {data.item.name} {data.item.shortName && data.item.shortName}
+      </Typography>
+      {data.item.shortName && (
+        <Typography variant="muted">({data.item.shortName})</Typography>
+      )}
     </div>
-  )
+  );
 }

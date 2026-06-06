@@ -1,0 +1,146 @@
+import { stockApi } from '@/lib/api-client';
+import { InventoryFactory } from '@/lib/tanstack/queryFactory';
+import { useHasPermission } from '@57eme-regiment/auth-browser';
+import { PERMISSIONS } from '@57eme-regiment/auth-contracts';
+import {
+  Button,
+  buttonVariants,
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  Field,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+  Input,
+  Typography,
+} from '@57eme-regiment/nabu-ui';
+import {
+  createStockSchema,
+  type CreateStock,
+} from '@57eme-regiment/renenutet-api-contract';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+
+type AddNewStockDialogProps = {
+  inventoryId: string;
+};
+
+export function AddNewStockDialog({ inventoryId }: AddNewStockDialogProps) {
+  const userCanCreate = useHasPermission(PERMISSIONS.STOCK_ITEM_READ); //TODO HERMES_STOCKITEM_ADD
+  const [open, setOpen] = useState(false);
+
+  const { handleSubmit, control, reset } = useForm<CreateStock>({
+    resolver: zodResolver(createStockSchema),
+    defaultValues: {
+      inventoryId,
+      quantity: 1,
+    },
+  });
+
+  const queryClient = useQueryClient();
+  const queryKey = InventoryFactory.StockInInventory(inventoryId);
+
+  const { mutateAsync } = useMutation({
+    mutationFn: async (formValues: CreateStock) => {
+      const res = await stockApi.create({ body: formValues });
+      if (res.status != 201)
+        throw Error('Create Inventory failed', { cause: res });
+    },
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey });
+    },
+    onError(error) {
+      console.error('🚀 ~ InventoryDialog ~ error:', error);
+      toast.error(error.message);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey });
+    },
+    onSuccess: () => {
+      toast.success('Inventory Created');
+    },
+  });
+
+  const onSubmit = async (formValues: CreateStock) => {
+    await mutateAsync(formValues);
+    reset();
+    setOpen(false);
+  };
+
+  if (userCanCreate)
+    return (
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger
+          className={buttonVariants({
+            variant: 'outline',
+          })}>
+          Add new item to stock
+        </DialogTrigger>
+        <DialogContent showCloseButton={false}>
+          <DialogHeader>
+            <DialogTitle>Add new item</DialogTitle>
+            <DialogDescription className="wrap-normal w-full">
+              <Typography>
+                Add an item that is not already tracked in this inventory
+              </Typography>
+            </DialogDescription>
+          </DialogHeader>
+          <form id="incrementStock" onSubmit={handleSubmit(onSubmit)}>
+            <FieldGroup>
+              <Controller
+                control={control}
+                name="itemId"
+                render={({ field, fieldState }) => (
+                  <Field>
+                    <FieldLabel>Item</FieldLabel>
+                    <Input {...field} />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+              <Controller
+                control={control}
+                name="quantity"
+                render={({ field, fieldState }) => (
+                  <Field>
+                    <FieldLabel>Quantity</FieldLabel>
+                    <Input
+                      {...field}
+                      type="number"
+                      min={1}
+                      onChange={e => field.onChange(e.target.valueAsNumber)}
+                    />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+            </FieldGroup>
+          </form>
+          <DialogFooter>
+            <DialogClose>
+              <Button variant="outline">Cancel</Button>
+            </DialogClose>
+            <Button
+              form="incrementStock"
+              type="submit"
+              className="bg-primary hover:bg-primary/90">
+              Add item to stock
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    );
+}
