@@ -23,7 +23,7 @@ import {
   type UpdateStock,
 } from '@57eme-regiment/renenutet-api-contract';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 type IncrementItemStockProps = {
@@ -33,11 +33,16 @@ type IncrementItemStockProps = {
 export const IncrementItemStock = ({ item }: IncrementItemStockProps) => {
   const { t } = useLanguage();
   const [open, setOpen] = useState(false);
+  const isDisabled = useMemo(
+    () => item.quantity == item.item.maxQuantity,
+    [item],
+  );
 
+  const maxIcrementValue = (item.item.maxQuantity ?? 100) - item.quantity;
   const { handleSubmit, control, reset } = useForm<UpdateStock>({
     resolver: zodResolver(updateStockSchema),
     defaultValues: {
-      quantity: 10,
+      quantity: maxIcrementValue > 10 ? 10 : maxIcrementValue,
     },
   });
 
@@ -60,7 +65,8 @@ export const IncrementItemStock = ({ item }: IncrementItemStockProps) => {
           variant: 'outline',
           className:
             'text-green-600 border-green-200 hover:bg-green-50 dark:border-green-900 dark:hover:bg-green-900/30',
-        })}>
+        })}
+        disabled={isDisabled}>
         {t('dialog.add')}
       </DialogTrigger>
       <DialogContent showCloseButton={false}>
@@ -83,6 +89,7 @@ export const IncrementItemStock = ({ item }: IncrementItemStockProps) => {
                     {...field}
                     type="number"
                     min={1}
+                    max={maxIcrementValue}
                     onChange={e => field.onChange(e.target.valueAsNumber)}
                   />
                   {fieldState.invalid && (

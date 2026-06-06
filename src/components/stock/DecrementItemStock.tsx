@@ -23,7 +23,7 @@ import {
   type UpdateStock,
 } from '@57eme-regiment/renenutet-api-contract';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 type DecrementItemStockProps = {
@@ -33,11 +33,12 @@ type DecrementItemStockProps = {
 export const DecrementItemStock = ({ item }: DecrementItemStockProps) => {
   const { t } = useLanguage();
   const [open, setOpen] = useState(false);
+  const isDisabled = useMemo(() => item.quantity == 0, [item]);
 
   const { handleSubmit, control, reset } = useForm<UpdateStock>({
     resolver: zodResolver(updateStockSchema),
     defaultValues: {
-      quantity: 10,
+      quantity: item.quantity < 10 ? item.quantity : 10,
     },
   });
 
@@ -60,7 +61,8 @@ export const DecrementItemStock = ({ item }: DecrementItemStockProps) => {
           variant: 'outline',
           className:
             'text-red-600 border-red-200 hover:bg-red-50 dark:border-red-900 dark:hover:bg-red-900/30',
-        })}>
+        })}
+        disabled={isDisabled}>
         {t('dialog.remove')}
       </DialogTrigger>
       <DialogContent showCloseButton={false}>
@@ -81,6 +83,7 @@ export const DecrementItemStock = ({ item }: DecrementItemStockProps) => {
                     {...field}
                     type="number"
                     min={1}
+                    max={item.quantity}
                     onChange={e => field.onChange(e.target.valueAsNumber)}
                   />
                   {fieldState.invalid && (

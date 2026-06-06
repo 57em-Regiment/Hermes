@@ -1,7 +1,9 @@
+import { useGetStockByInventoryId } from '@/hooks/useGetStockByInventoryId';
 import { stockApi } from '@/lib/api-client';
 import { InventoryFactory } from '@/lib/tanstack/queryFactory';
 import { useHasPermission } from '@57eme-regiment/auth-browser';
 import { PERMISSIONS } from '@57eme-regiment/auth-contracts';
+import type { Item } from '@57eme-regiment/krang-api-contract';
 import {
   Button,
   buttonVariants,
@@ -37,15 +39,24 @@ type AddNewStockDialogProps = {
 
 export function AddNewStockDialog({ inventoryId }: AddNewStockDialogProps) {
   const userCanCreate = useHasPermission(PERMISSIONS.STOCK_ITEM_READ); //TODO HERMES_STOCKITEM_ADD
+  const { data: stocks } = useGetStockByInventoryId(inventoryId);
   const [open, setOpen] = useState(false);
 
-  const { handleSubmit, control, reset } = useForm<CreateStock>({
+  const { handleSubmit, control, reset, formState } = useForm<CreateStock>({
     resolver: zodResolver(createStockSchema),
     defaultValues: {
       inventoryId,
       quantity: 1,
     },
   });
+  const [itemMaxQuantity, setItemMaxQuantity] = useState(100);
+
+  const onItemSelected =
+    (fieldOnChange: (id: string | undefined) => void) =>
+    (item: Item | null) => {
+      fieldOnChange(item?.id);
+      setItemMaxQuantity(item?.maxQuantity ?? 100);
+    };
 
   const queryClient = useQueryClient();
   const queryKey = InventoryFactory.StockInInventory(inventoryId);
@@ -76,10 +87,14 @@ export function AddNewStockDialog({ inventoryId }: AddNewStockDialogProps) {
     reset();
     setOpen(false);
   };
+  const onOpenChange = (open: boolean) => {
+    reset();
+    setOpen(open);
+  };
 
   if (userCanCreate)
     return (
-      <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogTrigger
           className={buttonVariants({
             variant: 'outline',
@@ -103,8 +118,11 @@ export function AddNewStockDialog({ inventoryId }: AddNewStockDialogProps) {
                 render={({ field, fieldState }) => (
                   <Field>
                     <FieldLabel>Item</FieldLabel>
-                    <ItemAutocompleteSelect />
-                    <Input {...field} />
+                    <ItemAutocompleteSelect
+                      {...field}
+                      onSelected={onItemSelected(field.onChange)}
+                      excludeItemIds={stocks?.map(i => i.itemId)}
+                    />
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
                     )}
@@ -114,13 +132,17 @@ export function AddNewStockDialog({ inventoryId }: AddNewStockDialogProps) {
               <Controller
                 control={control}
                 name="quantity"
-                render={({ field, fieldState }) => (
+                render={({ field, fieldState, formState }) => (
                   <Field>
                     <FieldLabel>Quantity</FieldLabel>
                     <Input
                       {...field}
+                      disabled={
+                        formState.isSubmitting || !formState.dirtyFields.itemId
+                      }
                       type="number"
                       min={1}
+                      max={itemMaxQuantity}
                       onChange={e => field.onChange(e.target.valueAsNumber)}
                     />
                     {fieldState.invalid && (
@@ -136,6 +158,7 @@ export function AddNewStockDialog({ inventoryId }: AddNewStockDialogProps) {
               <Button variant="outline">Cancel</Button>
             </DialogClose>
             <Button
+              disabled={!formState.isValid}
               form="incrementStock"
               type="submit"
               className="bg-primary hover:bg-primary/90">

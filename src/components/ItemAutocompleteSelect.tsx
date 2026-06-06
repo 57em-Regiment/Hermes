@@ -1,5 +1,115 @@
-type ItemAutocompleteSelectProps = {};
+import { useItemsQuery } from '@/features/item/useItemsQuery';
+import { useDebounce } from '@/hooks/useDebounce';
+import type { Item } from '@57eme-regiment/krang-api-contract';
+import { cn } from '@57eme-regiment/nabu-ui';
+import { Combobox } from '@base-ui/react/combobox';
+import { CheckIcon, ChevronsUpDownIcon, LoaderCircleIcon } from 'lucide-react';
+import { useState } from 'react';
 
-export const ItemAutocompleteSelect = ({} : ItemAutocompleteSelectProps) => {
-  return <div>toto</div>;
+type ItemAutocompleteSelectProps = {
+  value?: string;
+  onSelected?: (item: Item | null) => void;
+  disabled?: boolean;
+  readOnly?: boolean;
+  excludeItemIds?: string[];
+  placeholder?: string;
+};
+
+export const ItemAutocompleteSelect = ({
+  value,
+  onSelected,
+  disabled = false,
+  readOnly = false,
+  excludeItemIds = [],
+  placeholder = 'Search item…',
+}: ItemAutocompleteSelectProps) => {
+  const [inputValue, setInputValue] = useState('');
+  const [selectedItem, setSelectedItem] = useState<Item | null>(null);
+  const debouncedSearch = useDebounce(inputValue, 300);
+
+  const {
+    data: items = [],
+    isLoading,
+    isFetching,
+  } = useItemsQuery(debouncedSearch);
+
+  const filteredItems = items.filter(item => !excludeItemIds.includes(item.id));
+  const isDisabled = disabled || readOnly;
+  const showSpinner = isLoading || isFetching;
+
+  const comboboxValue = selectedItem?.id === value ? selectedItem : null;
+
+  return (
+    <Combobox.Root<Item>
+      value={comboboxValue}
+      onValueChange={item => {
+        const resolved = item ?? null;
+        setSelectedItem(resolved);
+        onSelected?.(resolved);
+        setInputValue(resolved?.name ?? '');
+      }}
+      disabled={isDisabled}
+      filter={null}
+      itemToStringLabel={item => item?.name ?? ''}
+      itemToStringValue={item => item?.id ?? ''}
+      isItemEqualToValue={(a, b) => a.id === b.id}>
+      <Combobox.InputGroup
+        className={cn(
+          'flex h-8 w-full items-center gap-1 rounded-lg border border-input bg-transparent pl-2.5 pr-2 text-sm transition-colors',
+          'focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/50',
+          isDisabled && 'cursor-not-allowed opacity-50',
+          readOnly && 'bg-muted',
+        )}>
+        <Combobox.Input
+          placeholder={placeholder}
+          readOnly={readOnly}
+          value={inputValue}
+          onChange={e => setInputValue(e.target.value)}
+          className="flex-1 bg-transparent outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed"
+        />
+        {showSpinner ? (
+          <LoaderCircleIcon className="size-4 shrink-0 animate-spin text-muted-foreground" />
+        ) : (
+          <Combobox.Trigger
+            disabled={isDisabled}
+            className="flex items-center disabled:cursor-not-allowed">
+            <ChevronsUpDownIcon className="size-4 shrink-0 text-muted-foreground" />
+          </Combobox.Trigger>
+        )}
+      </Combobox.InputGroup>
+
+      <Combobox.Portal>
+        <Combobox.Positioner sideOffset={4} className="isolate z-50">
+          <Combobox.Popup className="w-(--anchor-width) max-h-60 overflow-y-auto rounded-lg bg-popover text-popover-foreground shadow-md ring-1 ring-foreground/10 origin-(--transform-origin) data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 duration-100">
+            <Combobox.List className="p-1">
+              <Combobox.Empty className="py-6 text-center text-sm text-muted-foreground">
+                {debouncedSearch.length < 2
+                  ? 'Type at least 2 characters…'
+                  : !items.length && 'No item found.'}
+              </Combobox.Empty>
+              {filteredItems.map(item => (
+                <Combobox.Item
+                  key={item.id}
+                  value={item}
+                  className="relative flex w-full cursor-default items-center gap-1.5 rounded-md py-1 pl-1.5 pr-8 text-sm outline-none select-none data-highlighted:bg-accent data-highlighted:text-accent-foreground data-disabled:pointer-events-none data-disabled:opacity-50">
+                  <Combobox.ItemIndicator
+                    render={
+                      <span className="pointer-events-none absolute right-2 flex size-4 items-center justify-center" />
+                    }>
+                    <CheckIcon className="size-4" />
+                  </Combobox.ItemIndicator>
+                  <span className="flex-1">{item.name}</span>
+                  {item.shortName && (
+                    <span className="text-xs text-muted-foreground">
+                      {item.shortName}
+                    </span>
+                  )}
+                </Combobox.Item>
+              ))}
+            </Combobox.List>
+          </Combobox.Popup>
+        </Combobox.Positioner>
+      </Combobox.Portal>
+    </Combobox.Root>
+  );
 };
