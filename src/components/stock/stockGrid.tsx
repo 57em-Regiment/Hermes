@@ -65,6 +65,7 @@ export const StockGrid = ({ stocks }: StockGridProps) => {
         minWidth: 230,
         valueGetter: ({ data }) => data?.quantity,
         filter: false,
+        sort: 'desc',
       },
       // {
       //   headerName: t('v1.demand'),

@@ -4,14 +4,18 @@ export const ItemFactory = {
 
 export const StockFactory = {
   all: ['stocks'],
-  byId: (stockId: string) => [...StockFactory.all, stockId],
+  ById: (stockId: string) => [...StockFactory.all, stockId],
 } as const;
 export const InventoryFactory = {
   all: ['inventories'],
-  byId: (inventoryId: string) => [...InventoryFactory.all, inventoryId],
+  ById: (inventoryId: string) => [...InventoryFactory.all, inventoryId],
   StockInInventory: (inventoryId: string) => [
     ...InventoryFactory.all,
     inventoryId,
     'stocks',
+  ],
+  CodeInventory: (inventoryId: string) => [
+    ...InventoryFactory.ById(inventoryId),
+    'Code',
   ],
 } as const;

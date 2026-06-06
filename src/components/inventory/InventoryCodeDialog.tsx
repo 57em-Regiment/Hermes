@@ -1,69 +1,90 @@
+import { useInventoryCodeQuery } from '@/features/inventory/useInventoryCode.query';
+import { InventoryFactory } from '@/lib/tanstack/queryFactory';
 import { useHasPermission } from '@57eme-regiment/auth-browser';
 import { PERMISSIONS } from '@57eme-regiment/auth-contracts';
 import {
-  AlertDialog,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
+  Button,
+  ButtonGroup,
   buttonVariants,
-  useLanguage,
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  Input,
+  Typography,
 } from '@57eme-regiment/nabu-ui';
+import { useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
 
-export const InventoryCodeDialog = () => {
-  const { t } = useLanguage();
+type InventoryCodeDialogProps = {
+  inventoryId: string;
+};
+export const InventoryCodeDialog = ({
+  inventoryId,
+}: InventoryCodeDialogProps) => {
   const useCanViewCode = useHasPermission(
     PERMISSIONS.STOCK_INVENTORY_CODE_READ,
   );
 
-  const handleGetCode = (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-  ) => {
-    e.stopPropagation();
-    e.preventDefault();
+  const [revealed, setRevealed] = useState(false);
+  const { refetch, data } = useInventoryCodeQuery(inventoryId);
+  const queryClient = useQueryClient();
+  const queryKey = InventoryFactory.CodeInventory(inventoryId);
+
+  const onOpenChange = (open: boolean) => {
+    if (open) return;
+    setRevealed(false);
+    queryClient.cancelQueries({ queryKey });
+    queryClient.setQueryData(queryKey, undefined);
+    queryClient.removeQueries({ queryKey });
   };
 
   if (!useCanViewCode) return null;
   return (
-    <AlertDialog>
-      <AlertDialogTrigger
+    <Dialog onOpenChange={onOpenChange}>
+      <DialogTrigger
         className={buttonVariants({
           variant: 'outline',
-          className: 'ml-auto hover:text-primary cursor-pointer',
-        })}
-        onClick={handleGetCode}>
-        Get Code
-      </AlertDialogTrigger>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>
-            Récupération du code de l'inventaire
-          </AlertDialogTitle>
-          <AlertDialogDescription>
-            Tu t'apprète à récupéré le code de l'inventaire
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        {/* <div className="py-4">
-          <Input
-            type="number"
-            value={amount}
-            onChange={e => setAmount(Number(e.target.value))}
-            min={1}
-            max={item.quantity}
-          />
-        </div> */}
-        <AlertDialogFooter>
-          <AlertDialogCancel>{t('dialog.cancel')}</AlertDialogCancel>
-          {/* <AlertDialogAction
-              className="bg-destructive hover:bg-destructive/90"
-              onClick={() => updateQuantity(stockId, item.id, -amount)}>
-              {t('dialog.confirm_remove')}
-            </AlertDialogAction> */}
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+        })}>
+        Get inventory code
+      </DialogTrigger>
+      <DialogContent showCloseButton={false}>
+        <DialogHeader>
+          <DialogTitle>Inventory code</DialogTitle>
+          <DialogDescription className="wrap-normal w-full">
+            <Typography>
+              This code is sensitive and should not be shared with everyone.
+            </Typography>
+          </DialogDescription>
+        </DialogHeader>
+        <div className="flex justify-center">
+          {!revealed || !data ? (
+            <Button
+              onClick={() => {
+                refetch();
+                setRevealed(true);
+              }}>
+              GetCode
+            </Button>
+          ) : (
+            <div>
+              <ButtonGroup>
+                <Input value={data.code ?? 'No code'} />
+                <Button></Button>
+              </ButtonGroup>
+            </div>
+          )}
+        </div>
+        <DialogFooter>
+          <DialogClose>
+            <Button variant="outline">Close</Button>
+          </DialogClose>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };
