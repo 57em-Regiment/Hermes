@@ -29,6 +29,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
+import { ItemAutocompleteSelect } from '../ItemAutocompleteSelect';
 
 type AddNewStockDialogProps = {
   inventoryId: string;
@@ -102,6 +103,7 @@ export function AddNewStockDialog({ inventoryId }: AddNewStockDialogProps) {
                 render={({ field, fieldState }) => (
                   <Field>
                     <FieldLabel>Item</FieldLabel>
+                    <ItemAutocompleteSelect />
                     <Input {...field} />
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />

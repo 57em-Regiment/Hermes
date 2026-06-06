@@ -1,3 +1,7 @@
+export const ItemFactory = {
+  all: ['items'] as const,
+} as const;
+
 export const StockFactory = {
   all: ['stocks'],
   byId: (stockId: string) => [...StockFactory.all, stockId],
