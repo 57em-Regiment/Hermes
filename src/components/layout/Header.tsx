@@ -1,6 +1,8 @@
-import { useLanguage } from '@/components/language-provider';
-import { LanguageToggle } from '@/components/language-toggle';
-import { ThemeToggle } from '@/components/theme-toggle';
+import {
+  LanguageToggle,
+  ThemeToggle,
+  useLanguage,
+} from '@57eme-regiment/nabu-ui';
 import { Link } from '@tanstack/react-router';
 import { AuthButton } from '../auth/authButton';
 

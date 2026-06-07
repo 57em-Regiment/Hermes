@@ -31,7 +31,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import { ItemAutocompleteSelect } from '../ItemAutocompleteSelect';
+import { ItemAutocompleteSelect } from '../item/ItemAutocompleteSelect';
 
 type AddNewStockDialogProps = {
   inventoryId: string;

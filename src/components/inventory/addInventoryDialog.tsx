@@ -30,7 +30,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { REGEXP_ONLY_DIGITS } from 'input-otp';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { LocationAutocompleteSelect } from '../LocationAutocompleteSelect';
+import { LocationAutocompleteSelect } from '../location/LocationAutocompleteSelect';
 
 export function AddInventoryDialog() {
   const { access } = useAccess();
@@ -140,6 +140,8 @@ export function AddInventoryDialog() {
                   <InputOTP
                     {...field}
                     maxLength={6}
+                    minLength={6}
+                    required
                     pattern={REGEXP_ONLY_DIGITS}
                     disabled={!formState.dirtyFields.name}>
                     <InputOTPGroup>
@@ -170,7 +172,7 @@ export function AddInventoryDialog() {
           <Button
             type="submit"
             form="createInventoryForm"
-            disabled={!formState.isValid}>
+            disabled={!formState.isValid || !formState.dirtyFields.accessCode}>
             Add Inventory
           </Button>
         </DialogFooter>
