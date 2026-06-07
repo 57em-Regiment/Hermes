@@ -10,7 +10,15 @@ export const stockApi = initClient(contract.stock, {
   baseUrl: import.meta.env.VITE_RENENUTET_SERVICE_URL,
   credentials: 'include',
 });
+export const locationApi = initClient(contract.location, {
+  baseUrl: import.meta.env.VITE_RENENUTET_SERVICE_URL,
+  credentials: 'include',
+});
 export const krangItemApi = initClient(krangContract.item, {
+  baseUrl: import.meta.env.VITE_KRANG_SERVICE_URL,
+  credentials: 'include',
+});
+export const krangLocationApi = initClient(krangContract.location, {
   baseUrl: import.meta.env.VITE_KRANG_SERVICE_URL,
   credentials: 'include',
 });

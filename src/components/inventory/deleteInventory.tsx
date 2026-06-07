@@ -1,4 +1,4 @@
-import { inventoryApi } from '@/lib/api-client';
+import { useDeleteInventoryMutation } from '@/features/inventory/useDeleteInventory.mutation';
 import { useHasPermission } from '@57eme-regiment/auth-browser';
 import { PERMISSIONS } from '@57eme-regiment/auth-contracts';
 import {
@@ -14,11 +14,9 @@ import {
   AlertDialogTrigger,
   Button,
 } from '@57eme-regiment/nabu-ui';
-import { useMutation } from '@tanstack/react-query';
-import { getRouteApi, useNavigate } from '@tanstack/react-router';
+import { getRouteApi } from '@tanstack/react-router';
 import { Trash2Icon } from 'lucide-react';
 import { type PropsWithChildren } from 'react';
-import { toast } from 'sonner';
 
 type DeleteInventoryDialog = PropsWithChildren;
 
@@ -26,24 +24,7 @@ const routeApi = getRouteApi('/_authenticated/inventory/$id');
 
 export function DeleteInventoryDialog({ children }: DeleteInventoryDialog) {
   const { id: stockId } = routeApi.useParams();
-  const navigate = useNavigate();
-  const { mutateAsync } = useMutation({
-    mutationFn: async () => {
-      const res = await inventoryApi.inventory.delete({
-        params: { id: stockId },
-      });
-      if (res.status != 204)
-        throw Error('Create Inventory failed', { cause: res });
-    },
-    onError(error) {
-      console.error('🚀 ~ InventoryDialog ~ error:', error);
-      toast.error(error.message);
-    },
-    onSuccess() {
-      toast.warning('Inventory Deleted');
-      navigate({ to: '/' });
-    },
-  });
+  const { mutateAsync } = useDeleteInventoryMutation(stockId);
 
   if (!useHasPermission(PERMISSIONS.STOCK_INVENTORY_DELETE)) return null;
   return (

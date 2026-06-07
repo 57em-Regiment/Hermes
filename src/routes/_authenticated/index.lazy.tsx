@@ -1,9 +1,9 @@
 /* eslint-disable react-refresh/only-export-components */
+import { AddInventoryDialog } from '@/components/inventory/addInventoryDialog';
 import { DemandCell } from '@/components/inventory/cells/DemandCell';
 import { ProductionCell } from '@/components/inventory/cells/ProductionCell';
 import { ResourceCell } from '@/components/inventory/cells/ResourceCell';
 import { StockCell } from '@/components/inventory/cells/StockCell';
-import { InventoryDialog } from '@/components/inventory/InventoryDialog';
 import { InventoryMenu } from '@/components/inventory/InventoryMenu';
 import { useLanguage } from '@/components/language-provider';
 import { useTheme } from '@/components/theme-provider';
@@ -147,7 +147,7 @@ function Index() {
 
   return (
     <div className="flex flex-col space-y-8 pb-8 min-h-[calc(100vh-80px)]">
-      <div className="flex justify-between">
+      <div className="flex justify-between items-start">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">
             {t('nav.title')}
@@ -155,7 +155,7 @@ function Index() {
           <p className="text-muted-foreground mt-2">{t('nav.select_stock')}</p>
         </div>
         <div className="flex">
-          <InventoryDialog />
+          <AddInventoryDialog />
         </div>
       </div>
 

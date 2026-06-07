@@ -1,56 +1,94 @@
-import { useItemsQuery } from '@/features/item/useItemsQuery';
+import {
+  useLocationByIdQuery,
+  useLocationsQuery,
+} from '@/features/location/useLocationsQuery';
 import { useDebounce } from '@/hooks/useDebounce';
-import type { Item } from '@57eme-regiment/krang-api-contract';
+import type { LocationNames } from '@57eme-regiment/krang-api-contract';
 import { cn } from '@57eme-regiment/nabu-ui';
 import { Combobox } from '@base-ui/react/combobox';
-import { CheckIcon, ChevronsUpDownIcon, LoaderCircleIcon } from 'lucide-react';
+import {
+  AnchorIcon,
+  CheckIcon,
+  ChevronsUpDownIcon,
+  LoaderCircleIcon,
+  WarehouseIcon,
+} from 'lucide-react';
 import { useState } from 'react';
 
-type ItemAutocompleteSelectProps = {
+type LocationAutocompleteSelectProps = {
   value?: string;
-  onSelected?: (item: Item | null) => void;
+  defaultValue?: string;
+  onSelected?: (location: LocationNames | null) => void;
   disabled?: boolean;
   readOnly?: boolean;
-  excludeItemIds?: string[];
+  excludeLocationIds?: string[];
   placeholder?: string;
 };
 
-export const ItemAutocompleteSelect = ({
+const locationLabel = (loc: LocationNames) =>
+  `${loc.region.name} · ${loc.town.name} · ${loc.type}`;
+
+const TypeIcon = ({ type }: { type: LocationNames['type'] }) =>
+  type === 'STORAGE_DEPOT' ? (
+    <WarehouseIcon className="size-4 shrink-0 text-muted-foreground" />
+  ) : (
+    <AnchorIcon className="size-4 shrink-0 text-muted-foreground" />
+  );
+
+export const LocationAutocompleteSelect = ({
   value,
+  defaultValue,
   onSelected,
   disabled = false,
   readOnly = false,
-  excludeItemIds = [],
-  placeholder = 'Search item…',
-}: ItemAutocompleteSelectProps) => {
+  excludeLocationIds = [],
+  placeholder = 'Search location…',
+}: LocationAutocompleteSelectProps) => {
   const [inputValue, setInputValue] = useState('');
-  const [selectedItem, setSelectedItem] = useState<Item | null>(null);
+  const [userPickedItem, setUserPickedItem] = useState<LocationNames | null>(
+    null,
+  );
+  const [defaultInputApplied, setDefaultInputApplied] = useState(false);
   const debouncedSearch = useDebounce(inputValue, 300);
 
   const {
-    data: items = [],
+    data: locations = [],
     isLoading,
     isFetching,
-  } = useItemsQuery(debouncedSearch);
+  } = useLocationsQuery(debouncedSearch);
 
-  const filteredItems = items.filter(item => !excludeItemIds.includes(item.id));
+  const { data: defaultLocation } = useLocationByIdQuery(
+    defaultValue && !userPickedItem ? defaultValue : undefined,
+  );
+
+  const selectedItem = userPickedItem ?? defaultLocation ?? null;
+
+  if (defaultLocation && !defaultInputApplied && !userPickedItem) {
+    setDefaultInputApplied(true);
+    setInputValue(locationLabel(defaultLocation));
+  }
+
   const isDisabled = disabled || readOnly;
   const showSpinner = isLoading || isFetching;
-
-  const comboboxValue = selectedItem?.id === value ? selectedItem : null;
+  const comboboxValue =
+    value !== undefined
+      ? selectedItem?.id === value
+        ? selectedItem
+        : null
+      : selectedItem;
 
   return (
-    <Combobox.Root<Item>
+    <Combobox.Root<LocationNames>
       value={comboboxValue}
       onValueChange={item => {
         const resolved = item ?? null;
-        setSelectedItem(resolved);
+        setUserPickedItem(resolved);
         onSelected?.(resolved);
-        setInputValue(resolved?.name ?? '');
+        setInputValue(resolved ? locationLabel(resolved) : '');
       }}
       disabled={isDisabled}
       filter={null}
-      itemToStringLabel={item => item?.name ?? ''}
+      itemToStringLabel={item => (item ? locationLabel(item) : '')}
       itemToStringValue={item => item?.id ?? ''}
       isItemEqualToValue={(a, b) => a.id === b.id}>
       <Combobox.InputGroup
@@ -87,15 +125,16 @@ export const ItemAutocompleteSelect = ({
                   Type at least 2 characters…
                 </Combobox.Empty>
               )}
-              {debouncedSearch.length >= 2 && !items.length && (
+              {debouncedSearch.length >= 2 && !locations.length && (
                 <Combobox.Empty className="py-6 text-center text-sm text-muted-foreground">
-                  No item found.
+                  No location found.
                 </Combobox.Empty>
               )}
-              {filteredItems.map(item => (
+              {locations.map(location => (
                 <Combobox.Item
-                  key={item.id}
-                  value={item}
+                  key={location.id}
+                  value={location}
+                  disabled={excludeLocationIds.includes(location.id)}
                   className="relative flex w-full cursor-default items-center gap-1.5 rounded-md py-1 pl-1.5 pr-8 text-sm outline-none select-none data-highlighted:bg-accent data-highlighted:text-accent-foreground data-disabled:pointer-events-none data-disabled:opacity-50">
                   <Combobox.ItemIndicator
                     render={
@@ -103,12 +142,13 @@ export const ItemAutocompleteSelect = ({
                     }>
                     <CheckIcon className="size-4" />
                   </Combobox.ItemIndicator>
-                  <span className="flex-1">{item.name}</span>
-                  {item.shortName && (
-                    <span className="text-xs text-muted-foreground">
-                      {item.shortName}
-                    </span>
-                  )}
+                  <TypeIcon type={location.type} />
+                  <span className="flex-1">
+                    {location.region.name} · {location.town.name}
+                  </span>
+                  <span className="text-xs text-muted-foreground">
+                    {location.type}
+                  </span>
                 </Combobox.Item>
               ))}
             </Combobox.List>

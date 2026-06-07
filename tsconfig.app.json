@@ -15,12 +15,10 @@
     "moduleDetection": "force",
     "noEmit": true,
     "jsx": "react-jsx",
-    
+
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./src/*"
-      ]
+      "@/*": ["./src/*"]
     },
 
     /* Strict */
@@ -32,5 +30,9 @@
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src", "../nabu/packages/ui/src/components/button-group.tsx", "nabu/packages/ui/src/components/input-otp.tsx"]
+  "include": [
+    "src",
+    "../nabu/packages/ui/src/components/button-group.tsx",
+    "nabu/packages/ui/src/ui/input-otp.tsx"
+  ]
 }
