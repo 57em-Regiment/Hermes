@@ -39,7 +39,7 @@ export const IncrementItemStock = ({ item }: IncrementItemStockProps) => {
   );
 
   const maxIcrementValue = (item.item.maxQuantity ?? 100) - item.quantity;
-  const { handleSubmit, control, reset } = useForm<UpdateStock>({
+  const { handleSubmit, control, reset, formState } = useForm<UpdateStock>({
     resolver: zodResolver(updateStockSchema),
     defaultValues: {
       quantity: maxIcrementValue > 10 ? 10 : maxIcrementValue,
@@ -105,6 +105,7 @@ export const IncrementItemStock = ({ item }: IncrementItemStockProps) => {
             <Button variant="outline">{t('dialog.cancel')}</Button>
           </DialogClose>
           <Button
+            disabled={!formState.isValid}
             form="incrementStock"
             type="submit"
             className="bg-primary hover:bg-primary/90">

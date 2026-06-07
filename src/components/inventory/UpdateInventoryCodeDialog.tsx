@@ -1,5 +1,5 @@
 import { useInventoryCodeMutation } from '@/features/inventory/useInventoryCode.mutation';
-import { useHasPermission } from '@57eme-regiment/auth-browser';
+import { useAccess, useHasPermission } from '@57eme-regiment/auth-browser';
 import { PERMISSIONS } from '@57eme-regiment/auth-contracts';
 import {
   Button,
@@ -12,42 +12,62 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  Field,
+  FieldError,
+  FieldGroup,
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
   Typography,
 } from '@57eme-regiment/nabu-ui';
 import {
-  updateInventorySchema,
-  type UpdateInventory,
+  updateInventoryCodeSchema,
+  type InventoryDetails,
+  type UpdateInventoryCode,
 } from '@57eme-regiment/renenutet-api-contract';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
+import { REGEXP_ONLY_DIGITS } from 'input-otp';
+import { useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 
 type InventoryCodeDialogProps = {
-  inventoryId: string;
+  inventory: InventoryDetails;
 };
 export const UpdateInventoryCodeDialog = ({
-  inventoryId,
+  inventory,
 }: InventoryCodeDialogProps) => {
-  const useCanViewCode = useHasPermission(
-    PERMISSIONS.STOCK_INVENTORY_CODE_READ,
-  );
+  const [open, setOpen] = useState(false);
 
-  const { data, mutateAsync } = useInventoryCodeMutation(inventoryId);
-  const { handleSubmit, control, reset } = useForm<UpdateInventory>({
-    resolver: zodResolver(updateInventorySchema),
-    defaultValues: {
-      name: data?.body,
-      locationId: data?.body,
-      ownerId: data?.body,
-    },
-  });
+  const { mutateAsync } = useInventoryCodeMutation(inventory.id);
+  const { handleSubmit, control, reset, formState } =
+    useForm<UpdateInventoryCode>({
+      resolver: zodResolver(updateInventoryCodeSchema),
+    });
 
-  if (!useCanViewCode) return null;
+  const onSubmit = async (formValues: UpdateInventoryCode) => {
+    await mutateAsync(formValues);
+    reset();
+    setOpen(false);
+  };
+
+  const onOpenChange = (open: boolean) => {
+    if (open) return;
+    reset();
+  };
+  const { access } = useAccess();
+  //TODO : PERMISSIONS.STOCK_INVENTORY_CODE_UPDATE
+  if (
+    !useHasPermission(PERMISSIONS.STOCK_INVENTORY_CODE_READ) ||
+    access?.user.id != inventory.ownerId
+  )
+    return null;
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger
         className={buttonVariants({
           variant: 'outline',
-        })}>
+        })}
+        onClick={() => setOpen(true)}>
         update inventory code
       </DialogTrigger>
       <DialogContent showCloseButton={false}>
@@ -59,16 +79,46 @@ export const UpdateInventoryCodeDialog = ({
             </Typography>
           </DialogDescription>
         </DialogHeader>
-        <div className="flex justify-center">
-          {/* <ButtonGroup>
-              <Input value={data.code ?? 'No code'} />
-              <Button></Button>
-            </ButtonGroup> */}
-        </div>
+        <form id="updateCodeStock" onSubmit={handleSubmit(onSubmit)}>
+          <FieldGroup>
+            <Controller
+              control={control}
+              name="code"
+              render={({ field, fieldState }) => (
+                <Field>
+                  <InputOTP
+                    {...field}
+                    maxLength={6}
+                    pattern={REGEXP_ONLY_DIGITS}>
+                    <InputOTPGroup>
+                      <InputOTPSlot index={0} />
+                      <InputOTPSlot index={1} />
+                      <InputOTPSlot index={2} />
+                      <InputOTPSlot index={3} />
+                      <InputOTPSlot index={4} />
+                      <InputOTPSlot index={5} />
+                    </InputOTPGroup>
+                  </InputOTP>
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+          </FieldGroup>
+        </form>
         <DialogFooter>
-          <DialogClose>
-            <Button variant="outline">Close</Button>
+          <DialogClose onClick={() => setOpen(false)}>
+            <Button disabled={formState.isLoading} variant="outline">
+              Close
+            </Button>
           </DialogClose>
+          <Button
+            disabled={!formState.isValid || formState.isLoading}
+            type="submit"
+            id="updateCodeStock">
+            Update Code
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

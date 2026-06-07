@@ -1,4 +1,4 @@
-import { DeleteInventoryDialog } from '@/features/inventory/deleteInventory';
+import { DeleteInventoryDialog } from '@/components/inventory/deleteInventory';
 import { Button, Typography, useLanguage } from '@57eme-regiment/nabu-ui';
 import type { InventoryDetails } from '@57eme-regiment/renenutet-api-contract';
 import { IconShip, IconTrashFilled } from '@tabler/icons-react';
@@ -34,7 +34,7 @@ export const InventoryHeader = ({
         </Typography>
       </div>
       <div className="flex gap-4">
-        <UpdateInventoryCodeDialog inventoryId={inventory.id} />
+        <UpdateInventoryCodeDialog inventory={inventory} />
         <InventoryCodeDialog inventoryId={inventory.id} />
         <DeleteInventoryDialog>
           <Button variant={'destructive'}>

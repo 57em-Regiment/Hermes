@@ -17,7 +17,9 @@ import {
   Input,
   Typography,
 } from '@57eme-regiment/nabu-ui';
+import { IconCheck, IconCopy } from '@tabler/icons-react';
 import { useQueryClient } from '@tanstack/react-query';
+import copy from 'copy-to-clipboard';
 import { useState } from 'react';
 
 type InventoryCodeDialogProps = {
@@ -26,14 +28,18 @@ type InventoryCodeDialogProps = {
 export const InventoryCodeDialog = ({
   inventoryId,
 }: InventoryCodeDialogProps) => {
-  const useCanViewCode = useHasPermission(
-    PERMISSIONS.STOCK_INVENTORY_CODE_READ,
-  );
-
   const [revealed, setRevealed] = useState(false);
   const { refetch, data } = useInventoryCodeQuery(inventoryId);
   const queryClient = useQueryClient();
   const queryKey = InventoryFactory.CodeInventory(inventoryId);
+
+  const [copied, setCopied] = useState(false);
+  const handleCopy = () => {
+    // navigator.clipboard.writeText(data?.code ?? 'toto').catch(console.error);
+    copy(data?.code ?? 'toto');
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   const onOpenChange = (open: boolean) => {
     if (open) return;
@@ -43,7 +49,7 @@ export const InventoryCodeDialog = ({
     queryClient.removeQueries({ queryKey });
   };
 
-  if (!useCanViewCode) return null;
+  if (!useHasPermission(PERMISSIONS.STOCK_INVENTORY_CODE_READ)) return null;
   return (
     <Dialog onOpenChange={onOpenChange}>
       <DialogTrigger
@@ -74,7 +80,9 @@ export const InventoryCodeDialog = ({
             <div>
               <ButtonGroup>
                 <Input value={data.code ?? 'No code'} />
-                <Button></Button>
+                <Button onClick={() => handleCopy()}>
+                  {copied ? <IconCheck /> : <IconCopy />}
+                </Button>
               </ButtonGroup>
             </div>
           )}

@@ -1,3 +1,6 @@
+import { inventoryApi } from '@/lib/api-client';
+import { useHasPermission } from '@57eme-regiment/auth-browser';
+import { PERMISSIONS } from '@57eme-regiment/auth-contracts';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -9,9 +12,8 @@ import {
   AlertDialogMedia,
   AlertDialogTitle,
   AlertDialogTrigger,
+  Button,
 } from '@57eme-regiment/nabu-ui';
-import { Button } from '@57eme-regiment/nabu-ui';
-import { inventoryApi } from '@/lib/api-client';
 import { useMutation } from '@tanstack/react-query';
 import { getRouteApi, useNavigate } from '@tanstack/react-router';
 import { Trash2Icon } from 'lucide-react';
@@ -43,6 +45,7 @@ export function DeleteInventoryDialog({ children }: DeleteInventoryDialog) {
     },
   });
 
+  if (!useHasPermission(PERMISSIONS.STOCK_INVENTORY_DELETE)) return null;
   return (
     <AlertDialog>
       <AlertDialogTrigger>

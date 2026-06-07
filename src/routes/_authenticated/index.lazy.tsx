@@ -3,13 +3,11 @@ import { DemandCell } from '@/components/inventory/cells/DemandCell';
 import { ProductionCell } from '@/components/inventory/cells/ProductionCell';
 import { ResourceCell } from '@/components/inventory/cells/ResourceCell';
 import { StockCell } from '@/components/inventory/cells/StockCell';
+import { InventoryDialog } from '@/components/inventory/InventoryDialog';
 import { InventoryMenu } from '@/components/inventory/InventoryMenu';
 import { useLanguage } from '@/components/language-provider';
 import { useTheme } from '@/components/theme-provider';
-import { Button } from '@57eme-regiment/nabu-ui';
-import { Input } from '@57eme-regiment/nabu-ui';
-import { InventoryDialog } from '@/features/inventory/InventoryDialog';
-import type { InventoryItem } from '@/types/inventory';
+import { Button, Input } from '@57eme-regiment/nabu-ui';
 import { createLazyFileRoute } from '@tanstack/react-router';
 import type { ColDef, RowClassParams } from 'ag-grid-community';
 import {
@@ -149,7 +147,7 @@ function Index() {
 
   return (
     <div className="flex flex-col space-y-8 pb-8 min-h-[calc(100vh-80px)]">
-      <div className="flex">
+      <div className="flex justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">
             {t('nav.title')}
