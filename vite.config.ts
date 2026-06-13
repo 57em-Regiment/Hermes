@@ -9,11 +9,14 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [react(), tanstackRouter(), tailwindcss()],
+    optimizeDeps: {
+      include: ['ag-grid-community', 'ag-grid-react'],
+    },
     resolve: {
       alias: {
         '@': path.resolve(__dirname, './src'),
       },
-      dedupe: ['react', 'react-dom'],
+      dedupe: ['react', 'react-dom', 'ag-grid-community', 'ag-grid-react'],
     },
     server: {
       host: '0.0.0.0',

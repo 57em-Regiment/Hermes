@@ -1,5 +1,5 @@
 import { PERMISSIONS } from '@57eme-regiment/auth-contracts';
-import { IconForklift } from '@tabler/icons-react';
+import { IconArrowUpRightCircle, IconHome } from '@tabler/icons-react';
 import type { GenericLinkSchema, NavigationLink } from './navigation.model';
 
 const link = (
@@ -9,7 +9,8 @@ const link = (
 ): NavigationLink => ({ to, label, ...options });
 
 export const LINKS = {
-  index: link('/', 'Home', {
+  index: link('/', 'Hermes', {
+    Icon: IconHome,
     permission: PERMISSIONS.STOCK_ITEM_READ, //ADMIN_FOXWATCHER_ACCESS
   }),
   forbidden: link('/forbidden', 'Forbidden', {
@@ -21,8 +22,13 @@ export const LINKS = {
 
   Inventory: {
     detail: link('/inventory/$id', "Detail de l'inventaire", {
-      Icon: IconForklift,
       permission: PERMISSIONS.STOCK_INVENTORY_READ,
+    }),
+  },
+  ProductionRequest: {
+    index: link('/productionRequests', 'Global Production Requests', {
+      Icon: IconArrowUpRightCircle,
+      permission: PERMISSIONS.STOCK_INVENTORY_READ, //TODO STOCK_PRODUCTIONREQUEST_READ
     }),
   },
 } satisfies GenericLinkSchema;

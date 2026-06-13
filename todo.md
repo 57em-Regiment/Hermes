@@ -1,0 +1,8 @@
+- AllStock grid -> gestion des demande / production need total
+- aggrid filter set
+- Gestion des icons
+- Gestion des droits
+- I18n
+- Theme Provider
+- géré les page 404 sur hermes
+- oAut2 remove email des scope

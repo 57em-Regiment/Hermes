@@ -10,7 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@57eme-regiment/auth-browser": "^1.4.0",
+    "@57eme-regiment/auth-browser": "link:../wan-shi-tong/packages/auth-browser",
     "@57eme-regiment/auth-contracts": "link:../wan-shi-tong/packages/auth-contracts",
     "@57eme-regiment/krang-api-contract": "link:../Krang/API/packages/contract",
     "@57eme-regiment/nabu-frontend-utils": "link:../Hermes/nabu/packages/frontend-utils",

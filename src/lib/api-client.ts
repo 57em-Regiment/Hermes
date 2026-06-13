@@ -6,6 +6,10 @@ export const inventoryApi = initClient(contract, {
   baseUrl: import.meta.env.VITE_RENENUTET_SERVICE_URL,
   credentials: 'include',
 });
+export const prApi = initClient(contract.productionRequests, {
+  baseUrl: import.meta.env.VITE_RENENUTET_SERVICE_URL,
+  credentials: 'include',
+});
 export const stockApi = initClient(contract.stock, {
   baseUrl: import.meta.env.VITE_RENENUTET_SERVICE_URL,
   credentials: 'include',

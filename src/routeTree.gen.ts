@@ -13,6 +13,7 @@ import { Route as UnauthenticatedRouteImport } from './routes/unauthenticated'
 import { Route as ForbiddenRouteImport } from './routes/forbidden'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
+import { Route as AuthenticatedProductionRequestsIndexRouteImport } from './routes/_authenticated/productionRequests/index'
 import { Route as AuthenticatedInventoryIdRouteImport } from './routes/_authenticated/inventory/$id'
 
 const UnauthenticatedRoute = UnauthenticatedRouteImport.update({
@@ -36,6 +37,16 @@ const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
 } as any).lazy(() =>
   import('./routes/_authenticated/index.lazy').then((d) => d.Route),
 )
+const AuthenticatedProductionRequestsIndexRoute =
+  AuthenticatedProductionRequestsIndexRouteImport.update({
+    id: '/productionRequests/',
+    path: '/productionRequests/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any).lazy(() =>
+    import('./routes/_authenticated/productionRequests/index.lazy').then(
+      (d) => d.Route,
+    ),
+  )
 const AuthenticatedInventoryIdRoute =
   AuthenticatedInventoryIdRouteImport.update({
     id: '/inventory/$id',
@@ -50,12 +61,14 @@ export interface FileRoutesByFullPath {
   '/forbidden': typeof ForbiddenRoute
   '/unauthenticated': typeof UnauthenticatedRoute
   '/inventory/$id': typeof AuthenticatedInventoryIdRoute
+  '/productionRequests/': typeof AuthenticatedProductionRequestsIndexRoute
 }
 export interface FileRoutesByTo {
   '/forbidden': typeof ForbiddenRoute
   '/unauthenticated': typeof UnauthenticatedRoute
   '/': typeof AuthenticatedIndexRoute
   '/inventory/$id': typeof AuthenticatedInventoryIdRoute
+  '/productionRequests': typeof AuthenticatedProductionRequestsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -64,12 +77,23 @@ export interface FileRoutesById {
   '/unauthenticated': typeof UnauthenticatedRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/inventory/$id': typeof AuthenticatedInventoryIdRoute
+  '/_authenticated/productionRequests/': typeof AuthenticatedProductionRequestsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/forbidden' | '/unauthenticated' | '/inventory/$id'
+  fullPaths:
+    | '/'
+    | '/forbidden'
+    | '/unauthenticated'
+    | '/inventory/$id'
+    | '/productionRequests/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/forbidden' | '/unauthenticated' | '/' | '/inventory/$id'
+  to:
+    | '/forbidden'
+    | '/unauthenticated'
+    | '/'
+    | '/inventory/$id'
+    | '/productionRequests'
   id:
     | '__root__'
     | '/_authenticated'
@@ -77,6 +101,7 @@ export interface FileRouteTypes {
     | '/unauthenticated'
     | '/_authenticated/'
     | '/_authenticated/inventory/$id'
+    | '/_authenticated/productionRequests/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -115,6 +140,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedIndexRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/productionRequests/': {
+      id: '/_authenticated/productionRequests/'
+      path: '/productionRequests'
+      fullPath: '/productionRequests/'
+      preLoaderRoute: typeof AuthenticatedProductionRequestsIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/inventory/$id': {
       id: '/_authenticated/inventory/$id'
       path: '/inventory/$id'
@@ -128,11 +160,14 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteChildren {
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedInventoryIdRoute: typeof AuthenticatedInventoryIdRoute
+  AuthenticatedProductionRequestsIndexRoute: typeof AuthenticatedProductionRequestsIndexRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedInventoryIdRoute: AuthenticatedInventoryIdRoute,
+  AuthenticatedProductionRequestsIndexRoute:
+    AuthenticatedProductionRequestsIndexRoute,
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(

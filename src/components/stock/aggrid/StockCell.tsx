@@ -4,12 +4,13 @@ import type { ICellRendererParams } from 'ag-grid-community';
 
 type StockCellProps = {
   disableCapacity?: boolean;
-} & ICellRendererParams<StockDetails>;
+} & ICellRendererParams<StockDetails & { stockCount: number }>;
 
 export function StockCell({ data, disableCapacity }: StockCellProps) {
   if (!data) return null;
   const DEFAULT_MAX_CAP = 100;
-  const caseMaxQuantity = data.item?.maxQuantity || DEFAULT_MAX_CAP;
+  const caseMaxQuantity =
+    (data.item?.maxQuantity || DEFAULT_MAX_CAP) * data.stockCount;
   const pct = (data.quantity / caseMaxQuantity) * 100;
 
   return (

@@ -1,21 +1,14 @@
-import { InventoryBreadcrumbLabel } from '@/components/layout/breadcrumb/InventoryBreadcrumbLabel';
 import { LINKS } from '@/features/navigation/links';
 import { accessClient } from '@/lib/access';
-import { authClient } from '@/lib/auth';
 import { PERMISSIONS } from '@57eme-regiment/auth-contracts';
 import { createFileRoute, redirect } from '@tanstack/react-router';
 
-export const Route = createFileRoute('/_authenticated/inventory/$id')({
-  staticData: {
-    link: LINKS.Inventory.detail,
-    BreadcrumbLabel: InventoryBreadcrumbLabel,
-  },
+export const Route = createFileRoute('/_authenticated/productionRequests/')({
+  staticData: { link: LINKS.ProductionRequest.index },
   beforeLoad: async () => {
-    const session = await authClient.getSession();
-    if (!session) throw redirect({ to: '/unauthenticated' });
-
     const access = await accessClient.getMyAccess();
-    if (!accessClient.hasPermission(access, PERMISSIONS.STOCK_INVENTORY_READ)) {
+    if (!accessClient.hasPermission(access, LINKS.ProductionRequest.index.permission)) {
+      //TODO STOCK_PRODUCTIONREQUEST_READ
       throw redirect({ to: '/forbidden' });
     }
     return { access };

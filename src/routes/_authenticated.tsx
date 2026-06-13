@@ -4,6 +4,7 @@ import { authClient } from '@/lib/auth';
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/_authenticated')({
+  staticData: { link: LINKS.index },
   beforeLoad: async () => {
     const session = await authClient.getSession();
     if (!session.data?.session)

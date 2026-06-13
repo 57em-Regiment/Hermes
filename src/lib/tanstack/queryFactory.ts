@@ -24,3 +24,6 @@ export const InventoryFactory = {
     'Code',
   ],
 } as const;
+export const ProductionRequestFactory = {
+  all: ['ProductionRequests'],
+} as const;

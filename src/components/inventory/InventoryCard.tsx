@@ -15,6 +15,7 @@ import {
 } from '@57eme-regiment/nabu-ui';
 import {
   IconAlertTriangle,
+  IconCheck,
   IconHours24,
   IconInfoCircle,
   IconShip,
@@ -42,6 +43,14 @@ interface InventoryCardProps {
 export function InventoryCard({ inventoryId }: InventoryCardProps) {
   const { data: inventory, error } = useInventoryDetailsQuery(inventoryId);
 
+  const criticals = inventory?.stocks.filter(
+    s => s.minimumQuantity && s.minimumQuantity > s.quantity,
+  );
+  const warnings = inventory?.stocks.filter(
+    s => s.minimumQuantity && s.quantity <= s.minimumQuantity * 1.2,
+  );
+  const demands = inventory?.stocks.filter(s => s.productionRequest?.length);
+
   if (error || !inventory) return <div>toto</div>;
 
   return (
@@ -67,19 +76,38 @@ export function InventoryCard({ inventoryId }: InventoryCardProps) {
           </CardHeader>
           <CardContent>
             <div className="flex flex-wrap gap-4">
-              <div className="flex gap-1 items-center text-red-500 font-semibold">
-                <IconAlertTriangle className="size-4 animate-pulse" />X Critique
-              </div>
-              <div className="flex gap-1 items-center text-amber-500 font-semibold">
-                <IconAlertTriangle className="size-4 animate-pulse" />X Warning
-              </div>
-              <div className="flex gap-1 items-center text-blue-500 font-semibold">
-                <IconInfoCircle className="size-4 animate-pulse" />X Demand
-              </div>
+              {criticals?.length ? (
+                <div className="flex gap-1 items-center text-red-500 font-semibold">
+                  <IconAlertTriangle className="size-4 animate-pulse" />
+                  {criticals.length} Critique
+                </div>
+              ) : (
+                <div className="flex gap-1 items-center text-green-500/40 font-semibold">
+                  <IconCheck className="size-4" />0 Critique
+                </div>
+              )}
+              {warnings?.length ? (
+                <div className="flex gap-1 items-center text-amber-500 font-semibold">
+                  <IconAlertTriangle className="size-4 animate-pulse" />
+                  {warnings?.length} Warning
+                </div>
+              ) : (
+                <div className="flex gap-1 items-center text-green-500/40 font-semibold">
+                  <IconAlertTriangle className="size-4 animate-pulse" />0
+                  Warning
+                </div>
+              )}
+              {demands?.length ? (
+                <div className="flex gap-1 items-center text-blue-500 font-semibold">
+                  <IconInfoCircle className="size-4 animate-pulse" />
+                  {demands?.length} Demand{demands?.length > 1 && 's'}
+                </div>
+              ) : (
+                <div className="flex gap-1 items-center text-green-500/40 font-semibold">
+                  <IconInfoCircle className="size-4 animate-pulse" />0 Demand
+                </div>
+              )}
             </div>
-            <Typography variant="muted">
-              Last update {formatDateTime(inventory.updatedAt)}
-            </Typography>
           </CardContent>
           <CardFooter className="flex gap-1 items-center w-full">
             <Avatar>

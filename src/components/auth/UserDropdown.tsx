@@ -1,3 +1,4 @@
+import { LINKS } from '@/features/navigation/links';
 import { authClient } from '@/lib/auth';
 import {
   Avatar,
@@ -27,14 +28,14 @@ export function UserDropdown() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="flex items-center gap-2 rounded-md px-2 py-1 text-sm hover:bg-muted hover:cursor-pointer">
-        <button className="group size-9 rounded-full">
+        <div className="group size-9 rounded-full">
           <Avatar className="mr-2 size-full group-active:scale-95">
             <AvatarFallback className="bg-card">
               {user?.name?.slice(0, 1).toUpperCase()}
             </AvatarFallback>
             {user?.image && <AvatarImage src={user.image} />}
           </Avatar>
-        </button>
+        </div>
         <span className="max-w-32 truncate">{session.data?.user?.name}</span>
       </DropdownMenuTrigger>
 
@@ -48,6 +49,17 @@ export function UserDropdown() {
           </DropdownMenuItem>
         </DropdownMenuGroup>
 
+        <DropdownMenuSeparator />
+        <DropdownMenuGroup>
+          <DropdownMenuItem
+            onClick={() => navigate({ to: LINKS.ProductionRequest.index.to })}
+            className="hover:cursor-pointer">
+            {LINKS.ProductionRequest.index.Icon && (
+              <LINKS.ProductionRequest.index.Icon className="mr-2 size-4" />
+            )}
+            {LINKS.ProductionRequest.index.label}
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
         <DropdownMenuSeparator />
 
         <DropdownMenuGroup>

@@ -45,6 +45,7 @@ export const UpdateInventoryCodeDialog = ({
     });
 
   const onSubmit = async (formValues: UpdateInventoryCode) => {
+    console.log('🚀 ~ onSubmit ~ formValues:', formValues);
     await mutateAsync(formValues);
     reset();
     setOpen(false);
@@ -116,7 +117,7 @@ export const UpdateInventoryCodeDialog = ({
           <Button
             disabled={!formState.isValid || formState.isLoading}
             type="submit"
-            id="updateCodeStock">
+            form="updateCodeStock">
             Update Code
           </Button>
         </DialogFooter>

@@ -2,7 +2,6 @@ import { useAllStockQuery } from '@/features/stock/useAllStockQuery';
 import { useLanguage, useTheme } from '@57eme-regiment/nabu-ui';
 import type { StockDetails } from '@57eme-regiment/renenutet-api-contract';
 import {
-  AllCommunityModule,
   colorSchemeDark,
   colorSchemeLight,
   themeQuartz,
@@ -12,7 +11,7 @@ import {
 import { AgGridReact } from 'ag-grid-react';
 import { useMemo, useRef } from 'react';
 import { ResourceCell } from '../inventory/cells/ResourceCell';
-import { StockCell } from '../inventory/cells/StockCell';
+import { StockCell } from './aggrid/StockCell';
 
 export const AllStockGrid = () => {
   const gridRef = useRef<AgGridReact<StockDetails>>(null);
@@ -94,21 +93,22 @@ export const AllStockGrid = () => {
         filter: true,
         resizable: false,
         suppressFloatingFilterButton: true,
+        suppressHeaderMenuButton: true,
+        suppressHeaderContextMenu: true,
         floatingFilter: true,
       },
-      theme: agTheme,
       suppressMovableColumns: true,
       columnDefs,
     }),
-    [agTheme, columnDefs],
+    [columnDefs],
   );
 
   return (
     <div className="h-[calc(100vh-30rem)]">
       <AgGridReact<StockDetails>
         ref={gridRef}
-        modules={[AllCommunityModule]}
         gridOptions={gridOption}
+        theme={agTheme}
         rowData={stocks}
       />
     </div>

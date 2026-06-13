@@ -1,6 +1,7 @@
 import { useInventoriesListQuery } from '@/features/inventory/useInventoriesList.query';
 import { InventoryCard } from './InventoryCard';
 
+
 export const InventoryMenu = () => {
   const { data: inventories, error, isPending } = useInventoriesListQuery();
 
@@ -30,7 +31,10 @@ export const InventoryMenu = () => {
   return (
     <div className="flex gap-6">
       {(inventories ?? []).map(({ id: inventoryId }) => (
-        <InventoryCard key={inventoryId} inventoryId={inventoryId} />
+        <InventoryCard
+          key={inventoryId}
+          inventoryId={inventoryId}
+        />
       ))}
     </div>
   );

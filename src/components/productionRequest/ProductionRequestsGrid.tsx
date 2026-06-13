@@ -1,31 +1,26 @@
+import { useGetProductionRequestsQuery } from '@/features/productionRequests/useGetProductionRequests.query';
+import { useUpdateProductionRequestMutation } from '@/features/productionRequests/useUpdateProductionRequest.mutation copy';
 import { useLanguage, useTheme } from '@57eme-regiment/nabu-ui';
-import type { StockDetails } from '@57eme-regiment/renenutet-api-contract';
-import { useParams } from '@tanstack/react-router';
+import type { ProductionRequestDetail } from '@57eme-regiment/renenutet-api-contract';
 import {
   colorSchemeDark,
   colorSchemeLight,
   themeQuartz,
   type ColDef,
   type GridOptions,
+  type NewValueParams,
 } from 'ag-grid-community';
 import { AgGridReact } from 'ag-grid-react';
 import { useMemo, useRef } from 'react';
-import { ActionsCell } from '../inventory/cells/ActionsCell';
-import { DemandCell } from '../inventory/cells/DemandCell';
-import { ProductionCell } from '../inventory/cells/ProductionCell';
-import { ResourceCell } from '../inventory/cells/ResourceCell';
-import { StockCell } from '../inventory/cells/StockCell';
-import { AddNewStockDialog } from './addNewStock';
+import { ActionsCell } from './cells/ActionsCell';
+import { ResourceCell } from './cells/ResourceCell';
+import { StockCell } from './cells/StockCell';
 
-type StockGridProps = {
-  stocks: StockDetails[];
-};
+export const ProductionRequestsGrid = () => {
+  const gridRef = useRef<AgGridReact<ProductionRequestDetail>>(null);
 
-export const StockGrid = ({ stocks }: StockGridProps) => {
-  const { id: inventoryId } = useParams({
-    from: '/_authenticated/inventory/$id',
-  });
-  const gridRef = useRef<AgGridReact<StockDetails>>(null);
+  const { data: prs } = useGetProductionRequestsQuery();
+  const { mutateAsync } = useUpdateProductionRequestMutation();
 
   const { t } = useLanguage();
   const { theme } = useTheme();
@@ -49,15 +44,40 @@ export const StockGrid = ({ stocks }: StockGridProps) => {
     [isDark],
   );
 
-  const columnDefs = useMemo<ColDef<StockDetails>[]>(
-    () => [
+  const onCellValueChanged = async (
+    e: NewValueParams<ProductionRequestDetail>,
+  ) => {
+    mutateAsync({
+      prParams: {
+        id: e.data.id,
+      },
+      formValues: {
+        quantity: e.newValue,
+      },
+    });
+  };
+
+  const columnDefs = useMemo<ColDef<ProductionRequestDetail>[]>(() => {
+    return [
       {
         headerName: t('v1.resource'),
         cellRenderer: ResourceCell,
         flex: 2,
         minWidth: 220,
-        filterValueGetter: ({ data }) => data?.item.name,
+        filterValueGetter: ({ data }) =>
+          `${data?.item.name} ${data?.item.shortName}`,
         valueGetter: ({ data }) => data?.item.name,
+      },
+      {
+        headerName: 'Inventory',
+        flex: 2,
+        minWidth: 230,
+        filter: 'agSetColumnFilter',
+        valueGetter: ({ data }) =>
+          data?.inventoryId
+            ? data.stocks?.find(s => s.inventoryId == data.inventoryId)
+                ?.inventoryFullName
+            : null,
       },
       {
         headerName: t('v1.stock'),
@@ -69,35 +89,29 @@ export const StockGrid = ({ stocks }: StockGridProps) => {
         sort: 'desc',
       },
       {
-        headerName: t('v1.production'),
-        cellRenderer: ProductionCell,
-        flex: 1,
-        minWidth: 160,
-        filter: false,
-      },
-      {
         headerName: t('v1.demand'),
-        cellRenderer: DemandCell,
+        field: 'quantity',
         flex: 2,
-        filter: false,
         minWidth: 200,
+        editable: true,
+        filter: false,
+        singleClickEdit: true,
+        onCellValueChanged,
       },
       {
         headerName: t('v1.actions'),
         cellRenderer: ActionsCell,
-        cellRendererParams: { inventoryId: inventoryId },
         headerClass: '[&_.ag-header-cell-label]:justify-end',
         sortable: false,
         suppressHeaderMenuButton: true,
         filter: false,
-        flex: 1.5,
+        flex: 1,
         minWidth: 180,
       },
-    ],
-    [t, inventoryId],
-  );
+    ];
+  }, [t, onCellValueChanged]);
 
-  const gridOption = useMemo<GridOptions<StockDetails>>(
+  const gridOption = useMemo<GridOptions<ProductionRequestDetail>>(
     () => ({
       defaultColDef: {
         sortable: true,
@@ -115,21 +129,13 @@ export const StockGrid = ({ stocks }: StockGridProps) => {
   );
 
   return (
-    <div className="space-y-4">
-      <div className="flex justify-between gap-4">
-        <div className="space-x-4">
-          <AddNewStockDialog inventoryId={inventoryId} />
-        </div>
-      </div>
-
-      <div className="h-[calc(100vh-18rem)]">
-        <AgGridReact<StockDetails>
-          ref={gridRef}
-          gridOptions={gridOption}
-          theme={agTheme}
-          rowData={stocks}
-        />
-      </div>
+    <div className="h-[calc(100vh-10rem)]">
+      <AgGridReact<ProductionRequestDetail>
+        ref={gridRef}
+        gridOptions={gridOption}
+        theme={agTheme}
+        rowData={prs}
+      />
     </div>
   );
 };

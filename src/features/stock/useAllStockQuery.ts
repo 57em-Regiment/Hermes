@@ -12,15 +12,16 @@ export function useAllStockQuery() {
       if (res.status !== 200)
         throw new HttpError(res.status, 'Failed to all stocks');
 
-      const allItems = new Map<string, StockDetails>();
+      const allItems = new Map<string, StockDetails & { stockCount: number }>();
       for (const s of res.body) {
         if (!allItems.has(s.itemId)) {
-          allItems.set(s.itemId, s);
+          allItems.set(s.itemId, { ...s, stockCount: 1 });
         } else {
           const existing = allItems.get(s.itemId)!;
           allItems.set(s.itemId, {
             ...existing,
             quantity: existing.quantity + s.quantity,
+            stockCount: existing.stockCount + 1,
           });
         }
       }

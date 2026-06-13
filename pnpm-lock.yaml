@@ -13,8 +13,8 @@ importers:
   .:
     dependencies:
       '@57eme-regiment/auth-browser':
-        specifier: ^1.4.0
-        version: 1.4.0(@types/node@24.12.4)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+        specifier: link:../wan-shi-tong/packages/auth-browser
+        version: link:../wan-shi-tong/packages/auth-browser
       '@57eme-regiment/auth-contracts':
         specifier: link:../wan-shi-tong/packages/auth-contracts
         version: link:../wan-shi-tong/packages/auth-contracts
@@ -195,14 +195,6 @@ importers:
         version: 8.0.14(@types/node@24.12.4)(jiti@2.7.0)
 
 packages:
-
-  '@57eme-regiment/auth-browser@1.4.0':
-    resolution: {integrity: sha512-rqa9jAz6IU8ceED9A4qrr+1dBIDsU3aUYpyalWFaoQbbGMGyoeRAfR82XM1l9yNrGPbJpVFGG8PXQ7svFz+4bA==, tarball: https://npm.pkg.github.com/download/@57eme-regiment/auth-browser/1.4.0/7ce2458d98783863a22510488865c156ff5905d8}
-    peerDependencies:
-      react: 19.2.6
-
-  '@57eme-regiment/auth-contracts@1.5.0':
-    resolution: {integrity: sha512-CCz9OZ8F3AAzyMmYVS1q38HaiMsRtwIzBAn9yONJMr+F/AAiT+sL1mRFIkP4oWO+6grthTF2AJfVy22+B42eEg==, tarball: https://npm.pkg.github.com/download/@57eme-regiment/auth-contracts/1.5.0/99e39a228483601e2b3c2ccfd4a816b97081392f}
 
   '@alloc/quick-lru@5.2.0':
     resolution: {integrity: sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==}
@@ -1052,14 +1044,6 @@ packages:
       '@types/node':
         optional: true
       zod:
-        optional: true
-
-  '@ts-rest/core@3.53.0-rc.1':
-    resolution: {integrity: sha512-hDMXqKHSys6w+kXFW1Q6EvN8QgRvtXKXJ2TpYByKI4TquaPjiTOv99aLD26X4LNRzdna8Ci1PVyzr0jYZv0oNQ==}
-    peerDependencies:
-      '@types/node': ^18.18.7 || >=20.8.4
-    peerDependenciesMeta:
-      '@types/node':
         optional: true
 
   '@tsconfig/node10@1.0.12':
@@ -3021,41 +3005,6 @@ packages:
 
 snapshots:
 
-  '@57eme-regiment/auth-browser@1.4.0(@types/node@24.12.4)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)':
-    dependencies:
-      '@57eme-regiment/auth-contracts': 1.5.0(@types/node@24.12.4)
-      better-auth: 1.6.11(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
-      react: 19.2.6
-    transitivePeerDependencies:
-      - '@cloudflare/workers-types'
-      - '@lynx-js/react'
-      - '@opentelemetry/api'
-      - '@prisma/client'
-      - '@sveltejs/kit'
-      - '@tanstack/react-start'
-      - '@tanstack/solid-start'
-      - '@types/node'
-      - better-sqlite3
-      - drizzle-kit
-      - drizzle-orm
-      - mongodb
-      - mysql2
-      - next
-      - pg
-      - prisma
-      - react-dom
-      - solid-js
-      - svelte
-      - vitest
-      - vue
-
-  '@57eme-regiment/auth-contracts@1.5.0(@types/node@24.12.4)':
-    dependencies:
-      '@ts-rest/core': 3.53.0-rc.1(@types/node@24.12.4)
-      zod: 4.4.3
-    transitivePeerDependencies:
-      - '@types/node'
-
   '@alloc/quick-lru@5.2.0': {}
 
   '@babel/code-frame@7.29.7':
@@ -3867,10 +3816,6 @@ snapshots:
     optionalDependencies:
       '@types/node': 24.12.4
       zod: 4.4.3
-
-  '@ts-rest/core@3.53.0-rc.1(@types/node@24.12.4)':
-    optionalDependencies:
-      '@types/node': 24.12.4
 
   '@tsconfig/node10@1.0.12': {}
 

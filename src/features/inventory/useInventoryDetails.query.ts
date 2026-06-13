@@ -14,7 +14,15 @@ export function useInventoryDetailsQuery(inventoryId: string) {
       });
       if (res.status !== 200)
         throw new HttpError(res.status, 'Failed to fetch inventories');
-      return res.body;
+      return {
+        ...res.body,
+        stocks: res.body.stocks.map(s => ({
+          ...s,
+          productionRequest: s.productionRequest?.filter(
+            pr => pr.inventoryId == res.body.id,
+          ),
+        })),
+      };
     },
   });
 }

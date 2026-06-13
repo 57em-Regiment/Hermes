@@ -1,3 +1,5 @@
+import { AllCommunityModule } from 'ag-grid-community';
+import { AgGridProvider } from 'ag-grid-react';
 import { getQueryClient } from '@57eme-regiment/nabu-frontend-utils';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { RouterProvider, createRouter } from '@tanstack/react-router';
@@ -18,8 +20,10 @@ declare module '@tanstack/react-router' {
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
-    </QueryClientProvider>
+    <AgGridProvider modules={[AllCommunityModule]}>
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
+    </AgGridProvider>
   </StrictMode>,
 );
