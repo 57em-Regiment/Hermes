@@ -3,7 +3,10 @@ import {
   useLocationsQuery,
 } from '@/features/location/useLocationsQuery';
 import { useDebounce } from '@/hooks/useDebounce';
-import type { LocationNames } from '@57eme-regiment/krang-api-contract';
+import type {
+  LocationNames,
+  LocationType,
+} from '@57eme-regiment/krang-api-contract';
 import { cn } from '@57eme-regiment/nabu-ui';
 import { Combobox } from '@base-ui/react/combobox';
 import {
@@ -11,9 +14,9 @@ import {
   CheckIcon,
   ChevronsUpDownIcon,
   LoaderCircleIcon,
-  WarehouseIcon,
 } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 type LocationAutocompleteSelectProps = {
   value?: string;
@@ -23,17 +26,11 @@ type LocationAutocompleteSelectProps = {
   readOnly?: boolean;
   excludeLocationIds?: string[];
   placeholder?: string;
+  filterType?: LocationType[];
 };
 
 const locationLabel = (loc: LocationNames) =>
   `${loc.region.name} · ${loc.town.name} · ${loc.type}`;
-
-const TypeIcon = ({ type }: { type: LocationNames['type'] }) =>
-  type === 'STORAGE_DEPOT' ? (
-    <WarehouseIcon className="size-4 shrink-0 text-muted-foreground" />
-  ) : (
-    <AnchorIcon className="size-4 shrink-0 text-muted-foreground" />
-  );
 
 export const LocationAutocompleteSelect = ({
   value,
@@ -42,8 +39,12 @@ export const LocationAutocompleteSelect = ({
   disabled = false,
   readOnly = false,
   excludeLocationIds = [],
-  placeholder = 'Search location…',
+  placeholder,
+  filterType,
 }: LocationAutocompleteSelectProps) => {
+  const { t } = useTranslation();
+  const resolvedPlaceholder =
+    placeholder ?? t('Components.LocationAutocompleteSelect.placeholder');
   const [inputValue, setInputValue] = useState('');
   const [userPickedItem, setUserPickedItem] = useState<LocationNames | null>(
     null,
@@ -55,7 +56,7 @@ export const LocationAutocompleteSelect = ({
     data: locations = [],
     isLoading,
     isFetching,
-  } = useLocationsQuery(debouncedSearch);
+  } = useLocationsQuery(debouncedSearch, filterType);
 
   const { data: defaultLocation } = useLocationByIdQuery(
     defaultValue && !userPickedItem ? defaultValue : undefined,
@@ -99,7 +100,7 @@ export const LocationAutocompleteSelect = ({
           readOnly && 'bg-muted',
         )}>
         <Combobox.Input
-          placeholder={placeholder}
+          placeholder={resolvedPlaceholder}
           readOnly={readOnly}
           value={inputValue}
           onChange={e => setInputValue(e.target.value)}
@@ -118,16 +119,16 @@ export const LocationAutocompleteSelect = ({
 
       <Combobox.Portal>
         <Combobox.Positioner sideOffset={4} className="isolate z-50">
-          <Combobox.Popup className="w-(--anchor-width) max-h-60 overflow-y-auto rounded-lg bg-popover text-popover-foreground shadow-md ring-1 ring-foreground/10 origin-(--transform-origin) data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 duration-100">
+          <Combobox.Popup className="w-lg max-h-60 overflow-y-auto rounded-lg bg-popover text-popover-foreground shadow-md ring-1 ring-foreground/10 origin-(--transform-origin) data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 duration-100">
             <Combobox.List className="p-1">
               {debouncedSearch.length < 2 && (
                 <Combobox.Empty className="py-6 text-center text-sm text-muted-foreground">
-                  Type at least 2 characters…
+                  {t('Components.LocationAutocompleteSelect.minChars')}
                 </Combobox.Empty>
               )}
               {debouncedSearch.length >= 2 && !locations.length && (
                 <Combobox.Empty className="py-6 text-center text-sm text-muted-foreground">
-                  No location found.
+                  {t('Components.LocationAutocompleteSelect.notFound')}
                 </Combobox.Empty>
               )}
               {locations.map(location => (
@@ -142,7 +143,11 @@ export const LocationAutocompleteSelect = ({
                     }>
                     <CheckIcon className="size-4" />
                   </Combobox.ItemIndicator>
-                  <TypeIcon type={location.type} />
+                  {location.icon ? (
+                    <img src={location.icon} className="size-6 object-cover" />
+                  ) : (
+                    <AnchorIcon className="size-4 shrink-0 text-muted-foreground" />
+                  )}
                   <span className="flex-1">
                     {location.region.name} · {location.town.name}
                   </span>

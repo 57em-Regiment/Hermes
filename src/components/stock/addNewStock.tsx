@@ -30,6 +30,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { ItemAutocompleteSelect } from '../item/ItemAutocompleteSelect';
 
@@ -41,6 +42,7 @@ export function AddNewStockDialog({ inventoryId }: AddNewStockDialogProps) {
   const userCanCreate = useHasPermission(PERMISSIONS.STOCK_ITEM_READ); //TODO HERMES_STOCKITEM_ADD
   const { data: stocks } = useGetStockByInventoryId(inventoryId);
   const [open, setOpen] = useState(false);
+  const { t } = useTranslation();
 
   const { handleSubmit, control, reset, formState } = useForm<CreateStock>({
     resolver: zodResolver(createStockSchema),
@@ -71,7 +73,6 @@ export function AddNewStockDialog({ inventoryId }: AddNewStockDialogProps) {
       await queryClient.cancelQueries({ queryKey });
     },
     onError(error) {
-      console.error('🚀 ~ InventoryDialog ~ error:', error);
       toast.error(error.message);
     },
     onSettled: () => {
@@ -99,15 +100,14 @@ export function AddNewStockDialog({ inventoryId }: AddNewStockDialogProps) {
           className={buttonVariants({
             variant: 'outline',
           })}>
-          Add new item to stock
+          {t('Pages.Inventory.AddItemDialog.triggerLabel')}{' '}
         </DialogTrigger>
         <DialogContent showCloseButton={false}>
           <DialogHeader>
-            <DialogTitle>Add new item</DialogTitle>
+            <DialogTitle>{t('Pages.Inventory.AddItemDialog.title')}</DialogTitle>
             <DialogDescription className="wrap-normal w-full">
               <Typography>
-                Add an item that is not already tracked in this inventory
-              </Typography>
+                {t('Pages.Inventory.AddItemDialog.description')} </Typography>
             </DialogDescription>
           </DialogHeader>
           <form id="incrementStock" onSubmit={handleSubmit(onSubmit)}>
@@ -117,7 +117,7 @@ export function AddNewStockDialog({ inventoryId }: AddNewStockDialogProps) {
                 name="itemId"
                 render={({ field, fieldState }) => (
                   <Field>
-                    <FieldLabel>Item</FieldLabel>
+                    <FieldLabel>{t('Pages.Inventory.item')}</FieldLabel>
                     <ItemAutocompleteSelect
                       {...field}
                       onSelected={onItemSelected(field.onChange)}
@@ -134,7 +134,7 @@ export function AddNewStockDialog({ inventoryId }: AddNewStockDialogProps) {
                 name="quantity"
                 render={({ field, fieldState, formState }) => (
                   <Field>
-                    <FieldLabel>Quantity</FieldLabel>
+                    <FieldLabel>{t('Pages.Inventory.quantity')}</FieldLabel>
                     <Input
                       {...field}
                       disabled={
@@ -155,15 +155,14 @@ export function AddNewStockDialog({ inventoryId }: AddNewStockDialogProps) {
           </form>
           <DialogFooter>
             <DialogClose>
-              <Button variant="outline">Cancel</Button>
+              <Button variant="outline">{t('dialog.cancel')}</Button>
             </DialogClose>
             <Button
               disabled={!formState.isValid}
               form="incrementStock"
               type="submit"
               className="bg-primary hover:bg-primary/90">
-              Add item to stock
-            </Button>
+              {t('Pages.Inventory.AddItemDialog.saveAction')} </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

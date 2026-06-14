@@ -17,12 +17,14 @@ import {
 import { getRouteApi } from '@tanstack/react-router';
 import { Trash2Icon } from 'lucide-react';
 import { type PropsWithChildren } from 'react';
+import { useTranslation } from 'react-i18next';
 
 type DeleteInventoryDialog = PropsWithChildren;
 
 const routeApi = getRouteApi('/_authenticated/inventory/$id');
 
 export function DeleteInventoryDialog({ children }: DeleteInventoryDialog) {
+  const { t } = useTranslation();
   const { id: stockId } = routeApi.useParams();
   const { mutateAsync } = useDeleteInventoryMutation(stockId);
 
@@ -30,24 +32,24 @@ export function DeleteInventoryDialog({ children }: DeleteInventoryDialog) {
   return (
     <AlertDialog>
       <AlertDialogTrigger>
-        {children || <Button variant="destructive">Delete Inventory</Button>}
+        {children || <Button variant="destructive">{t('Components.DeleteInventory.triggerLabel')}</Button>}
       </AlertDialogTrigger>
       <AlertDialogContent size="sm">
         <AlertDialogHeader>
           <AlertDialogMedia className="bg-destructive/10 text-destructive dark:bg-destructive/20 dark:text-destructive">
             <Trash2Icon />
           </AlertDialogMedia>
-          <AlertDialogTitle>Delete inventory ?</AlertDialogTitle>
+          <AlertDialogTitle>{t('Components.DeleteInventory.title')}</AlertDialogTitle>
           <AlertDialogDescription>
-            This will permanently delete this inventory and all relative data
+            {t('Components.DeleteInventory.description')}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel variant="outline">Cancel</AlertDialogCancel>
+          <AlertDialogCancel variant="outline">{t('Components.DeleteInventory.cancelButton')}</AlertDialogCancel>
           <AlertDialogAction
             variant="destructive"
             onClick={() => mutateAsync()}>
-            Delete
+            {t('Components.DeleteInventory.deleteButton')}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

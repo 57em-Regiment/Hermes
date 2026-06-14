@@ -4,11 +4,19 @@ import { IconPackage } from '@tabler/icons-react';
 import type { ICellRendererParams } from 'ag-grid-community';
 
 export function ResourceCell({ data }: ICellRendererParams<StockDetails>) {
+  console.log('🚀 ~ ResourceCell ~ data:', data);
   if (!data) return null;
 
   return (
     <div className="flex items-center gap-2 h-full">
-      <IconPackage />
+      {data.item.icon ? (
+        <img
+          src={data.item.icon}
+          className="size-8 rounded-full object-cover"
+        />
+      ) : (
+        <IconPackage />
+      )}
       <Typography>
         {data.item.name} {data.item.shortName && data.item.shortName}
       </Typography>

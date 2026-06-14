@@ -9,7 +9,7 @@ const link = (
 ): NavigationLink => ({ to, label, ...options });
 
 export const LINKS = {
-  index: link('/', 'Hermes', {
+  index: link('/', 'Links.index', {
     Icon: IconHome,
     permission: PERMISSIONS.STOCK_ITEM_READ, //ADMIN_FOXWATCHER_ACCESS
   }),
@@ -21,12 +21,12 @@ export const LINKS = {
   }),
 
   Inventory: {
-    detail: link('/inventory/$id', "Detail de l'inventaire", {
+    detail: link('/inventory/$id', 'Links.Inventory.detail', {
       permission: PERMISSIONS.STOCK_INVENTORY_READ,
     }),
   },
   ProductionRequest: {
-    index: link('/productionRequests', 'Global Production Requests', {
+    index: link('/productionRequests', 'Links.ProductionRequest.index', {
       Icon: IconArrowUpRightCircle,
       permission: PERMISSIONS.STOCK_INVENTORY_READ, //TODO STOCK_PRODUCTIONREQUEST_READ
     }),

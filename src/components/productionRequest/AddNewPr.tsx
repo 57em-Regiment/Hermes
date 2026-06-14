@@ -28,10 +28,12 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { InventoryAutocompleteSelect } from '../inventory/InventoryAutocompleteSelect';
 import { ItemAutocompleteSelect } from '../item/ItemAutocompleteSelect';
 
 export function AddNewPr() {
+  const { t } = useTranslation();
   const userCanCreate = useHasPermission(PERMISSIONS.STOCK_ITEM_READ); //TODO HERMES_PRODUCTIONREQUEST_CREATE
   const [open, setOpen] = useState(false);
 
@@ -74,16 +76,13 @@ export function AddNewPr() {
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogTrigger>
-          <Button>Add Production Request</Button>
+          <Button>{t('Components.AddNewPr.triggerLabel')}</Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Add new Production Request</DialogTitle>
+            <DialogTitle>{t('Components.AddNewPr.title')}</DialogTitle>
             <DialogDescription className="wrap-normal w-full">
-              <Typography>
-                Add an Production Request for item that is not already tracked
-                by PR.
-              </Typography>
+              <Typography>{t('Components.AddNewPr.description')}</Typography>
             </DialogDescription>
           </DialogHeader>
           <form id="createProductionRequest" onSubmit={handleSubmit(onSubmit)}>
@@ -93,7 +92,7 @@ export function AddNewPr() {
                 name="itemId"
                 render={({ field, fieldState }) => (
                   <Field>
-                    <FieldLabel>Item</FieldLabel>
+                    <FieldLabel>{t('Components.AddNewPr.itemLabel')}</FieldLabel>
                     <ItemAutocompleteSelect
                       {...field}
                       onSelected={onItemSelected(field.onChange)}
@@ -109,7 +108,7 @@ export function AddNewPr() {
                 name="inventoryId"
                 render={({ field, fieldState }) => (
                   <Field>
-                    <FieldLabel>Inventory (optional)</FieldLabel>
+                    <FieldLabel>{t('Components.AddNewPr.inventoryLabel')}</FieldLabel>
                     <InventoryAutocompleteSelect
                       {...field}
                       onSelected={onInventorySelected(field.onChange)}
@@ -125,7 +124,7 @@ export function AddNewPr() {
                 name="quantity"
                 render={({ field, fieldState, formState }) => (
                   <Field>
-                    <FieldLabel>Quantity</FieldLabel>
+                    <FieldLabel>{t('Components.AddNewPr.quantityLabel')}</FieldLabel>
                     <Input
                       {...field}
                       disabled={
@@ -146,14 +145,14 @@ export function AddNewPr() {
           </form>
           <DialogFooter>
             <DialogClose>
-              <Button variant="outline">Cancel</Button>
+              <Button variant="outline">{t('Components.AddNewPr.cancelButton')}</Button>
             </DialogClose>
             <Button
               disabled={!formState.isValid}
               form="createProductionRequest"
               type="submit"
               className="bg-primary hover:bg-primary/90">
-              Create new PR.
+              {t('Components.AddNewPr.submitButton')}
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -29,6 +29,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { REGEXP_ONLY_DIGITS } from 'input-otp';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
 type InventoryCodeDialogProps = {
   inventory: InventoryDetails;
@@ -37,6 +38,7 @@ export const UpdateInventoryCodeDialog = ({
   inventory,
 }: InventoryCodeDialogProps) => {
   const [open, setOpen] = useState(false);
+  const { t } = useTranslation();
 
   const { mutateAsync } = useInventoryCodeMutation(inventory.id);
   const { handleSubmit, control, reset, formState } =
@@ -69,15 +71,16 @@ export const UpdateInventoryCodeDialog = ({
           variant: 'outline',
         })}
         onClick={() => setOpen(true)}>
-        update inventory code
+        {t('Components.UpdateInventoryCode.triggerLabel')}{' '}
       </DialogTrigger>
       <DialogContent showCloseButton={false}>
         <DialogHeader>
-          <DialogTitle>update inventory code</DialogTitle>
+          <DialogTitle>
+            {t('Pages.Inventory.AddItemDialog.triggerLabel')}
+          </DialogTitle>
           <DialogDescription className="wrap-normal w-full">
             <Typography>
-              This code is sensitive and should not be shared with everyone.
-            </Typography>
+              {t('Components.UpdateInventoryCode.description')} </Typography>
           </DialogDescription>
         </DialogHeader>
         <form id="updateCodeStock" onSubmit={handleSubmit(onSubmit)}>
@@ -111,15 +114,13 @@ export const UpdateInventoryCodeDialog = ({
         <DialogFooter>
           <DialogClose onClick={() => setOpen(false)}>
             <Button disabled={formState.isLoading} variant="outline">
-              Close
-            </Button>
+              {t('dialog.close')} </Button>
           </DialogClose>
           <Button
             disabled={!formState.isValid || formState.isLoading}
             type="submit"
             form="updateCodeStock">
-            Update Code
-          </Button>
+            {t('Components.UpdateInventoryCode.saveAction')} </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

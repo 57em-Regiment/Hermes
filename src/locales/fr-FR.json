@@ -1,0 +1,156 @@
+{
+  "stock": {
+    "items_zero": "aucun item",
+    "items_one": "{{count}} item",
+    "items_other": "{{count}} items"
+  },
+  "dialog": {
+    "add": "Ajouter",
+    "remove": "Retirer",
+    "cancel": "Annuler",
+    "confirm_add": "Confirmer l'ajout",
+    "confirm_remove": "Confirmer le retrait",
+    "add_description": "Combien d'unités voulez-vous ajouter ? Actuellement à",
+    "remove_description": "Combien d'unités voulez-vous retirer ?",
+    "close": "Fermer"
+  },
+  "Links": {
+    "index": "Tableau de bord",
+    "ProductionRequest": {
+      "index": "Demandes de production"
+    }
+  },
+  "Global": {
+    "Aggrid": {
+      "resource": "Ressource",
+      "stock": "Stock / Capacité",
+      "demand": "Demande",
+      "globalDemandPR": "Demande de production globale",
+      "production": "Besoin de Production",
+      "actions": "Actions",
+      "inventory": "Inventaire",
+      "Input": {
+        "vide": "Vide",
+        "nonVide": "Non vide"
+      }
+    },
+    "Auth": {
+      "logout": "Se déconnecter",
+      "login": "Connexion"
+    }
+  },
+  "Pages": {
+    "Unauthenticated": {
+      "title": "Authentification requise",
+      "description": "Vous avez besoin d'être authentifié pour accéder à cette page."
+    },
+    "Forbidden": {
+      "title": "Accès refusé",
+      "description": "Vous n'avez pas les permissions nécessaires pour accéder à cette page."
+    },
+    "Inventory": {
+      "errorMessage": "Impossible de charger l'inventaire",
+      "AddItemDialog": {
+        "triggerLabel": "Ajouter un nouvel item au stock",
+        "title": "Ajouter un nouvel item",
+        "description": "Ajouter un item qui n'est pas encore répertorié dans cet inventaire",
+        "saveAction": "Ajouter l'item au stock"
+      },
+      "item": "Item",
+      "quantity": "Quantité"
+    },
+    "InventoryDetail": {
+      "errorMessage": "Impossible de charger l'inventaire"
+    }
+  },
+  "Components": {
+    "ItemAutocompleteSelect": {
+      "placeholder": "Rechercher un item…",
+      "minChars": "Tapez au moins 2 caractères…",
+      "notFound": "Aucun item trouvé."
+    },
+    "InventoryAutocompleteSelect": {
+      "placeholder": "Rechercher un inventaire…",
+      "notFound": "Aucun inventaire trouvé."
+    },
+    "LocationAutocompleteSelect": {
+      "placeholder": "Rechercher un emplacement…",
+      "minChars": "Tapez au moins 2 caractères…",
+      "notFound": "Aucun emplacement trouvé."
+    },
+    "InventoryMenu": {
+      "noExistingInventory": "Aucun inventaire existant"
+    },
+    "InventoryCard": {
+      "errorMessage": "Impossible de charger l'inventaire",
+      "critical_zero": "0 Critique",
+      "critical_one": "{{count}} Critique",
+      "critical_other": "{{count}} Critiques",
+      "warning_zero": "0 Avertissement",
+      "warning_one": "{{count}} Avertissement",
+      "warning_other": "{{count}} Avertissements",
+      "demand_zero": "0 Demande",
+      "demand_one": "{{count}} Demande",
+      "demand_other": "{{count}} Demandes"
+    },
+    "InventoryCodeDialog": {
+      "triggerLabel": "Obtenir le code d'inventaire",
+      "title": "Code d'inventaire",
+      "description": "Ce code est confidentiel et ne doit pas être divulgué à tout le monde.",
+      "getCodeButton": "Obtenir le code",
+      "noCode": "Aucun code",
+      "closeButton": "Fermer"
+    },
+    "UpdateInventoryCode": {
+      "triggerLabel": "Mettre à jour le code d'inventaire",
+      "description": "Ce code est confidentiel et ne doit pas être divulgué à tout le monde.",
+      "saveAction": "Mettre à jour le code"
+    },
+    "DeleteInventory": {
+      "triggerLabel": "Supprimer l'inventaire",
+      "title": "Supprimer l'inventaire ?",
+      "description": "Cette action supprimera définitivement cet inventaire et toutes les données associées.",
+      "cancelButton": "Annuler",
+      "deleteButton": "Supprimer"
+    },
+    "AddInventory": {
+      "triggerLabel": "Ajouter un inventaire",
+      "title": "Créer un inventaire",
+      "ownerLabel": "Propriétaire",
+      "locationLabel": "Emplacement",
+      "nameLabel": "Nom",
+      "namePlaceholder": "Nom du nouvel inventaire, ex : 57ème - 4",
+      "accessCodeLabel": "Code d'accès",
+      "accessCodeDescription": "Code pour déverrouiller le retrait en stock",
+      "cancelButton": "Annuler",
+      "submitButton": "Ajouter l'inventaire"
+    },
+    "DeleteProductionRequest": {
+      "triggerLabel": "Supprimer",
+      "title": "Supprimer la demande de production ?",
+      "description": "Cette action supprimera définitivement cette demande de production.",
+      "cancelButton": "Annuler",
+      "deleteButton": "Supprimer"
+    },
+    "AddNewPr": {
+      "triggerLabel": "Ajouter une demande de production",
+      "title": "Nouvelle demande de production",
+      "description": "Ajouter une demande de production pour un item non encore suivi par une PR.",
+      "itemLabel": "Item",
+      "inventoryLabel": "Inventaire (optionnel)",
+      "quantityLabel": "Quantité",
+      "cancelButton": "Annuler",
+      "submitButton": "Créer la PR"
+    },
+    "AddNewStock": {
+      "createFailed": "Échec de la création de l'inventaire",
+      "success": "Inventaire créé"
+    },
+    "IncrementItemStock": {
+      "title": "Incrémenter la quantité de — {{name}}"
+    },
+    "DecrementItemStock": {
+      "title": "Décrémenter la quantité de — {{name}}"
+    }
+  }
+}

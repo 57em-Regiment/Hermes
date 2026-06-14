@@ -25,13 +25,14 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
 type DecrementItemStockProps = {
   item: StockDetails;
 };
 
 export const DecrementItemStock = ({ item }: DecrementItemStockProps) => {
-  const { t } = useLanguage();
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const isDisabled = useMemo(() => item.quantity == 0, [item]);
 
@@ -67,7 +68,7 @@ export const DecrementItemStock = ({ item }: DecrementItemStockProps) => {
       </DialogTrigger>
       <DialogContent showCloseButton={false}>
         <DialogHeader>
-          <DialogTitle>Decrement quantity for — {item.item.name}</DialogTitle>
+          <DialogTitle>{t('Components.DecrementItemStock.title', { name: item.item.name })}</DialogTitle>
           <DialogDescription className="wrap-normal w-full">
             <Typography>{t('dialog.remove_description')}</Typography>
           </DialogDescription>

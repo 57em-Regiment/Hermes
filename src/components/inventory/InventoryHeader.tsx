@@ -1,7 +1,8 @@
 import { DeleteInventoryDialog } from '@/components/inventory/deleteInventory';
-import { Button, Typography, useLanguage } from '@57eme-regiment/nabu-ui';
+import { Button, Typography } from '@57eme-regiment/nabu-ui';
 import type { InventoryDetails } from '@57eme-regiment/renenutet-api-contract';
 import { IconShip, IconTrashFilled } from '@tabler/icons-react';
+import { useTranslation } from 'react-i18next';
 import { InventoryCodeDialog } from './InventoryCodeDialog';
 import { UpdateInventoryCodeDialog } from './UpdateInventoryCodeDialog';
 
@@ -11,7 +12,7 @@ export const InventoryHeader = ({
   inventory,
   stockLen,
 }: InventoryHeaderProps) => {
-  const { t } = useLanguage();
+  const { t } = useTranslation();
 
   return (
     <div className="flex items-center justify-between shrink-0">
@@ -30,7 +31,7 @@ export const InventoryHeader = ({
           <Typography variant="muted">{inventory.location.type}</Typography>
         </div>
         <Typography variant="muted">
-          {stockLen} {t('stock.items')}
+          {t('stock.items', { count: stockLen })}
         </Typography>
       </div>
       <div className="flex gap-4">

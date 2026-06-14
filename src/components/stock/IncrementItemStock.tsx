@@ -25,13 +25,14 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
 type IncrementItemStockProps = {
   item: StockDetails;
 };
 
 export const IncrementItemStock = ({ item }: IncrementItemStockProps) => {
-  const { t } = useLanguage();
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const isDisabled = useMemo(
     () => item.quantity == item.item.maxQuantity,
@@ -71,7 +72,7 @@ export const IncrementItemStock = ({ item }: IncrementItemStockProps) => {
       </DialogTrigger>
       <DialogContent showCloseButton={false}>
         <DialogHeader>
-          <DialogTitle>Increment quantity for — {item.item.name}</DialogTitle>
+          <DialogTitle>{t('Components.IncrementItemStock.title', { name: item.item.name })}</DialogTitle>
           <DialogDescription className="wrap-normal w-full">
             <Typography>
               {t('dialog.add_description')} {item.quantity}

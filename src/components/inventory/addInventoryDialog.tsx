@@ -30,9 +30,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { REGEXP_ONLY_DIGITS } from 'input-otp';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { LocationAutocompleteSelect } from '../location/LocationAutocompleteSelect';
 
 export function AddInventoryDialog() {
+  const { t } = useTranslation();
   const { access } = useAccess();
   const [open, setOpen] = useState(false);
 
@@ -72,11 +74,11 @@ export function AddInventoryDialog() {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger onClick={() => setOpen(true)}>
-        <Button>Add Inventory</Button>
+        <Button>{t('Components.AddInventory.triggerLabel')}</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Create Inventory</DialogTitle>
+          <DialogTitle>{t('Components.AddInventory.title')}</DialogTitle>
         </DialogHeader>
 
         <form id="createInventoryForm" onSubmit={handleSubmit(onSubmit)}>
@@ -86,7 +88,9 @@ export function AddInventoryDialog() {
               name="ownerId"
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel>Owner</FieldLabel>
+                  <FieldLabel>
+                    {t('Components.AddInventory.ownerLabel')}
+                  </FieldLabel>
                   <UserAutocompleteSelect
                     {...field}
                     defaultValue={access?.user.id}
@@ -103,10 +107,13 @@ export function AddInventoryDialog() {
               name="locationId"
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel>Location</FieldLabel>
+                  <FieldLabel>
+                    {t('Components.AddInventory.locationLabel')}
+                  </FieldLabel>
                   <LocationAutocompleteSelect
                     {...field}
                     onSelected={onLocationSelectd(field.onChange)}
+                    filterType={['STORAGE', 'SPAWN_STORAGE']}
                   />
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />
@@ -119,10 +126,12 @@ export function AddInventoryDialog() {
               name="name"
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel>Name</FieldLabel>
+                  <FieldLabel>
+                    {t('Components.AddInventory.nameLabel')}
+                  </FieldLabel>
                   <Input
                     {...field}
-                    placeholder="New inventory name like : 57ème - 4"
+                    placeholder={t('Components.AddInventory.namePlaceholder')}
                     disabled={!formState.dirtyFields.locationId}
                   />
                   {fieldState.invalid && (
@@ -136,7 +145,9 @@ export function AddInventoryDialog() {
               name="accessCode"
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel>Acces code</FieldLabel>
+                  <FieldLabel>
+                    {t('Components.AddInventory.accessCodeLabel')}
+                  </FieldLabel>
                   <InputOTP
                     {...field}
                     maxLength={6}
@@ -157,7 +168,7 @@ export function AddInventoryDialog() {
                     <FieldError errors={[fieldState.error]} />
                   )}
                   <FieldDescription>
-                    Code to unlock storage pickup
+                    {t('Components.AddInventory.accessCodeDescription')}
                   </FieldDescription>
                 </Field>
               )}
@@ -167,13 +178,15 @@ export function AddInventoryDialog() {
 
         <DialogFooter>
           <DialogClose>
-            <Button variant="destructive">Cancel</Button>
+            <Button variant="destructive">
+              {t('Components.AddInventory.cancelButton')}
+            </Button>
           </DialogClose>
           <Button
             type="submit"
             form="createInventoryForm"
             disabled={!formState.isValid || !formState.dirtyFields.accessCode}>
-            Add Inventory
+            {t('Components.AddInventory.submitButton')}
           </Button>
         </DialogFooter>
       </DialogContent>

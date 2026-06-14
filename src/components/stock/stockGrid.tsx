@@ -1,4 +1,5 @@
-import { useLanguage, useTheme } from '@57eme-regiment/nabu-ui';
+import { defautGridOption } from '@57eme-regiment/nabu-frontend-utils';
+import { useTheme, type FilterHeaderParams } from '@57eme-regiment/nabu-ui';
 import type { StockDetails } from '@57eme-regiment/renenutet-api-contract';
 import { useParams } from '@tanstack/react-router';
 import {
@@ -10,6 +11,7 @@ import {
 } from 'ag-grid-community';
 import { AgGridReact } from 'ag-grid-react';
 import { useMemo, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ActionsCell } from '../inventory/cells/ActionsCell';
 import { DemandCell } from '../inventory/cells/DemandCell';
 import { ProductionCell } from '../inventory/cells/ProductionCell';
@@ -27,7 +29,7 @@ export const StockGrid = ({ stocks }: StockGridProps) => {
   });
   const gridRef = useRef<AgGridReact<StockDetails>>(null);
 
-  const { t } = useLanguage();
+  const { t } = useTranslation();
   const { theme } = useTheme();
 
   const isDark =
@@ -52,7 +54,7 @@ export const StockGrid = ({ stocks }: StockGridProps) => {
   const columnDefs = useMemo<ColDef<StockDetails>[]>(
     () => [
       {
-        headerName: t('v1.resource'),
+        headerName: t('Global.Aggrid.resource'),
         cellRenderer: ResourceCell,
         flex: 2,
         minWidth: 220,
@@ -60,7 +62,7 @@ export const StockGrid = ({ stocks }: StockGridProps) => {
         valueGetter: ({ data }) => data?.item.name,
       },
       {
-        headerName: t('v1.stock'),
+        headerName: t('Global.Aggrid.stock'),
         cellRenderer: StockCell,
         flex: 2,
         minWidth: 230,
@@ -69,24 +71,28 @@ export const StockGrid = ({ stocks }: StockGridProps) => {
         sort: 'desc',
       },
       {
-        headerName: t('v1.production'),
+        headerName: t('Global.Aggrid.production'),
         cellRenderer: ProductionCell,
         flex: 1,
         minWidth: 160,
         filter: false,
+        sortable: false,
       },
       {
-        headerName: t('v1.demand'),
+        headerName: t('Global.Aggrid.demand'),
         cellRenderer: DemandCell,
         flex: 2,
         filter: false,
         minWidth: 200,
+        sortable: false,
       },
       {
-        headerName: t('v1.actions'),
+        headerName: t('Global.Aggrid.actions'),
+        headerComponentParams: {
+          className: 'text-right',
+        } satisfies Partial<FilterHeaderParams>,
         cellRenderer: ActionsCell,
         cellRendererParams: { inventoryId: inventoryId },
-        headerClass: '[&_.ag-header-cell-label]:justify-end',
         sortable: false,
         suppressHeaderMenuButton: true,
         filter: false,
@@ -99,16 +105,7 @@ export const StockGrid = ({ stocks }: StockGridProps) => {
 
   const gridOption = useMemo<GridOptions<StockDetails>>(
     () => ({
-      defaultColDef: {
-        sortable: true,
-        filter: true,
-        resizable: false,
-        suppressFloatingFilterButton: true,
-        suppressHeaderMenuButton: true,
-        suppressHeaderContextMenu: true,
-        floatingFilter: true,
-      },
-      suppressMovableColumns: true,
+      ...defautGridOption,
       columnDefs,
     }),
     [columnDefs],

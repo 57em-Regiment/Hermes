@@ -1,5 +1,8 @@
+import { ProductionCell } from '@/components/stock/aggrid/ProductionCell';
 import { useAllStockQuery } from '@/features/stock/useAllStockQuery';
-import { useLanguage, useTheme } from '@57eme-regiment/nabu-ui';
+import { defautGridOption } from '@57eme-regiment/nabu-frontend-utils';
+import { useTheme } from '@57eme-regiment/nabu-ui';
+import { useTranslation } from 'react-i18next';
 import type { StockDetails } from '@57eme-regiment/renenutet-api-contract';
 import {
   colorSchemeDark,
@@ -11,6 +14,7 @@ import {
 import { AgGridReact } from 'ag-grid-react';
 import { useMemo, useRef } from 'react';
 import { ResourceCell } from '../inventory/cells/ResourceCell';
+import { DemandCell } from './aggrid/DemandCell';
 import { StockCell } from './aggrid/StockCell';
 
 export const AllStockGrid = () => {
@@ -18,7 +22,7 @@ export const AllStockGrid = () => {
 
   const { data: stocks } = useAllStockQuery();
 
-  const { t } = useLanguage();
+  const { t } = useTranslation();
   const { theme } = useTheme();
 
   const isDark =
@@ -43,7 +47,7 @@ export const AllStockGrid = () => {
   const columnDefs = useMemo<ColDef<StockDetails>[]>(
     () => [
       {
-        headerName: t('v1.resource'),
+        headerName: t('Global.Aggrid.resource'),
         cellRenderer: ResourceCell,
         flex: 2,
         minWidth: 220,
@@ -51,60 +55,42 @@ export const AllStockGrid = () => {
         valueGetter: ({ data }) => data?.item.name,
       },
       {
-        headerName: t('v1.stock'),
-        cellRenderer: StockCell, //TODO Géré la capacity quand on a des items dans + d'un seul stock
+        headerName: t('Global.Aggrid.stock'),
+        cellRenderer: StockCell,
         flex: 2,
         minWidth: 230,
         valueGetter: ({ data }) => data?.quantity,
         filter: false,
         sort: 'desc',
       },
-      // {
-      //   headerName: t('v1.demand'),
-      //   field: 'demand',
-      //   cellRenderer: DemandCell,
-      //   flex: 2,
-      //   minWidth: 200,
-      //   getQuickFilterText: () => '',
-      //   // comparator: (_a, _b, nodeA, nodeB) => {
-      //   // const a = nodeA.data!;
-      //   // const b = nodeB.data!;
-      //   // const aReq = a.demand > 0 ? a.demand : a.maxCapacity;
-      //   // const bReq = b.demand > 0 ? b.demand : b.maxCapacity;
-      //   // return a.quantity / aReq - b.quantity / bReq;
-      //   // },
-      // },
-      // {
-      //   headerName: t('v1.production'),
-      //   field: 'productionNeed',
-      //   cellRenderer: ProductionCell,
-      //   flex: 1,
-      //   minWidth: 160,
-      //   getQuickFilterText: () => '',
-      // },
+      {
+        headerName: t('Global.Aggrid.globalDemandPR'),
+        cellRenderer: DemandCell,
+        flex: 2,
+        filter: false,
+        minWidth: 200,
+      },
+      {
+        headerName: t('Global.Aggrid.production'),
+        cellRenderer: ProductionCell,
+        flex: 1,
+        filter: false,
+        minWidth: 160,
+      },
     ],
     [t],
   );
 
   const gridOption = useMemo<GridOptions<StockDetails>>(
     () => ({
-      defaultColDef: {
-        sortable: true,
-        filter: true,
-        resizable: false,
-        suppressFloatingFilterButton: true,
-        suppressHeaderMenuButton: true,
-        suppressHeaderContextMenu: true,
-        floatingFilter: true,
-      },
-      suppressMovableColumns: true,
+      ...defautGridOption,
       columnDefs,
     }),
     [columnDefs],
   );
 
   return (
-    <div className="h-[calc(100vh-30rem)]">
+    <div className="h-[calc(100vh-22.1rem)]">
       <AgGridReact<StockDetails>
         ref={gridRef}
         gridOptions={gridOption}

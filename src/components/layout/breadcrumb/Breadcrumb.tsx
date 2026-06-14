@@ -1,8 +1,10 @@
 import { Link, useMatches } from '@tanstack/react-router';
 import { ChevronRightIcon } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export function Breadcrumb() {
   const matches = useMatches();
+  const { t } = useTranslation();
 
   const crumbs = matches.filter(
     m => m.staticData?.link || m.staticData?.BreadcrumbLabel,
@@ -29,7 +31,7 @@ export function Breadcrumb() {
           const label = BreadcrumbLabel ? (
             <BreadcrumbLabel params={params} />
           ) : (
-            link?.label
+            t(link?.label ?? '')
           );
 
           const content = (

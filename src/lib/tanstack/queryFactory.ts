@@ -4,7 +4,7 @@ export const ItemFactory = {
 
 export const LocationFactory = {
   all: ['locations'] as const,
-  Search: (query: string) => [...LocationFactory.all, query] as const,
+  Search: (query: string, filterType?: string[]) => [...LocationFactory.all, query, ...(filterType ?? [])] as const,
   ById: (locationId: string) => [...LocationFactory.all, locationId] as const,
 } as const;
 

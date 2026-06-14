@@ -1,5 +1,9 @@
 import { prApi } from '@/lib/api-client';
-import { ProductionRequestFactory } from '@/lib/tanstack/queryFactory';
+import {
+  InventoryFactory,
+  ProductionRequestFactory,
+  StockFactory,
+} from '@/lib/tanstack/queryFactory';
 import type {
   ProductionRequestDetail,
   ProductionRequestIdParam,
@@ -59,6 +63,8 @@ export function useUpdateProductionRequestMutation() {
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey });
+      queryClient.invalidateQueries({ queryKey: InventoryFactory.all });
+      queryClient.invalidateQueries({ queryKey: StockFactory.all });
     },
   });
 }

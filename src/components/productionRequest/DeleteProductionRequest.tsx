@@ -13,12 +13,14 @@ import {
   Button,
 } from '@57eme-regiment/nabu-ui';
 import { Trash2Icon } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 type IncrementItemStockProps = {
   id: string;
 };
 
 export const DeleteProductionRequest = ({ id }: IncrementItemStockProps) => {
+  const { t } = useTranslation();
   const { mutate } = useDeleteProductionRequestMutation({ id });
 
   return (
@@ -27,7 +29,7 @@ export const DeleteProductionRequest = ({ id }: IncrementItemStockProps) => {
         <Button
           variant="outline"
           className="text-red-600 border-red-200 hover:bg-red-50 dark:border-red-900 dark:hover:bg-red-900/30">
-          Delete
+          {t('Components.DeleteProductionRequest.triggerLabel')}
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent size="sm">
@@ -35,15 +37,15 @@ export const DeleteProductionRequest = ({ id }: IncrementItemStockProps) => {
           <AlertDialogMedia className="bg-destructive/10 text-destructive dark:bg-destructive/20 dark:text-destructive">
             <Trash2Icon />
           </AlertDialogMedia>
-          <AlertDialogTitle>Delete Production Request?</AlertDialogTitle>
+          <AlertDialogTitle>{t('Components.DeleteProductionRequest.title')}</AlertDialogTitle>
           <AlertDialogDescription>
-            This will permanently delete this Production Request.
+            {t('Components.DeleteProductionRequest.description')}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel variant="outline">Cancel</AlertDialogCancel>
+          <AlertDialogCancel variant="outline">{t('Components.DeleteProductionRequest.cancelButton')}</AlertDialogCancel>
           <AlertDialogAction variant="destructive" onClick={() => mutate()}>
-            Delete
+            {t('Components.DeleteProductionRequest.deleteButton')}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

@@ -22,6 +22,7 @@ import {
 } from '@tabler/icons-react';
 import { Link } from '@tanstack/react-router';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 //TODO pour plus tard
 // function getAlertCounts(stock: Stock) {
@@ -41,6 +42,7 @@ interface InventoryCardProps {
 }
 
 export function InventoryCard({ inventoryId }: InventoryCardProps) {
+  const { t } = useTranslation();
   const { data: inventory, error } = useInventoryDetailsQuery(inventoryId);
 
   const criticals = inventory?.stocks.filter(
@@ -51,7 +53,7 @@ export function InventoryCard({ inventoryId }: InventoryCardProps) {
   );
   const demands = inventory?.stocks.filter(s => s.productionRequest?.length);
 
-  if (error || !inventory) return <div>toto</div>;
+  if (error || !inventory) return <div>{t('Components.InventoryCard.errorMessage')}</div>;
 
   return (
     <motion.div
@@ -76,37 +78,18 @@ export function InventoryCard({ inventoryId }: InventoryCardProps) {
           </CardHeader>
           <CardContent>
             <div className="flex flex-wrap gap-4">
-              {criticals?.length ? (
-                <div className="flex gap-1 items-center text-red-500 font-semibold">
-                  <IconAlertTriangle className="size-4 animate-pulse" />
-                  {criticals.length} Critique
-                </div>
-              ) : (
-                <div className="flex gap-1 items-center text-green-500/40 font-semibold">
-                  <IconCheck className="size-4" />0 Critique
-                </div>
-              )}
-              {warnings?.length ? (
-                <div className="flex gap-1 items-center text-amber-500 font-semibold">
-                  <IconAlertTriangle className="size-4 animate-pulse" />
-                  {warnings?.length} Warning
-                </div>
-              ) : (
-                <div className="flex gap-1 items-center text-green-500/40 font-semibold">
-                  <IconAlertTriangle className="size-4 animate-pulse" />0
-                  Warning
-                </div>
-              )}
-              {demands?.length ? (
-                <div className="flex gap-1 items-center text-blue-500 font-semibold">
-                  <IconInfoCircle className="size-4 animate-pulse" />
-                  {demands?.length} Demand{demands?.length > 1 && 's'}
-                </div>
-              ) : (
-                <div className="flex gap-1 items-center text-green-500/40 font-semibold">
-                  <IconInfoCircle className="size-4 animate-pulse" />0 Demand
-                </div>
-              )}
+              <div className={`flex gap-1 items-center font-semibold ${criticals?.length ? 'text-red-500' : 'text-green-500/40'}`}>
+                {criticals?.length ? <IconAlertTriangle className="size-4 animate-pulse" /> : <IconCheck className="size-4" />}
+                {t('Components.InventoryCard.critical', { count: criticals?.length ?? 0 })}
+              </div>
+              <div className={`flex gap-1 items-center font-semibold ${warnings?.length ? 'text-amber-500' : 'text-green-500/40'}`}>
+                <IconAlertTriangle className="size-4 animate-pulse" />
+                {t('Components.InventoryCard.warning', { count: warnings?.length ?? 0 })}
+              </div>
+              <div className={`flex gap-1 items-center font-semibold ${demands?.length ? 'text-blue-500' : 'text-green-500/40'}`}>
+                <IconInfoCircle className="size-4 animate-pulse" />
+                {t('Components.InventoryCard.demand', { count: demands?.length ?? 0 })}
+              </div>
             </div>
           </CardContent>
           <CardFooter className="flex gap-1 items-center w-full">

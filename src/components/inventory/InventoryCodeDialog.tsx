@@ -21,6 +21,7 @@ import { IconCheck, IconCopy } from '@tabler/icons-react';
 import { useQueryClient } from '@tanstack/react-query';
 import copy from 'copy-to-clipboard';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 type InventoryCodeDialogProps = {
   inventoryId: string;
@@ -28,6 +29,7 @@ type InventoryCodeDialogProps = {
 export const InventoryCodeDialog = ({
   inventoryId,
 }: InventoryCodeDialogProps) => {
+  const { t } = useTranslation();
   const [revealed, setRevealed] = useState(false);
   const { refetch, data } = useInventoryCodeQuery(inventoryId);
   const queryClient = useQueryClient();
@@ -56,15 +58,13 @@ export const InventoryCodeDialog = ({
         className={buttonVariants({
           variant: 'outline',
         })}>
-        Get inventory code
+        {t('Components.InventoryCodeDialog.triggerLabel')}{' '}
       </DialogTrigger>
       <DialogContent showCloseButton={false}>
         <DialogHeader>
-          <DialogTitle>Inventory code</DialogTitle>
+          <DialogTitle>{t('Components.InventoryCodeDialog.title')}</DialogTitle>
           <DialogDescription className="wrap-normal w-full">
-            <Typography>
-              This code is sensitive and should not be shared with everyone.
-            </Typography>
+            <Typography>{t('Components.InventoryCodeDialog.description')}</Typography>
           </DialogDescription>
         </DialogHeader>
         <div className="flex justify-center">
@@ -74,12 +74,12 @@ export const InventoryCodeDialog = ({
                 refetch();
                 setRevealed(true);
               }}>
-              GetCode
+              {t('Components.InventoryCodeDialog.getCodeButton')}
             </Button>
           ) : (
             <div>
               <ButtonGroup>
-                <Input value={data.code ?? 'No code'} />
+                <Input value={data.code ?? t('Components.InventoryCodeDialog.noCode')} />
                 <Button onClick={() => handleCopy()}>
                   {copied ? <IconCheck /> : <IconCopy />}
                 </Button>
@@ -89,7 +89,7 @@ export const InventoryCodeDialog = ({
         </div>
         <DialogFooter>
           <DialogClose>
-            <Button variant="outline">Close</Button>
+            <Button variant="outline">{t('Components.InventoryCodeDialog.closeButton')}</Button>
           </DialogClose>
         </DialogFooter>
       </DialogContent>

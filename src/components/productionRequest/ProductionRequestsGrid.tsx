@@ -1,6 +1,7 @@
 import { useGetProductionRequestsQuery } from '@/features/productionRequests/useGetProductionRequests.query';
-import { useUpdateProductionRequestMutation } from '@/features/productionRequests/useUpdateProductionRequest.mutation copy';
-import { useLanguage, useTheme } from '@57eme-regiment/nabu-ui';
+import { useUpdateProductionRequestMutation } from '@/features/productionRequests/useUpdateProductionRequest.mutation';
+import { defautGridOption } from '@57eme-regiment/nabu-frontend-utils';
+import { useTheme, type FilterHeaderParams } from '@57eme-regiment/nabu-ui';
 import type { ProductionRequestDetail } from '@57eme-regiment/renenutet-api-contract';
 import {
   colorSchemeDark,
@@ -12,8 +13,9 @@ import {
 } from 'ag-grid-community';
 import { AgGridReact } from 'ag-grid-react';
 import { useMemo, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
+import { ResourceCell } from '../inventory/cells/ResourceCell';
 import { ActionsCell } from './cells/ActionsCell';
-import { ResourceCell } from './cells/ResourceCell';
 import { StockCell } from './cells/StockCell';
 
 export const ProductionRequestsGrid = () => {
@@ -22,7 +24,7 @@ export const ProductionRequestsGrid = () => {
   const { data: prs } = useGetProductionRequestsQuery();
   const { mutateAsync } = useUpdateProductionRequestMutation();
 
-  const { t } = useLanguage();
+  const { t } = useTranslation();
   const { theme } = useTheme();
 
   const isDark =
@@ -60,7 +62,7 @@ export const ProductionRequestsGrid = () => {
   const columnDefs = useMemo<ColDef<ProductionRequestDetail>[]>(() => {
     return [
       {
-        headerName: t('v1.resource'),
+        headerName: t('Global.Aggrid.resource'),
         cellRenderer: ResourceCell,
         flex: 2,
         minWidth: 220,
@@ -72,15 +74,15 @@ export const ProductionRequestsGrid = () => {
         headerName: 'Inventory',
         flex: 2,
         minWidth: 230,
-        filter: 'agSetColumnFilter',
         valueGetter: ({ data }) =>
           data?.inventoryId
             ? data.stocks?.find(s => s.inventoryId == data.inventoryId)
                 ?.inventoryFullName
             : null,
+        sort: 'asc',
       },
       {
-        headerName: t('v1.stock'),
+        headerName: t('Global.Aggrid.stock'),
         cellRenderer: StockCell,
         flex: 2,
         minWidth: 230,
@@ -89,7 +91,7 @@ export const ProductionRequestsGrid = () => {
         sort: 'desc',
       },
       {
-        headerName: t('v1.demand'),
+        headerName: t('Global.Aggrid.demand'),
         field: 'quantity',
         flex: 2,
         minWidth: 200,
@@ -99,11 +101,12 @@ export const ProductionRequestsGrid = () => {
         onCellValueChanged,
       },
       {
-        headerName: t('v1.actions'),
+        headerName: t('Global.Aggrid.actions'),
         cellRenderer: ActionsCell,
-        headerClass: '[&_.ag-header-cell-label]:justify-end',
+        headerComponentParams: {
+          className: 'text-right',
+        } satisfies Partial<FilterHeaderParams>,
         sortable: false,
-        suppressHeaderMenuButton: true,
         filter: false,
         flex: 1,
         minWidth: 180,
@@ -113,16 +116,7 @@ export const ProductionRequestsGrid = () => {
 
   const gridOption = useMemo<GridOptions<ProductionRequestDetail>>(
     () => ({
-      defaultColDef: {
-        sortable: true,
-        filter: true,
-        resizable: false,
-        suppressFloatingFilterButton: true,
-        suppressHeaderMenuButton: true,
-        suppressHeaderContextMenu: true,
-        floatingFilter: true,
-      },
-      suppressMovableColumns: true,
+      ...defautGridOption,
       columnDefs,
     }),
     [columnDefs],

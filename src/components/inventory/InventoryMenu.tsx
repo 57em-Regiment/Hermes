@@ -1,8 +1,9 @@
 import { useInventoriesListQuery } from '@/features/inventory/useInventoriesList.query';
+import { useTranslation } from 'react-i18next';
 import { InventoryCard } from './InventoryCard';
 
-
 export const InventoryMenu = () => {
+  const { t } = useTranslation();
   const { data: inventories, error, isPending } = useInventoriesListQuery();
 
   if (error)
@@ -24,17 +25,14 @@ export const InventoryMenu = () => {
   if (!inventories.length)
     return (
       <div className="text-sm p-3 rounded-md bg-destructive/10 text-destructive border border-destructive/20">
-        No existing inventory
+        {t('Components.InventoryMenu.noExistingInventory')}
       </div>
     );
 
   return (
-    <div className="flex gap-6">
+    <div className="flex gap-4">
       {(inventories ?? []).map(({ id: inventoryId }) => (
-        <InventoryCard
-          key={inventoryId}
-          inventoryId={inventoryId}
-        />
+        <InventoryCard key={inventoryId} inventoryId={inventoryId} />
       ))}
     </div>
   );

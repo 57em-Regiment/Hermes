@@ -5,6 +5,7 @@ import { cn } from '@57eme-regiment/nabu-ui';
 import { Combobox } from '@base-ui/react/combobox';
 import { CheckIcon, ChevronsUpDownIcon, LoaderCircleIcon } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 type ItemAutocompleteSelectProps = {
   value?: string;
@@ -21,11 +22,12 @@ export const ItemAutocompleteSelect = ({
   disabled = false,
   readOnly = false,
   excludeItemIds = [],
-  placeholder = 'Search item…',
+  placeholder = 'Components.ItemAutoCompleteSelecte.placeholder',
 }: ItemAutocompleteSelectProps) => {
   const [inputValue, setInputValue] = useState('');
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
   const debouncedSearch = useDebounce(inputValue, 300);
+  const { t } = useTranslation();
 
   const {
     data: items = [],
@@ -61,7 +63,7 @@ export const ItemAutocompleteSelect = ({
           readOnly && 'bg-muted',
         )}>
         <Combobox.Input
-          placeholder={placeholder}
+          placeholder={t(placeholder)}
           readOnly={readOnly}
           value={inputValue}
           onChange={e => setInputValue(e.target.value)}
@@ -84,12 +86,12 @@ export const ItemAutocompleteSelect = ({
             <Combobox.List className="p-1">
               {debouncedSearch.length < 2 && (
                 <Combobox.Empty className="py-6 text-center text-sm text-muted-foreground">
-                  Type at least 2 characters…
+                  {t('Components.ItemAutocompleteSelect.minChars')}
                 </Combobox.Empty>
               )}
               {debouncedSearch.length >= 2 && !items.length && (
                 <Combobox.Empty className="py-6 text-center text-sm text-muted-foreground">
-                  No item found.
+                  {t('Components.ItemAutocompleteSelect.notFound')}
                 </Combobox.Empty>
               )}
               {filteredItems.map(item => (

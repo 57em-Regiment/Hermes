@@ -1,0 +1,157 @@
+{
+  "dialog": {
+    "add": "Add",
+    "remove": "Remove",
+    "cancel": "Cancel",
+    "confirm_add": "Confirm Add",
+    "confirm_remove": "Confirm Remove",
+    "add_description": "How many units would you like to add? Currently at",
+    "remove_description": "How many units would you like to remove?",
+    "close": "Close"
+  },
+  "Links": {
+    "index": "Dashboard",
+    "Inventory": {},
+    "ProductionRequest": {
+      "index": "Production request"
+    }
+  },
+  "Global": {
+    "Aggrid": {
+      "resource": "Resource",
+      "stock": "Stock / Capacity",
+      "demand": "Demand",
+      "globalDemandPR": "Global production request",
+      "production": "Production Need",
+      "actions": "Actions",
+      "inventory": "Inventory",
+      "Input": {
+        "vide": "Empty",
+        "nonVide": "Not empty"
+      }
+    },
+    "Auth": {
+      "logout": "Logout",
+      "login": "Login"
+    }
+  },
+  "stock": {
+    "items_zero": "no item",
+    "items_one": "{{count}} item",
+    "items_other": "{{count}} items"
+  },
+  "Pages": {
+    "Unauthenticated": {
+      "title": "Authentication required",
+      "description": "You must be logged in to access this page"
+    },
+    "Forbidden": {
+      "title": "Access denied",
+      "description": "You do not have the necessary permissions to access this page."
+    },
+    "Inventory": {
+      "errorMessage": "Unable to load inventory",
+      "AddItemDialog": {
+        "triggerLabel": "Add new item to stock",
+        "title": "Add new item",
+        "description": "Add an item that is not already tracked in this inventory",
+        "saveAction": "Add item to stock"
+      },
+      "item": "Item",
+      "quantity": "Quantity"
+    },
+    "InventoryDetail": {
+      "errorMessage": "Unable to load inventory"
+    }
+  },
+  "Components": {
+    "ItemAutocompleteSelect": {
+      "placeholder": "Search item…",
+      "minChars": "Type at least 2 characters…",
+      "notFound": "No item found."
+    },
+    "InventoryAutocompleteSelect": {
+      "placeholder": "Search inventory…",
+      "notFound": "No inventory found."
+    },
+    "LocationAutocompleteSelect": {
+      "placeholder": "Search location…",
+      "minChars": "Type at least 2 characters…",
+      "notFound": "No location found."
+    },
+    "InventoryMenu": {
+      "noExistingInventory": "No existing inventory"
+    },
+    "InventoryCard": {
+      "errorMessage": "Unable to load inventory",
+      "critical_one": "{{count}} Critical",
+      "critical_other": "{{count}} Critical",
+      "critical_zero": "0 Critical",
+      "warning_one": "{{count}} Warning",
+      "warning_other": "{{count}} Warnings",
+      "warning_zero": "0 Warning",
+      "demand_one": "{{count}} Demand",
+      "demand_other": "{{count}} Demands",
+      "demand_zero": "0 Demand"
+    },
+    "InventoryCodeDialog": {
+      "triggerLabel": "Get inventory code",
+      "title": "Inventory code",
+      "description": "This code is sensitive and should not be shared with everyone.",
+      "getCodeButton": "Get code",
+      "noCode": "No code",
+      "closeButton": "Close"
+    },
+    "UpdateInventoryCode": {
+      "triggerLabel": "Update inventory code",
+      "description": "This code is sensitive and should not be shared with everyone.",
+      "saveAction": "Update Code"
+    },
+    "DeleteInventory": {
+      "triggerLabel": "Delete Inventory",
+      "title": "Delete inventory?",
+      "description": "This will permanently delete this inventory and all relative data.",
+      "cancelButton": "Cancel",
+      "deleteButton": "Delete"
+    },
+    "AddInventory": {
+      "triggerLabel": "Add Inventory",
+      "title": "Create Inventory",
+      "ownerLabel": "Owner",
+      "locationLabel": "Location",
+      "nameLabel": "Name",
+      "namePlaceholder": "New inventory name like: 57th - 4",
+      "accessCodeLabel": "Access code",
+      "accessCodeDescription": "Code to unlock storage pickup",
+      "cancelButton": "Cancel",
+      "submitButton": "Add Inventory"
+    },
+    "DeleteProductionRequest": {
+      "triggerLabel": "Delete",
+      "title": "Delete Production Request?",
+      "description": "This will permanently delete this Production Request.",
+      "cancelButton": "Cancel",
+      "deleteButton": "Delete"
+    },
+    "AddNewPr": {
+      "triggerLabel": "Add Production Request",
+      "title": "Add new Production Request",
+      "description": "Add a Production Request for an item not already tracked by a PR.",
+      "itemLabel": "Item",
+      "inventoryLabel": "Inventory (optional)",
+      "quantityLabel": "Quantity",
+      "cancelButton": "Cancel",
+      "submitButton": "Create PR"
+    },
+    "AddNewStock": {
+      "createFailed": "Create inventory failed",
+      "success": "Inventory created"
+    },
+    "IncrementItemStock": {
+      "title": "Increment quantity for — {{name}}"
+    },
+    "DecrementItemStock": {
+      "title": "Decrement quantity for — {{name}}"
+    }
+  }
+}

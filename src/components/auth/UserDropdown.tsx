@@ -14,8 +14,10 @@ import {
 import { IconHome, IconLoader2, IconLogout } from '@tabler/icons-react';
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
+import { useTranslation } from 'react-i18next';
 
 export function UserDropdown() {
+  const { t } = useTranslation();
   const session = authClient.useSession();
   const user = session.data?.user;
   const navigate = useNavigate();
@@ -42,10 +44,10 @@ export function UserDropdown() {
       <DropdownMenuContent className="w-56" align="end">
         <DropdownMenuGroup>
           <DropdownMenuItem
-            onClick={() => navigate({ to: '/' })}
+            onClick={() => navigate({ to: LINKS.index.to })}
             className="hover:cursor-pointer">
             <IconHome className="mr-2 size-4" />
-            Tableau de bord
+            {t('Links.index')}
           </DropdownMenuItem>
         </DropdownMenuGroup>
 
@@ -57,7 +59,7 @@ export function UserDropdown() {
             {LINKS.ProductionRequest.index.Icon && (
               <LINKS.ProductionRequest.index.Icon className="mr-2 size-4" />
             )}
-            {LINKS.ProductionRequest.index.label}
+            {t(LINKS.ProductionRequest.index.label)}
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
@@ -76,7 +78,7 @@ export function UserDropdown() {
             ) : (
               <IconLogout className="mr-2 size-4" />
             )}
-            Se déconnecter
+            {t('Global.Auth.logout')}
           </DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>

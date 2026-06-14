@@ -8,6 +8,7 @@ import {
   LoaderCircleIcon,
 } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 type InventoryAutocompleteSelectProps = {
   value?: string;
@@ -24,8 +25,10 @@ export const InventoryAutocompleteSelect = ({
   disabled = false,
   readOnly = false,
   excludeInventoryIds = [],
-  placeholder = 'Search inventory…',
+  placeholder,
 }: InventoryAutocompleteSelectProps) => {
+  const { t } = useTranslation();
+  const resolvedPlaceholder = placeholder ?? t('Components.InventoryAutocompleteSelect.placeholder');
   const [inputValue, setInputValue] = useState('');
   const [selectedInventory, setSelectedInventory] = useState<Inventory | null>(null);
 
@@ -63,7 +66,7 @@ export const InventoryAutocompleteSelect = ({
           readOnly && 'bg-muted',
         )}>
         <Combobox.Input
-          placeholder={placeholder}
+          placeholder={resolvedPlaceholder}
           readOnly={readOnly}
           value={inputValue}
           onChange={e => setInputValue(e.target.value)}
@@ -86,7 +89,7 @@ export const InventoryAutocompleteSelect = ({
             <Combobox.List className="p-1">
               {!inventories.length && !showSpinner && (
                 <Combobox.Empty className="py-6 text-center text-sm text-muted-foreground">
-                  No inventory found.
+                  {t('Components.InventoryAutocompleteSelect.notFound')}
                 </Combobox.Empty>
               )}
               {filteredInventories.map(inventory => (
