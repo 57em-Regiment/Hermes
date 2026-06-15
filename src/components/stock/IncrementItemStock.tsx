@@ -15,7 +15,6 @@ import {
   FieldGroup,
   Input,
   Typography,
-  useLanguage,
 } from '@57eme-regiment/nabu-ui';
 import {
   updateStockSchema,
@@ -72,7 +71,9 @@ export const IncrementItemStock = ({ item }: IncrementItemStockProps) => {
       </DialogTrigger>
       <DialogContent showCloseButton={false}>
         <DialogHeader>
-          <DialogTitle>{t('Components.IncrementItemStock.title', { name: item.item.name })}</DialogTitle>
+          <DialogTitle>
+            {t('Components.IncrementItemStock.title', { name: item.item.name })}
+          </DialogTitle>
           <DialogDescription className="wrap-normal w-full">
             <Typography>
               {t('dialog.add_description')} {item.quantity}

@@ -151,6 +151,11 @@
     },
     "DecrementItemStock": {
       "title": "Décrémenter la quantité de — {{name}}"
+    },
+    "SetMinimumQuantityStock": {
+      "trigger": "Min",
+      "title": "Définir le seuil minimum — {{name}}",
+      "description": "Définissez la quantité minimale en dessous de laquelle une alerte sera déclenchée. Laissez vide pour supprimer le seuil."
     }
   }
 }

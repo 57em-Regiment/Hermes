@@ -152,6 +152,11 @@
     },
     "DecrementItemStock": {
       "title": "Decrement quantity for — {{name}}"
+    },
+    "SetMinimumQuantityStock": {
+      "trigger": "Min",
+      "title": "Set minimum threshold — {{name}}",
+      "description": "Set the minimum quantity below which an alert will be triggered. Leave empty to remove the threshold."
     }
   }
 }
