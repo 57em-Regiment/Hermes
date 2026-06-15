@@ -17,8 +17,15 @@ export const InventoryHeader = ({
   return (
     <div className="flex items-center justify-between shrink-0">
       <div>
-        <div className="flex items-center gap-2">
-          <IconShip className="text-primary size-8" />
+        <div className="flex items-baseline gap-2">
+          {inventory.location.icon ? (
+            <img
+              src={inventory.location.icon}
+              className="size-8 object-cover"
+            />
+          ) : (
+            <IconShip className="size-8 shrink-0 text-muted-foreground" />
+          )}
           <Typography variant="h2">{inventory?.name}</Typography>
         </div>
         <div className="flex gap-1">

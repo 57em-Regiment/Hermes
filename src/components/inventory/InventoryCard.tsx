@@ -24,19 +24,6 @@ import { Link } from '@tanstack/react-router';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 
-//TODO pour plus tard
-// function getAlertCounts(stock: Stock) {
-//   const critical = stock.items.filter(
-//     item => item.demand > 0 && item.quantity / item.demand < 0.2,
-//   ).length;
-//   const warning = stock.items.filter(item => {
-//     if (item.demand === 0) return false;
-//     const ratio = item.quantity / item.demand;
-//     return ratio >= 0.2 && ratio < 0.5;
-//   }).length;
-//   return { critical, warning };
-// }
-
 interface InventoryCardProps {
   inventoryId: string;
 }
@@ -53,7 +40,8 @@ export function InventoryCard({ inventoryId }: InventoryCardProps) {
   );
   const demands = inventory?.stocks.filter(s => s.productionRequest?.length);
 
-  if (error || !inventory) return <div>{t('Components.InventoryCard.errorMessage')}</div>;
+  if (error || !inventory)
+    return <div>{t('Components.InventoryCard.errorMessage')}</div>;
 
   return (
     <motion.div
@@ -64,8 +52,15 @@ export function InventoryCard({ inventoryId }: InventoryCardProps) {
       <Link to={LINKS.Inventory.detail.to} params={{ id: inventory.id }}>
         <Card className="min-w-96 min-h-24">
           <CardHeader>
-            <CardTitle className="flex gap-4 items-center">
-              <IconShip className="text-primary" />
+            <CardTitle className="flex gap-4 items-baseline">
+              {inventory.location.icon ? (
+                <img
+                  src={inventory.location.icon}
+                  className="size-6 object-cover"
+                />
+              ) : (
+                <IconShip className="size-4 shrink-0 text-muted-foreground" />
+              )}
               <Typography variant="lead" className="group-hover:text-primary">
                 {inventory.name}
               </Typography>
@@ -78,17 +73,30 @@ export function InventoryCard({ inventoryId }: InventoryCardProps) {
           </CardHeader>
           <CardContent>
             <div className="flex flex-wrap gap-4">
-              <div className={`flex gap-1 items-center font-semibold ${criticals?.length ? 'text-red-500' : 'text-green-500/40'}`}>
-                {criticals?.length ? <IconAlertTriangle className="size-4 animate-pulse" /> : <IconCheck className="size-4" />}
-                {t('Components.InventoryCard.critical', { count: criticals?.length ?? 0 })}
+              <div
+                className={`flex gap-1 items-center font-semibold ${criticals?.length ? 'text-red-500' : 'text-green-500/40'}`}>
+                {criticals?.length ? (
+                  <IconAlertTriangle className="size-4 animate-pulse" />
+                ) : (
+                  <IconCheck className="size-4" />
+                )}
+                {t('Components.InventoryCard.critical', {
+                  count: criticals?.length ?? 0,
+                })}
               </div>
-              <div className={`flex gap-1 items-center font-semibold ${warnings?.length ? 'text-amber-500' : 'text-green-500/40'}`}>
+              <div
+                className={`flex gap-1 items-center font-semibold ${warnings?.length ? 'text-amber-500' : 'text-green-500/40'}`}>
                 <IconAlertTriangle className="size-4 animate-pulse" />
-                {t('Components.InventoryCard.warning', { count: warnings?.length ?? 0 })}
+                {t('Components.InventoryCard.warning', {
+                  count: warnings?.length ?? 0,
+                })}
               </div>
-              <div className={`flex gap-1 items-center font-semibold ${demands?.length ? 'text-blue-500' : 'text-green-500/40'}`}>
+              <div
+                className={`flex gap-1 items-center font-semibold ${demands?.length ? 'text-blue-500' : 'text-green-500/40'}`}>
                 <IconInfoCircle className="size-4 animate-pulse" />
-                {t('Components.InventoryCard.demand', { count: demands?.length ?? 0 })}
+                {t('Components.InventoryCard.demand', {
+                  count: demands?.length ?? 0,
+                })}
               </div>
             </div>
           </CardContent>

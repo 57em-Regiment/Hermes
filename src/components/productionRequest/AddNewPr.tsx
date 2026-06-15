@@ -1,5 +1,4 @@
 import { useAddProductionRequestMutation } from '@/features/productionRequests/useAddProductionRequest.mutation';
-import { useGetProductionRequestsQuery } from '@/features/productionRequests/useGetProductionRequests.query';
 import { useHasPermission } from '@57eme-regiment/auth-browser';
 import { PERMISSIONS } from '@57eme-regiment/auth-contracts';
 import type { Item } from '@57eme-regiment/krang-api-contract';
@@ -36,8 +35,6 @@ export function AddNewPr() {
   const { t } = useTranslation();
   const userCanCreate = useHasPermission(PERMISSIONS.STOCK_ITEM_READ); //TODO HERMES_PRODUCTIONREQUEST_CREATE
   const [open, setOpen] = useState(false);
-
-  const { data: prs } = useGetProductionRequestsQuery();
 
   const { handleSubmit, control, reset, formState } =
     useForm<CreateProductionRequest>({
@@ -78,7 +75,7 @@ export function AddNewPr() {
         <DialogTrigger>
           <Button>{t('Components.AddNewPr.triggerLabel')}</Button>
         </DialogTrigger>
-        <DialogContent>
+        <DialogContent showCloseButton={false}>
           <DialogHeader>
             <DialogTitle>{t('Components.AddNewPr.title')}</DialogTitle>
             <DialogDescription className="wrap-normal w-full">
@@ -92,7 +89,9 @@ export function AddNewPr() {
                 name="itemId"
                 render={({ field, fieldState }) => (
                   <Field>
-                    <FieldLabel>{t('Components.AddNewPr.itemLabel')}</FieldLabel>
+                    <FieldLabel>
+                      {t('Components.AddNewPr.itemLabel')}
+                    </FieldLabel>
                     <ItemAutocompleteSelect
                       {...field}
                       onSelected={onItemSelected(field.onChange)}
@@ -108,7 +107,9 @@ export function AddNewPr() {
                 name="inventoryId"
                 render={({ field, fieldState }) => (
                   <Field>
-                    <FieldLabel>{t('Components.AddNewPr.inventoryLabel')}</FieldLabel>
+                    <FieldLabel>
+                      {t('Components.AddNewPr.inventoryLabel')}
+                    </FieldLabel>
                     <InventoryAutocompleteSelect
                       {...field}
                       onSelected={onInventorySelected(field.onChange)}
@@ -124,7 +125,9 @@ export function AddNewPr() {
                 name="quantity"
                 render={({ field, fieldState, formState }) => (
                   <Field>
-                    <FieldLabel>{t('Components.AddNewPr.quantityLabel')}</FieldLabel>
+                    <FieldLabel>
+                      {t('Components.AddNewPr.quantityLabel')}
+                    </FieldLabel>
                     <Input
                       {...field}
                       disabled={
@@ -145,7 +148,9 @@ export function AddNewPr() {
           </form>
           <DialogFooter>
             <DialogClose>
-              <Button variant="outline">{t('Components.AddNewPr.cancelButton')}</Button>
+              <Button variant="outline">
+                {t('Components.AddNewPr.cancelButton')}
+              </Button>
             </DialogClose>
             <Button
               disabled={!formState.isValid}

@@ -3,6 +3,7 @@ import { useDebounce } from '@/hooks/useDebounce';
 import type { Item } from '@57eme-regiment/krang-api-contract';
 import { cn } from '@57eme-regiment/nabu-ui';
 import { Combobox } from '@base-ui/react/combobox';
+import { IconPackage } from '@tabler/icons-react';
 import { CheckIcon, ChevronsUpDownIcon, LoaderCircleIcon } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -22,7 +23,7 @@ export const ItemAutocompleteSelect = ({
   disabled = false,
   readOnly = false,
   excludeItemIds = [],
-  placeholder = 'Components.ItemAutoCompleteSelecte.placeholder',
+  placeholder = 'Components.ItemAutocompleteSelect.placeholder',
 }: ItemAutocompleteSelectProps) => {
   const [inputValue, setInputValue] = useState('');
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
@@ -105,6 +106,11 @@ export const ItemAutocompleteSelect = ({
                     }>
                     <CheckIcon className="size-4" />
                   </Combobox.ItemIndicator>
+                  {item.icon ? (
+                    <img src={item.icon} className="size-7 object-cover" />
+                  ) : (
+                    <IconPackage className="size-4 shrink-0 text-muted-foreground" />
+                  )}
                   <span className="flex-1">{item.name}</span>
                   {item.shortName && (
                     <span className="text-xs text-muted-foreground">
