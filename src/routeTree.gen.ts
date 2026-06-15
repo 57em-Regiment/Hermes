@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as UnauthenticatedRouteImport } from './routes/unauthenticated'
 import { Route as ForbiddenRouteImport } from './routes/forbidden'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
+import { Route as SplatRouteImport } from './routes/$'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
 import { Route as AuthenticatedProductionRequestsIndexRouteImport } from './routes/_authenticated/productionRequests/index'
 import { Route as AuthenticatedInventoryIdRouteImport } from './routes/_authenticated/inventory/$id'
@@ -28,6 +29,11 @@ const ForbiddenRoute = ForbiddenRouteImport.update({
 } as any)
 const AuthenticatedRoute = AuthenticatedRouteImport.update({
   id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SplatRoute = SplatRouteImport.update({
+  id: '/$',
+  path: '/$',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
@@ -57,6 +63,7 @@ const AuthenticatedInventoryIdRoute =
   )
 
 export interface FileRoutesByFullPath {
+  '/$': typeof SplatRoute
   '/': typeof AuthenticatedIndexRoute
   '/forbidden': typeof ForbiddenRoute
   '/unauthenticated': typeof UnauthenticatedRoute
@@ -64,6 +71,7 @@ export interface FileRoutesByFullPath {
   '/productionRequests/': typeof AuthenticatedProductionRequestsIndexRoute
 }
 export interface FileRoutesByTo {
+  '/$': typeof SplatRoute
   '/forbidden': typeof ForbiddenRoute
   '/unauthenticated': typeof UnauthenticatedRoute
   '/': typeof AuthenticatedIndexRoute
@@ -72,6 +80,7 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/$': typeof SplatRoute
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/forbidden': typeof ForbiddenRoute
   '/unauthenticated': typeof UnauthenticatedRoute
@@ -82,6 +91,7 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
+    | '/$'
     | '/'
     | '/forbidden'
     | '/unauthenticated'
@@ -89,6 +99,7 @@ export interface FileRouteTypes {
     | '/productionRequests/'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/$'
     | '/forbidden'
     | '/unauthenticated'
     | '/'
@@ -96,6 +107,7 @@ export interface FileRouteTypes {
     | '/productionRequests'
   id:
     | '__root__'
+    | '/$'
     | '/_authenticated'
     | '/forbidden'
     | '/unauthenticated'
@@ -105,6 +117,7 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  SplatRoute: typeof SplatRoute
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   ForbiddenRoute: typeof ForbiddenRoute
   UnauthenticatedRoute: typeof UnauthenticatedRoute
@@ -131,6 +144,13 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof AuthenticatedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$': {
+      id: '/$'
+      path: '/$'
+      fullPath: '/$'
+      preLoaderRoute: typeof SplatRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/': {
@@ -175,6 +195,7 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
 )
 
 const rootRouteChildren: RootRouteChildren = {
+  SplatRoute: SplatRoute,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   ForbiddenRoute: ForbiddenRoute,
   UnauthenticatedRoute: UnauthenticatedRoute,
