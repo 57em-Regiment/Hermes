@@ -26,29 +26,38 @@ const routeApi = getRouteApi('/_authenticated/inventory/$id');
 export function DeleteInventoryDialog({ children }: DeleteInventoryDialog) {
   const { t } = useTranslation();
   const { id: stockId } = routeApi.useParams();
-  const { mutateAsync } = useDeleteInventoryMutation(stockId);
+  const { mutateAsync, isPending } = useDeleteInventoryMutation(stockId);
 
   if (!useHasPermission(PERMISSIONS.STOCK_INVENTORY_DELETE)) return null;
   return (
     <AlertDialog>
       <AlertDialogTrigger>
-        {children || <Button variant="destructive">{t('Components.DeleteInventory.triggerLabel')}</Button>}
+        {children || (
+          <Button variant="destructive">
+            {t('Components.DeleteInventory.triggerLabel')}
+          </Button>
+        )}
       </AlertDialogTrigger>
       <AlertDialogContent size="sm">
         <AlertDialogHeader>
           <AlertDialogMedia className="bg-destructive/10 text-destructive dark:bg-destructive/20 dark:text-destructive">
             <Trash2Icon />
           </AlertDialogMedia>
-          <AlertDialogTitle>{t('Components.DeleteInventory.title')}</AlertDialogTitle>
+          <AlertDialogTitle>
+            {t('Components.DeleteInventory.title')}
+          </AlertDialogTitle>
           <AlertDialogDescription>
             {t('Components.DeleteInventory.description')}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel variant="outline">{t('Components.DeleteInventory.cancelButton')}</AlertDialogCancel>
+          <AlertDialogCancel variant="outline">
+            {t('Components.DeleteInventory.cancelButton')}
+          </AlertDialogCancel>
           <AlertDialogAction
             variant="destructive"
-            onClick={() => mutateAsync()}>
+            onClick={() => mutateAsync()}
+            loading={isPending}>
             {t('Components.DeleteInventory.deleteButton')}
           </AlertDialogAction>
         </AlertDialogFooter>

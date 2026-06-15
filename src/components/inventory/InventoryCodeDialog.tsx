@@ -31,7 +31,7 @@ export const InventoryCodeDialog = ({
 }: InventoryCodeDialogProps) => {
   const { t } = useTranslation();
   const [revealed, setRevealed] = useState(false);
-  const { refetch, data } = useInventoryCodeQuery(inventoryId);
+  const { refetch, data, isPending } = useInventoryCodeQuery(inventoryId);
   const queryClient = useQueryClient();
   const queryKey = InventoryFactory.CodeInventory(inventoryId);
 
@@ -64,7 +64,9 @@ export const InventoryCodeDialog = ({
         <DialogHeader>
           <DialogTitle>{t('Components.InventoryCodeDialog.title')}</DialogTitle>
           <DialogDescription className="wrap-normal w-full">
-            <Typography>{t('Components.InventoryCodeDialog.description')}</Typography>
+            <Typography>
+              {t('Components.InventoryCodeDialog.description')}
+            </Typography>
           </DialogDescription>
         </DialogHeader>
         <div className="flex justify-center">
@@ -73,13 +75,18 @@ export const InventoryCodeDialog = ({
               onClick={() => {
                 refetch();
                 setRevealed(true);
-              }}>
+              }}
+              loading={isPending}>
               {t('Components.InventoryCodeDialog.getCodeButton')}
             </Button>
           ) : (
             <div>
               <ButtonGroup>
-                <Input value={data.code ?? t('Components.InventoryCodeDialog.noCode')} />
+                <Input
+                  value={
+                    data.code ?? t('Components.InventoryCodeDialog.noCode')
+                  }
+                />
                 <Button onClick={() => handleCopy()}>
                   {copied ? <IconCheck /> : <IconCopy />}
                 </Button>
@@ -89,7 +96,9 @@ export const InventoryCodeDialog = ({
         </div>
         <DialogFooter>
           <DialogClose>
-            <Button variant="outline">{t('Components.InventoryCodeDialog.closeButton')}</Button>
+            <Button variant="outline">
+              {t('Components.InventoryCodeDialog.closeButton')}
+            </Button>
           </DialogClose>
         </DialogFooter>
       </DialogContent>

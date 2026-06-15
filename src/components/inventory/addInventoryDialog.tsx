@@ -50,7 +50,7 @@ export function AddInventoryDialog() {
     setOpen(isOpen);
   };
 
-  const { mutateAsync } = useCreateInventoryMutation();
+  const { mutateAsync, isSuccess, isPending } = useCreateInventoryMutation();
 
   const onLocationSelectd =
     (fieldOnChange: (id: string | undefined) => void) =>
@@ -68,6 +68,7 @@ export function AddInventoryDialog() {
       ...formValues,
       ownerId: formValues.ownerId || access?.user.id,
     });
+    if (isSuccess) setOpen(false);
   };
 
   if (!useHasPermission(PERMISSIONS.STOCK_INVENTORY_CREATE)) return null;
@@ -76,7 +77,7 @@ export function AddInventoryDialog() {
       <DialogTrigger onClick={() => setOpen(true)}>
         <Button>{t('Components.AddInventory.triggerLabel')}</Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent showCloseButton={false}>
         <DialogHeader>
           <DialogTitle>{t('Components.AddInventory.title')}</DialogTitle>
         </DialogHeader>
@@ -178,13 +179,14 @@ export function AddInventoryDialog() {
 
         <DialogFooter>
           <DialogClose>
-            <Button variant="destructive">
+            <Button variant="destructive" loading={isPending}>
               {t('Components.AddInventory.cancelButton')}
             </Button>
           </DialogClose>
           <Button
             type="submit"
             form="createInventoryForm"
+            loading={isPending}
             disabled={!formState.isValid || !formState.dirtyFields.accessCode}>
             {t('Components.AddInventory.submitButton')}
           </Button>

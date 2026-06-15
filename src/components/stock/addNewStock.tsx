@@ -63,7 +63,7 @@ export function AddNewStockDialog({ inventoryId }: AddNewStockDialogProps) {
   const queryClient = useQueryClient();
   const queryKey = InventoryFactory.StockInInventory(inventoryId);
 
-  const { mutateAsync } = useMutation({
+  const { mutateAsync, isPending } = useMutation({
     mutationFn: async (formValues: CreateStock) => {
       const res = await stockApi.create({ body: formValues });
       if (res.status != 201)
@@ -104,10 +104,13 @@ export function AddNewStockDialog({ inventoryId }: AddNewStockDialogProps) {
         </DialogTrigger>
         <DialogContent showCloseButton={false}>
           <DialogHeader>
-            <DialogTitle>{t('Pages.Inventory.AddItemDialog.title')}</DialogTitle>
+            <DialogTitle>
+              {t('Pages.Inventory.AddItemDialog.title')}
+            </DialogTitle>
             <DialogDescription className="wrap-normal w-full">
               <Typography>
-                {t('Pages.Inventory.AddItemDialog.description')} </Typography>
+                {t('Pages.Inventory.AddItemDialog.description')}{' '}
+              </Typography>
             </DialogDescription>
           </DialogHeader>
           <form id="incrementStock" onSubmit={handleSubmit(onSubmit)}>
@@ -155,14 +158,18 @@ export function AddNewStockDialog({ inventoryId }: AddNewStockDialogProps) {
           </form>
           <DialogFooter>
             <DialogClose>
-              <Button variant="outline">{t('dialog.cancel')}</Button>
+              <Button variant="outline" loading={isPending}>
+                {t('dialog.cancel')}
+              </Button>
             </DialogClose>
             <Button
               disabled={!formState.isValid}
+              loading={isPending}
               form="incrementStock"
               type="submit"
               className="bg-primary hover:bg-primary/90">
-              {t('Pages.Inventory.AddItemDialog.saveAction')} </Button>
+              {t('Pages.Inventory.AddItemDialog.saveAction')}{' '}
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

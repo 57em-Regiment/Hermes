@@ -40,17 +40,16 @@ export const UpdateInventoryCodeDialog = ({
   const [open, setOpen] = useState(false);
   const { t } = useTranslation();
 
-  const { mutateAsync } = useInventoryCodeMutation(inventory.id);
+  const { mutateAsync, isPending } = useInventoryCodeMutation(inventory.id);
   const { handleSubmit, control, reset, formState } =
     useForm<UpdateInventoryCode>({
       resolver: zodResolver(updateInventoryCodeSchema),
     });
 
   const onSubmit = async (formValues: UpdateInventoryCode) => {
-    console.log('🚀 ~ onSubmit ~ formValues:', formValues);
     await mutateAsync(formValues);
-    reset();
     setOpen(false);
+    reset();
   };
 
   const onOpenChange = (open: boolean) => {
@@ -80,7 +79,8 @@ export const UpdateInventoryCodeDialog = ({
           </DialogTitle>
           <DialogDescription className="wrap-normal w-full">
             <Typography>
-              {t('Components.UpdateInventoryCode.description')} </Typography>
+              {t('Components.UpdateInventoryCode.description')}{' '}
+            </Typography>
           </DialogDescription>
         </DialogHeader>
         <form id="updateCodeStock" onSubmit={handleSubmit(onSubmit)}>
@@ -113,14 +113,17 @@ export const UpdateInventoryCodeDialog = ({
         </form>
         <DialogFooter>
           <DialogClose onClick={() => setOpen(false)}>
-            <Button disabled={formState.isLoading} variant="outline">
-              {t('dialog.close')} </Button>
+            <Button loading={isPending} variant="outline">
+              {t('dialog.close')}{' '}
+            </Button>
           </DialogClose>
           <Button
-            disabled={!formState.isValid || formState.isLoading}
+            disabled={!formState.isValid}
+            loading={isPending}
             type="submit"
             form="updateCodeStock">
-            {t('Components.UpdateInventoryCode.saveAction')} </Button>
+            {t('Components.UpdateInventoryCode.saveAction')}{' '}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
