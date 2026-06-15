@@ -52,7 +52,7 @@ export function InventoryCard({ inventoryId }: InventoryCardProps) {
       <Link to={LINKS.Inventory.detail.to} params={{ id: inventory.id }}>
         <Card className="min-w-96 min-h-24">
           <CardHeader>
-            <CardTitle className="flex gap-4 items-baseline">
+            <CardTitle className="flex gap-2">
               {inventory.location.icon ? (
                 <img
                   src={inventory.location.icon}
