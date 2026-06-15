@@ -1,0 +1,42 @@
+name: CI — Hermes
+
+on:
+  push:
+    branches: [develop]
+    tags: ["v*"]
+  pull_request:
+    branches: [main, develop]
+  workflow_dispatch:
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    uses: 57regiment/.github/.github/workflows/_reusable-build-vite.yml@main
+    secrets: inherit
+    with:
+      artifact_name: hermes-dist
+      # Hermes a des link: vers wan-shi-tong et Renenutet
+      checkout_wan_shi_tong: true
+      checkout_renenutet: true
+
+  docker:
+    needs: build
+    uses: 57regiment/.github/.github/workflows/_reusable-docker.yml@main
+    secrets: inherit
+    with:
+      image_name: hermes
+      artifact_name: hermes-dist
+      # dist/ uploadé tel quel — pas de tarball à extraire
+      extract_tarball: false
+
+  deploy:
+    needs: docker
+    if: needs.docker.outputs.target == 'staging' || needs.docker.outputs.target == 'prod'
+    uses: 57regiment/.github/.github/workflows/_reusable-deploy.yml@main
+    secrets: inherit
+    with:
+      target: ${{ needs.docker.outputs.target }}
+      image_name: hermes
