@@ -1,6 +1,9 @@
 import { PERMISSIONS } from '@57eme-regiment/auth-contracts';
+import type {
+  GenericLinkSchema,
+  NavigationLink,
+} from '@57eme-regiment/nabu-frontend-utils';
 import { IconArrowUpRightCircle, IconHome } from '@tabler/icons-react';
-import type { GenericLinkSchema, NavigationLink } from './navigation.model';
 
 const link = (
   to: NavigationLink['to'],

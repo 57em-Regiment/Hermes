@@ -15,7 +15,6 @@ import {
   FieldGroup,
   Input,
   Typography,
-  useLanguage,
 } from '@57eme-regiment/nabu-ui';
 import {
   updateStockSchema,

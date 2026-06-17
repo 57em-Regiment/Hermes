@@ -1,13 +1,17 @@
 import { LINKS } from '@/features/navigation/links';
 import { accessClient } from '@/lib/access';
-import { PERMISSIONS } from '@57eme-regiment/auth-contracts';
 import { createFileRoute, redirect } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/_authenticated/productionRequests/')({
   staticData: { link: LINKS.ProductionRequest.index },
   beforeLoad: async () => {
     const access = await accessClient.getMyAccess();
-    if (!accessClient.hasPermission(access, LINKS.ProductionRequest.index.permission)) {
+    if (
+      !accessClient.hasPermission(
+        access,
+        LINKS.ProductionRequest.index.permission,
+      )
+    ) {
       //TODO STOCK_PRODUCTIONREQUEST_READ
       throw redirect({ to: '/forbidden' });
     }

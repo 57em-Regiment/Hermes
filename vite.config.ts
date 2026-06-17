@@ -16,6 +16,7 @@ export default defineConfig(({ mode }) => {
       alias: {
         '@': path.resolve(__dirname, './src'),
       },
+      conditions: ['import', 'module', 'browser', 'default'],
       dedupe: ['react', 'react-dom', 'ag-grid-community', 'ag-grid-react'],
     },
     server: {

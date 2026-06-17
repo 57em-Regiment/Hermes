@@ -49,7 +49,7 @@ export function InventoryCard({ inventoryId }: InventoryCardProps) {
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ scale: 1.02 }}
       className="group select-none cursor-pointer">
-      <Link to={LINKS.Inventory.detail.to} params={{ id: inventory.id }}>
+      <Link to={LINKS.Inventory.detail.to} params={{ id: inventory.id } as never}>
         <Card className="min-w-96 min-h-24">
           <CardHeader>
             <CardTitle className="flex gap-2">

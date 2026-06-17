@@ -20,7 +20,7 @@ export function useCreateInventoryMutation() {
       return res.body;
     },
     onSuccess({ id }) {
-      navigate({ to: LINKS.Inventory.detail.to, params: { id } });
+      navigate({ to: LINKS.Inventory.detail.to, params: { id } as never });
       toast.success('Inventory Created');
     },
     onError: () => {

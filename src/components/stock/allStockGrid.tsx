@@ -1,6 +1,6 @@
 import { ProductionCell } from '@/components/stock/aggrid/ProductionCell';
 import { useAllStockQuery } from '@/features/stock/useAllStockQuery';
-import { defautGridOption } from '@57eme-regiment/nabu-frontend-utils';
+import { defautGridOption } from '@57eme-regiment/nabu-ui';
 import { useTheme } from '@57eme-regiment/nabu-ui';
 import { useTranslation } from 'react-i18next';
 import type { StockDetails } from '@57eme-regiment/renenutet-api-contract';

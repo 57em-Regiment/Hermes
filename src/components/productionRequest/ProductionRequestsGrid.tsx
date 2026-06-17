@@ -1,6 +1,6 @@
 import { useGetProductionRequestsQuery } from '@/features/productionRequests/useGetProductionRequests.query';
 import { useUpdateProductionRequestMutation } from '@/features/productionRequests/useUpdateProductionRequest.mutation';
-import { defautGridOption } from '@57eme-regiment/nabu-frontend-utils';
+import { defautGridOption } from '@57eme-regiment/nabu-ui';
 import { useTheme, type FilterHeaderParams } from '@57eme-regiment/nabu-ui';
 import type { ProductionRequestDetail } from '@57eme-regiment/renenutet-api-contract';
 import {

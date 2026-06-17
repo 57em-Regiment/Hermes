@@ -1,2 +1,9 @@
+packages:
+  - nabu/packages/*
+
+overrides:
+  '@tanstack/react-query': '5.100.14'
+  '@tanstack/query-core': '5.100.14'
+
 allowBuilds:
   msw: true
