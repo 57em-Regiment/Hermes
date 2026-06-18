@@ -30,16 +30,19 @@ type SetMinimumQuantityStockProps = {
   item: StockDetails;
 };
 
-export const SetMinimumQuantityStock = ({ item }: SetMinimumQuantityStockProps) => {
+export const SetMinimumQuantityStock = ({
+  item,
+}: SetMinimumQuantityStockProps) => {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
 
-  const { handleSubmit, control, reset, formState } = useForm<UpdateMinimumQuantity>({
-    resolver: zodResolver(updateMinimumQuantitySchema),
-    defaultValues: {
-      minimumQuantity: item.minimumQuantity ?? 0,
-    },
-  });
+  const { handleSubmit, control, reset, formState } =
+    useForm<UpdateMinimumQuantity>({
+      resolver: zodResolver(updateMinimumQuantitySchema),
+      defaultValues: {
+        minimumQuantity: item.minimumQuantity ?? 0,
+      },
+    });
 
   useEffect(() => {
     if (open) reset({ minimumQuantity: item.minimumQuantity ?? 0 });
@@ -64,7 +67,9 @@ export const SetMinimumQuantityStock = ({ item }: SetMinimumQuantityStockProps) 
       <DialogContent showCloseButton={false}>
         <DialogHeader>
           <DialogTitle>
-            {t('Components.SetMinimumQuantityStock.title', { name: item.item.name })}
+            {t('Components.SetMinimumQuantityStock.title', {
+              name: item.item.name,
+            })}
           </DialogTitle>
           <DialogDescription className="wrap-normal w-full">
             <Typography>
@@ -106,7 +111,7 @@ export const SetMinimumQuantityStock = ({ item }: SetMinimumQuantityStockProps) 
             disabled={!formState.isValid}
             form="setMinimumQuantity"
             type="submit">
-            {t('dialog.confirm')}
+            {t('dialog.confirm_add')}
           </Button>
         </DialogFooter>
       </DialogContent>

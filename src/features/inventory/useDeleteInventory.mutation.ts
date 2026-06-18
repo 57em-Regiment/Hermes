@@ -19,7 +19,6 @@ export function useDeleteInventoryMutation(inventoryId: string) {
         throw Error('Create Inventory failed', { cause: res });
     },
     onError(error) {
-      console.error('🚀 ~ InventoryDialog ~ error:', error);
       toast.error(error.message);
     },
     onSuccess() {
@@ -32,7 +31,6 @@ export function useDeleteInventoryMutation(inventoryId: string) {
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey });
-      console.log('🚀 ~ useDeleteInventoryMutation ~ queryKey:', queryKey);
     },
   });
 }

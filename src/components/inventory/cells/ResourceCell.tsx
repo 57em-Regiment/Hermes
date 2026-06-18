@@ -4,7 +4,6 @@ import { IconPackage } from '@tabler/icons-react';
 import type { ICellRendererParams } from 'ag-grid-community';
 
 export function ResourceCell({ data }: ICellRendererParams<StockDetails>) {
-  console.log('🚀 ~ ResourceCell ~ data:', data);
   if (!data) return null;
 
   return (

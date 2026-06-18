@@ -31,7 +31,8 @@ export const InventoryCodeDialog = ({
 }: InventoryCodeDialogProps) => {
   const { t } = useTranslation();
   const [revealed, setRevealed] = useState(false);
-  const { refetch, data, isPending } = useInventoryCodeQuery(inventoryId);
+  const { refetch, data, isPending, isFetching } =
+    useInventoryCodeQuery(inventoryId);
   const queryClient = useQueryClient();
   const queryKey = InventoryFactory.CodeInventory(inventoryId);
 
@@ -76,7 +77,7 @@ export const InventoryCodeDialog = ({
                 refetch();
                 setRevealed(true);
               }}
-              loading={isPending}>
+              loading={isFetching}>
               {t('Components.InventoryCodeDialog.getCodeButton')}
             </Button>
           ) : (

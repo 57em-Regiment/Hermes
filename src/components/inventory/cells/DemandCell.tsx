@@ -9,11 +9,11 @@ export function DemandCell({ data }: ICellRendererParams<StockDetails>) {
     pr => pr.inventoryId == data.inventoryId,
   );
 
-  if (!data || !productionRequest) return null;
+  if (!data || (!productionRequest && !data.minimumQuantity)) return null;
 
   const quantityNeeded = Math.max(
     data.minimumQuantity ?? 0,
-    productionRequest.quantity ?? 0,
+    productionRequest?.quantity ?? 0,
   );
 
   const pct = (data.quantity / quantityNeeded) * 100;

@@ -32,7 +32,7 @@ export const useOptimisticDecrementStockMutation = ({
         old =>
           old?.map(stock =>
             stock.itemId === item.itemId
-              ? { ...stock, quantity: stock.quantity + newData.quantity }
+              ? { ...stock, quantity: stock.quantity - newData.quantity }
               : stock,
           ) ?? [],
       );
