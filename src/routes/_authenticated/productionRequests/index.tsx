@@ -12,7 +12,6 @@ export const Route = createFileRoute('/_authenticated/productionRequests/')({
         LINKS.ProductionRequest.index.permission,
       )
     ) {
-      //TODO STOCK_PRODUCTIONREQUEST_READ
       throw redirect({ to: '/forbidden' });
     }
     return { access };

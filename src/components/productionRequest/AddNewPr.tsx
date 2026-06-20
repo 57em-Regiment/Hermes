@@ -33,7 +33,6 @@ import { ItemAutocompleteSelect } from '../item/ItemAutocompleteSelect';
 
 export function AddNewPr() {
   const { t } = useTranslation();
-  const userCanCreate = useHasPermission(PERMISSIONS.STOCK_ITEM_READ); //TODO HERMES_PRODUCTIONREQUEST_CREATE
   const [open, setOpen] = useState(false);
 
   const { handleSubmit, control, reset, formState } =
@@ -69,98 +68,98 @@ export function AddNewPr() {
     setOpen(open);
   };
 
-  if (userCanCreate)
-    return (
-      <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogTrigger>
-          <Button>{t('Components.AddNewPr.triggerLabel')}</Button>
-        </DialogTrigger>
-        <DialogContent showCloseButton={false}>
-          <DialogHeader>
-            <DialogTitle>{t('Components.AddNewPr.title')}</DialogTitle>
-            <DialogDescription className="wrap-normal w-full">
-              <Typography>{t('Components.AddNewPr.description')}</Typography>
-            </DialogDescription>
-          </DialogHeader>
-          <form id="createProductionRequest" onSubmit={handleSubmit(onSubmit)}>
-            <FieldGroup>
-              <Controller
-                control={control}
-                name="itemId"
-                render={({ field, fieldState }) => (
-                  <Field>
-                    <FieldLabel>
-                      {t('Components.AddNewPr.itemLabel')}
-                    </FieldLabel>
-                    <ItemAutocompleteSelect
-                      {...field}
-                      onSelected={onItemSelected(field.onChange)}
-                    />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
-              <Controller
-                control={control}
-                name="inventoryId"
-                render={({ field, fieldState }) => (
-                  <Field>
-                    <FieldLabel>
-                      {t('Components.AddNewPr.inventoryLabel')}
-                    </FieldLabel>
-                    <InventoryAutocompleteSelect
-                      {...field}
-                      onSelected={onInventorySelected(field.onChange)}
-                    />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
-              <Controller
-                control={control}
-                name="quantity"
-                render={({ field, fieldState, formState }) => (
-                  <Field>
-                    <FieldLabel>
-                      {t('Components.AddNewPr.quantityLabel')}
-                    </FieldLabel>
-                    <Input
-                      {...field}
-                      disabled={
-                        formState.isSubmitting || !formState.dirtyFields.itemId
-                      }
-                      type="number"
-                      min={1}
-                      max={prMaxQuantity}
-                      onChange={e => field.onChange(e.target.valueAsNumber)}
-                    />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
-            </FieldGroup>
-          </form>
-          <DialogFooter>
-            <DialogClose>
-              <Button variant="outline">
-                {t('Components.AddNewPr.cancelButton')}
-              </Button>
-            </DialogClose>
-            <Button
-              disabled={!formState.isValid}
-              form="createProductionRequest"
-              type="submit"
-              className="bg-primary hover:bg-primary/90">
-              {t('Components.AddNewPr.submitButton')}
+  if (!useHasPermission(PERMISSIONS.HERMES_PRODUCTION_REQUEST_CREATE))
+    return null;
+  
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogTrigger>
+        <Button>{t('Components.AddNewPr.triggerLabel')}</Button>
+      </DialogTrigger>
+      <DialogContent showCloseButton={false}>
+        <DialogHeader>
+          <DialogTitle>{t('Components.AddNewPr.title')}</DialogTitle>
+          <DialogDescription className="wrap-normal w-full">
+            <Typography>{t('Components.AddNewPr.description')}</Typography>
+          </DialogDescription>
+        </DialogHeader>
+        <form id="createProductionRequest" onSubmit={handleSubmit(onSubmit)}>
+          <FieldGroup>
+            <Controller
+              control={control}
+              name="itemId"
+              render={({ field, fieldState }) => (
+                <Field>
+                  <FieldLabel>{t('Components.AddNewPr.itemLabel')}</FieldLabel>
+                  <ItemAutocompleteSelect
+                    {...field}
+                    onSelected={onItemSelected(field.onChange)}
+                  />
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+            <Controller
+              control={control}
+              name="inventoryId"
+              render={({ field, fieldState }) => (
+                <Field>
+                  <FieldLabel>
+                    {t('Components.AddNewPr.inventoryLabel')}
+                  </FieldLabel>
+                  <InventoryAutocompleteSelect
+                    {...field}
+                    onSelected={onInventorySelected(field.onChange)}
+                  />
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+            <Controller
+              control={control}
+              name="quantity"
+              render={({ field, fieldState, formState }) => (
+                <Field>
+                  <FieldLabel>
+                    {t('Components.AddNewPr.quantityLabel')}
+                  </FieldLabel>
+                  <Input
+                    {...field}
+                    disabled={
+                      formState.isSubmitting || !formState.dirtyFields.itemId
+                    }
+                    type="number"
+                    min={1}
+                    max={prMaxQuantity}
+                    onChange={e => field.onChange(e.target.valueAsNumber)}
+                  />
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+          </FieldGroup>
+        </form>
+        <DialogFooter>
+          <DialogClose>
+            <Button variant="outline">
+              {t('Components.AddNewPr.cancelButton')}
             </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    );
+          </DialogClose>
+          <Button
+            disabled={!formState.isValid}
+            form="createProductionRequest"
+            type="submit"
+            className="bg-primary hover:bg-primary/90">
+            {t('Components.AddNewPr.submitButton')}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
 }

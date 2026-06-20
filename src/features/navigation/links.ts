@@ -14,7 +14,7 @@ const link = (
 export const LINKS = {
   index: link('/', 'Links.index', {
     Icon: IconHome,
-    permission: PERMISSIONS.STOCK_ITEM_READ, //ADMIN_FOXWATCHER_ACCESS
+    permission: PERMISSIONS.HERMES_ACCESS,
   }),
   forbidden: link('/forbidden', 'Forbidden', {
     hidden: true,
@@ -25,13 +25,13 @@ export const LINKS = {
 
   Inventory: {
     detail: link('/inventory/$id', 'Links.Inventory.detail', {
-      permission: PERMISSIONS.STOCK_INVENTORY_READ,
+      permission: PERMISSIONS.HERMES_INVENTORY_READ,
     }),
   },
   ProductionRequest: {
     index: link('/productionRequests', 'Links.ProductionRequest.index', {
       Icon: IconArrowUpRightCircle,
-      permission: PERMISSIONS.STOCK_INVENTORY_READ, //TODO STOCK_PRODUCTIONREQUEST_READ
+      permission: PERMISSIONS.HERMES_PRODUCTION_REQUEST_READ,
     }),
   },
 } satisfies GenericLinkSchema;

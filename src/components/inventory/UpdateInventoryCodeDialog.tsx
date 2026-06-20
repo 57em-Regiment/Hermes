@@ -57,9 +57,8 @@ export const UpdateInventoryCodeDialog = ({
     reset();
   };
   const { access } = useAccess();
-  //TODO : PERMISSIONS.STOCK_INVENTORY_CODE_UPDATE
   if (
-    !useHasPermission(PERMISSIONS.STOCK_INVENTORY_CODE_READ) ||
+    !useHasPermission(PERMISSIONS.HERMES_INVENTORY_CODE_UPDATE) ||
     access?.user.id != inventory.ownerId
   )
     return null;

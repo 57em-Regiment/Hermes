@@ -71,7 +71,7 @@ export function AddInventoryDialog() {
     if (isSuccess) setOpen(false);
   };
 
-  if (!useHasPermission(PERMISSIONS.STOCK_INVENTORY_CREATE)) return null;
+  if (!useHasPermission(PERMISSIONS.HERMES_INVENTORY_CREATE)) return null;
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger onClick={() => setOpen(true)}>
