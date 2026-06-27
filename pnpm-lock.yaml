@@ -14,12 +14,9 @@ importers:
 
   .:
     dependencies:
-      '@57eme-regiment/auth-browser':
-        specifier: ^1.10.0
-        version: 1.12.1(@ts-rest/core@3.52.1(@types/node@24.12.4)(zod@4.4.3))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(zod@4.4.3)
-      '@57eme-regiment/auth-contracts':
-        specifier: link:../wan-shi-tong/packages/auth-contracts
-        version: link:../wan-shi-tong/packages/auth-contracts
+      '@57eme-regiment/auth-package':
+        specifier: ^2.0.1
+        version: 2.0.1(@ts-rest/core@3.52.1(@types/node@24.12.4)(zod@4.4.3))(fastify@5.8.5)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(zod@4.4.3)
       '@57eme-regiment/krang-api-contract':
         specifier: ^0.11.0
         version: 0.11.0(@types/node@24.12.4)(zod@4.4.3)
@@ -240,8 +237,8 @@ importers:
   nabu/packages/frontend-utils:
     dependencies:
       '@57eme-regiment/auth-contracts':
-        specifier: '>=1'
-        version: 1.11.1(@ts-rest/core@3.53.0-rc.1(@types/node@24.12.4))(zod@4.4.3)
+        specifier: '>=1.13.2'
+        version: 1.13.2(@ts-rest/core@3.53.0-rc.1(@types/node@24.12.4))(zod@4.4.3)
       '@tabler/icons-react':
         specifier: '>=3'
         version: 3.44.0(react@19.2.6)
@@ -347,15 +344,24 @@ importers:
 
 packages:
 
-  '@57eme-regiment/auth-browser@1.12.1':
-    resolution: {integrity: sha512-SzN1nXoKNUfkuY/xA420gPy877Ah0+3orMxqgDMapORoB6NfZgDamhZq2YWR7PTqx3HWCI1h1jUoE5/StrQEMg==, tarball: https://npm.pkg.github.com/download/@57eme-regiment/auth-browser/1.12.1/8c9db866cbbf14b9368a680da29c0a398ab4040a}
-    peerDependencies:
-      react: 19.2.6
-
   '@57eme-regiment/auth-contracts@1.11.1':
     resolution: {integrity: sha512-PZxnZhr1Q3NB+DclRS898+YstNGFAHn5jXvpD4+vLcpZh7WPLtzcqlG4vSsGil6eW0OKPDFCcvOnR4SOvWRGeQ==, tarball: https://npm.pkg.github.com/download/@57eme-regiment/auth-contracts/1.11.1/7587b06c5660ace0b981fe3b7848354d4f18755b}
     peerDependencies:
       '@ts-rest/core': '>=3.50.0'
+      zod: '>=3'
+
+  '@57eme-regiment/auth-contracts@1.13.2':
+    resolution: {integrity: sha512-dG3oV+ggdFzxwFlvxYcyf6aTOkuU8fRb1EKjmMDaul1TW4nP7g4PZQO0S1KR5Rl2qsMutTrcVviU0EiXV7+9OA==, tarball: https://npm.pkg.github.com/download/@57eme-regiment/auth-contracts/1.13.2/9a7d27a1b24210063f97dc2dff13f01d8c85cf24}
+    peerDependencies:
+      '@ts-rest/core': '>=3.50.0'
+      zod: '>=3'
+
+  '@57eme-regiment/auth-package@2.0.1':
+    resolution: {integrity: sha512-eMFuBTeGyYUOVQQDQyjbmbzFBwKoQ/zvB+7CYDxiT6/+GMezKeI/xj0jKtWKQzyZwpVJMY4DIN+stBksL/uvDQ==, tarball: https://npm.pkg.github.com/download/@57eme-regiment/auth-package/2.0.1/b2ffe617492ff590fd51a800b0862e74c8313711}
+    peerDependencies:
+      '@ts-rest/core': '>=3.50.0'
+      fastify: '>=5'
+      react: 19.2.6
       zod: '>=3'
 
   '@57eme-regiment/krang-api-contract@0.11.0':
@@ -3382,11 +3388,23 @@ packages:
 
 snapshots:
 
-  '@57eme-regiment/auth-browser@1.12.1(@ts-rest/core@3.52.1(@types/node@24.12.4)(zod@4.4.3))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(zod@4.4.3)':
+  '@57eme-regiment/auth-contracts@1.11.1(@ts-rest/core@3.53.0-rc.1(@types/node@24.12.4))(zod@4.4.3)':
     dependencies:
-      '@57eme-regiment/auth-contracts': 1.11.1(@ts-rest/core@3.52.1(@types/node@24.12.4)(zod@4.4.3))(zod@4.4.3)
+      '@ts-rest/core': 3.53.0-rc.1(@types/node@24.12.4)
+      zod: 4.4.3
+
+  '@57eme-regiment/auth-contracts@1.13.2(@ts-rest/core@3.53.0-rc.1(@types/node@24.12.4))(zod@4.4.3)':
+    dependencies:
+      '@ts-rest/core': 3.53.0-rc.1(@types/node@24.12.4)
+      zod: 4.4.3
+
+  '@57eme-regiment/auth-package@2.0.1(@ts-rest/core@3.52.1(@types/node@24.12.4)(zod@4.4.3))(fastify@5.8.5)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(zod@4.4.3)':
+    dependencies:
+      '@ts-rest/core': 3.52.1(@types/node@24.12.4)(zod@4.4.3)
       better-auth: 1.6.11(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+      fastify: 5.8.5
       react: 19.2.6
+      zod: 4.4.3
     transitivePeerDependencies:
       - '@cloudflare/workers-types'
       - '@lynx-js/react'
@@ -3395,7 +3413,6 @@ snapshots:
       - '@sveltejs/kit'
       - '@tanstack/react-start'
       - '@tanstack/solid-start'
-      - '@ts-rest/core'
       - better-sqlite3
       - drizzle-kit
       - drizzle-orm
@@ -3409,17 +3426,6 @@ snapshots:
       - svelte
       - vitest
       - vue
-      - zod
-
-  '@57eme-regiment/auth-contracts@1.11.1(@ts-rest/core@3.52.1(@types/node@24.12.4)(zod@4.4.3))(zod@4.4.3)':
-    dependencies:
-      '@ts-rest/core': 3.52.1(@types/node@24.12.4)(zod@4.4.3)
-      zod: 4.4.3
-
-  '@57eme-regiment/auth-contracts@1.11.1(@ts-rest/core@3.53.0-rc.1(@types/node@24.12.4))(zod@4.4.3)':
-    dependencies:
-      '@ts-rest/core': 3.53.0-rc.1(@types/node@24.12.4)
-      zod: 4.4.3
 
   '@57eme-regiment/krang-api-contract@0.11.0(@types/node@24.12.4)(zod@4.4.3)':
     dependencies:
