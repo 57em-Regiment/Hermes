@@ -15,7 +15,7 @@ export const Route = createFileRoute('/_authenticated/inventory/$id')({
     if (!session) throw redirect({ to: '/unauthenticated' });
 
     const access = await accessClient.getMyAccess();
-    if (!accessClient.hasPermission(access, PERMISSIONS.STOCK_INVENTORY_READ)) {
+    if (!accessClient.hasPermission(access, PERMISSIONS.RENENUTET_INVENTORIES_READ)) {
       throw redirect({ to: '/forbidden' });
     }
     return { access };

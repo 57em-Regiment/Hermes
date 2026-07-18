@@ -68,7 +68,7 @@ export function AddNewPr() {
     setOpen(open);
   };
 
-  if (!useHasPermission(PERMISSIONS.HERMES_PRODUCTION_REQUEST_CREATE))
+  if (!useHasPermission(PERMISSIONS.RENENUTET_PRODUCTIONREQUEST_CREATE))
     return null;
   
   return (

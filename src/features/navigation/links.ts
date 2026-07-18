@@ -25,13 +25,13 @@ export const LINKS = {
 
   Inventory: {
     detail: link('/inventory/$id', 'Links.Inventory.detail', {
-      permission: PERMISSIONS.HERMES_INVENTORY_READ,
+      permission: PERMISSIONS.RENENUTET_INVENTORIES_READ,
     }),
   },
   ProductionRequest: {
     index: link('/productionRequests', 'Links.ProductionRequest.index', {
       Icon: IconArrowUpRightCircle,
-      permission: PERMISSIONS.HERMES_PRODUCTION_REQUEST_READ,
+      permission: PERMISSIONS.RENENUTET_PRODUCTIONREQUEST_READ,
     }),
   },
 } satisfies GenericLinkSchema;

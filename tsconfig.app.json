@@ -19,6 +19,9 @@
 
     "baseUrl": ".",
     "paths": {
+      "@57eme-regiment/auth-browser/dist/*": ["node_modules/@57eme-regiment/auth-package/dist/browser/*"],
+      "@57eme-regiment/auth-contracts": ["node_modules/@57eme-regiment/auth-package/dist/index.d.ts"],
+      "@57eme-regiment/auth-browser": ["node_modules/@57eme-regiment/auth-package/dist/browser/index.d.ts"],
       "@/*": ["./src/*"]
     },
 

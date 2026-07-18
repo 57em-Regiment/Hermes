@@ -31,7 +31,7 @@ export const InventoryCodeDialog = ({
 }: InventoryCodeDialogProps) => {
   const { t } = useTranslation();
   const [revealed, setRevealed] = useState(false);
-  const { refetch, data, isPending, isFetching } =
+  const { refetch, data, isFetching } =
     useInventoryCodeQuery(inventoryId);
   const queryClient = useQueryClient();
   const queryKey = InventoryFactory.CodeInventory(inventoryId);
@@ -52,7 +52,7 @@ export const InventoryCodeDialog = ({
     queryClient.removeQueries({ queryKey });
   };
 
-  if (!useHasPermission(PERMISSIONS.STOCK_INVENTORY_CODE_READ)) return null;
+  if (!useHasPermission(PERMISSIONS.RENENUTET_INVENTORIES_READ)) return null;
   return (
     <Dialog onOpenChange={onOpenChange}>
       <DialogTrigger

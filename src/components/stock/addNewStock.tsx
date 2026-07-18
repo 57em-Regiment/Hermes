@@ -39,7 +39,7 @@ type AddNewStockDialogProps = {
 };
 
 export function AddNewStockDialog({ inventoryId }: AddNewStockDialogProps) {
-  const userCanCreate = useHasPermission(PERMISSIONS.HERMES_STOCK_ITEM_ADD);
+  const userCanCreate = useHasPermission(PERMISSIONS.RENENUTET_STOCKS_CREATE);
   const { data: stocks } = useGetStockByInventoryId(inventoryId);
   const [open, setOpen] = useState(false);
   const { t } = useTranslation();

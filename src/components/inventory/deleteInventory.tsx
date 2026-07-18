@@ -28,7 +28,7 @@ export function DeleteInventoryDialog({ children }: DeleteInventoryDialog) {
   const { id: stockId } = routeApi.useParams();
   const { mutateAsync, isPending } = useDeleteInventoryMutation(stockId);
 
-  if (!useHasPermission(PERMISSIONS.STOCK_INVENTORY_DELETE)) return null;
+  if (!useHasPermission(PERMISSIONS.RENENUTET_INVENTORIES_UPDATE)) return null;
   return (
     <AlertDialog>
       <AlertDialogTrigger>

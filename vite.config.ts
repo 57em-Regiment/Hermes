@@ -15,6 +15,7 @@ export default defineConfig(({ mode }) => {
     resolve: {
       alias: {
         '@': path.resolve(__dirname, './src'),
+        '@57eme-regiment/auth-contracts': path.resolve(__dirname, 'node_modules/@57eme-regiment/auth-package/dist/index.js'),
       },
       conditions: ['import', 'module', 'browser', 'default'],
       dedupe: ['react', 'react-dom', 'ag-grid-community', 'ag-grid-react'],
